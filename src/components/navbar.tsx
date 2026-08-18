@@ -1,8 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
 import Image from "next/image"
+import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import {
   Menu,
@@ -18,12 +19,12 @@ import { contactInfo } from "@/data"
 import { useAuthStore } from "@/lib/auth-store"
 
 const navItems = [
-  { label: "Ana Səhifə", href: "/" },
-  { label: "Haqqımızda", href: "/haqqimizda" },
-  { label: "Həkimlər", href: "/hekimler" },
-  { label: "Xidmətlər", href: "/xidmetler" },
-  { label: "Filiallar", href: "/filiallar" },
-  { label: "Əlaqə", href: "/elaqe" },
+  { label: "Ana Səhifə", href: "#hero" },
+  { label: "Haqqımızda", href: "#haqqimizda" },
+  { label: "Həkimlər", href: "#hekimler" },
+  { label: "Xidmətlər", href: "#xidmetler" },
+  { label: "Filiallar", href: "#filiallar" },
+  { label: "Əlaqə", href: "#elaqe" },
 ]
 
 export default function Navbar() {
@@ -32,6 +33,26 @@ export default function Navbar() {
   const [showUserMenu, setShowUserMenu] = useState(false)
   const [mounted, setMounted] = useState(false)
   const { user, logout } = useAuthStore()
+  const pathname = usePathname()
+
+  const scrollToSection = useCallback((href: string) => {
+    const id = href.replace("#", "")
+    const el = document.getElementById(id)
+    if (el) {
+      const offset = 100
+      const top = el.getBoundingClientRect().top + window.scrollY - offset
+      window.scrollTo({ top, behavior: "smooth" })
+    }
+  }, [])
+
+  const handleNavClick = useCallback((href: string) => {
+    setIsOpen(false)
+    if (pathname === "/") {
+      scrollToSection(href)
+    } else {
+      window.location.href = `/${href}`
+    }
+  }, [pathname, scrollToSection])
 
   useEffect(() => {
     setMounted(true)
@@ -79,13 +100,13 @@ export default function Navbar() {
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-1">
               {navItems.map((item) => (
-                <Link
+                <button
                   key={item.href}
-                  href={item.href}
-                  className="px-4 py-2 text-sm font-medium text-slate-700 hover:text-teal-700 rounded-lg hover:bg-teal-50 transition-all duration-200 relative after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-0 after:h-0.5 after:bg-teal-600 after:rounded-full after:transition-all after:duration-300 hover:after:w-3/4"
+                  onClick={() => handleNavClick(item.href)}
+                  className="px-4 py-2 text-sm font-medium text-slate-700 hover:text-teal-700 rounded-lg hover:bg-teal-50 transition-all duration-200 relative after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-0 after:h-0.5 after:bg-teal-600 after:rounded-full after:transition-all after:duration-300 hover:after:w-3/4 cursor-pointer"
                 >
                   {item.label}
-                </Link>
+                </button>
               ))}
             </nav>
 
@@ -173,15 +194,14 @@ export default function Navbar() {
           <div className="container mx-auto px-4 py-4 bg-white border-t border-teal-100">
             <nav className="flex flex-col gap-2">
               {navItems.map((item, i) => (
-                <Link
+                <button
                   key={item.href}
-                  href={item.href}
-                  className="px-4 py-3 text-sm font-medium text-slate-700 hover:text-teal-700 rounded-lg hover:bg-teal-50 transition-all duration-200 hover:translate-x-1"
+                  onClick={() => handleNavClick(item.href)}
+                  className="px-4 py-3 text-sm font-medium text-slate-700 hover:text-teal-700 rounded-lg hover:bg-teal-50 transition-all duration-200 hover:translate-x-1 text-left cursor-pointer"
                   style={{ transitionDelay: isOpen ? `${i * 50}ms` : "0ms" }}
-                  onClick={() => setIsOpen(false)}
                 >
                   {item.label}
-                </Link>
+                </button>
               ))}
               <div className="flex flex-col gap-2 mt-4 pt-4 border-t">
                 {user ? (
