@@ -24,11 +24,24 @@ import type { Gender } from "@/lib/auth-store"
  */
 
 export interface ResultLookupRequest {
-  patientId: string
-  orderId: string
+  /**
+   * "STRIX / KART NO" exactly as printed on the report — patient number and
+   * order number joined by a hyphen, e.g. 00000000-0000000000. It is one field
+   * on the printout, so it is one field on the form; splitting it would only
+   * invite people to divide it in the wrong place.
+   */
+  cardNo: string
   /** ISO date, yyyy-mm-dd. */
   birthDate: string
-  securityCode: string
+}
+
+/** 8-digit patient number, hyphen, 10-digit order number. */
+export const CARD_NO_PATTERN = /^\d{8}-\d{10}$/
+
+/** Split for the API, which is likely to want the two parts separately. */
+export const splitCardNo = (cardNo: string) => {
+  const [patientId, orderId] = cardNo.split("-")
+  return { patientId, orderId }
 }
 
 export interface ResultLine {

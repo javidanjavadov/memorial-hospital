@@ -14,6 +14,7 @@ import ServicesSection from "@/components/services-section"
 import DoctorsSection from "@/components/doctors-section"
 import BranchesSection from "@/components/branches-section"
 import TrustSection from "@/components/trust-section"
+import AccreditationSection from "@/components/accreditation-section"
 import FaqSection from "@/components/faq-section"
 
 export default function Home() {
@@ -106,6 +107,7 @@ export default function Home() {
       </div>
       <div id="xidmetler"><DepartmentsSection /></div>
       <ServicesSection />
+      <AccreditationSection />
       <div id="hekimler"><DoctorsSection /></div>
       <div id="filiallar"><BranchesSection /></div>
       <TrustSection />

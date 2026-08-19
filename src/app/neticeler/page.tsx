@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import Link from "next/link"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -18,17 +18,19 @@ import { Input } from "@/components/ui/input"
 import { Field } from "@/components/ui/field"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { contactInfo, telHref } from "@/data"
-import { lookupResults, type ResultOrder } from "@/lib/results"
+import Captcha, { type CaptchaHandle } from "@/components/captcha"
+import {
+  CARD_NO_PATTERN,
+  lookupResults,
+  type ResultOrder,
+} from "@/lib/results"
 
 const schema = z.object({
-  patientId: z
+  // One field, exactly as the report prints it.
+  cardNo: z
     .string()
-    .min(1, "Pasiyent nömrəsi daxil edin")
-    .max(32, "Pasiyent nömrəsi çox uzundur"),
-  orderId: z
-    .string()
-    .min(1, "Sifariş nömrəsi daxil edin")
-    .max(32, "Sifariş nömrəsi çox uzundur"),
+    .min(1, "STRIX / KART NO daxil edin")
+    .regex(CARD_NO_PATTERN, "Format: 00000000-0000000000"),
   birthDate: z
     .string()
     .min(1, "Doğum tarixini seçin")
@@ -36,10 +38,7 @@ const schema = z.object({
       const d = new Date(v)
       return !Number.isNaN(d.valueOf()) && d < new Date()
     }, "Doğum tarixi düzgün deyil"),
-  securityCode: z
-    .string()
-    .min(4, "Təhlükəsizlik kodu minimum 4 simvoldur")
-    .max(16, "Təhlükəsizlik kodu çox uzundur"),
+  securityCode: z.string().min(1, "Təhlükəsizlik kodunu daxil edin"),
 })
 
 type FormData = z.infer<typeof schema>
@@ -48,26 +47,47 @@ export default function NeticelerPage() {
   const [error, setError] = useState("")
   const [order, setOrder] = useState<ResultOrder | null>(null)
 
+  /* State rather than a ref: the submit handler is created during render, and
+   * reading a ref from there is exactly what the refs lint rule warns about.
+   * The handle is set once, so this costs a single extra render. */
+  const [captcha, setCaptcha] = useState<CaptchaHandle | null>(null)
+  const onCaptchaReady = useCallback((handle: CaptchaHandle) => {
+    setCaptcha(handle)
+  }, [])
+
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      patientId: "",
-      orderId: "",
-      birthDate: "",
-      securityCode: "",
-    },
+    defaultValues: { cardNo: "", birthDate: "", securityCode: "" },
   })
 
   const onSubmit = async (data: FormData) => {
     setError("")
     setOrder(null)
-    const outcome = await lookupResults(data)
+
+    if (!captcha?.verify(data.securityCode)) {
+      captcha?.refresh()
+      setValue("securityCode", "")
+      setError("Təhlükəsizlik kodu düzgün deyil. Yeni kodu daxil edin.")
+      return
+    }
+
+    const outcome = await lookupResults({
+      cardNo: data.cardNo,
+      birthDate: data.birthDate,
+    })
     if (outcome.ok) setOrder(outcome.order)
-    else setError(outcome.error)
+    else {
+      // A fresh challenge after every attempt, so a failed lookup cannot be
+      // retried in a loop against one solved code.
+      captcha?.refresh()
+      setValue("securityCode", "")
+      setError(outcome.error)
+    }
   }
 
   return (
@@ -109,43 +129,23 @@ export default function NeticelerPage() {
                   </div>
                 )}
 
-                <div className="grid gap-5 sm:grid-cols-2">
-                  <Field
-                    label="Pasiyent nömrəsi"
-                    required
-                    hint="Qəbz üzərində göstərilir."
-                    error={errors.patientId?.message}
-                  >
-                    {(field) => (
-                      <Input
-                        {...field}
-                        inputMode="numeric"
-                        autoComplete="off"
-                        placeholder="Patient ID"
-                        {...register("patientId")}
-                        className={errors.patientId ? "border-red-500" : ""}
-                      />
-                    )}
-                  </Field>
-
-                  <Field
-                    label="Sifariş nömrəsi"
-                    required
-                    hint="Order ID."
-                    error={errors.orderId?.message}
-                  >
-                    {(field) => (
-                      <Input
-                        {...field}
-                        inputMode="numeric"
-                        autoComplete="off"
-                        placeholder="Order ID"
-                        {...register("orderId")}
-                        className={errors.orderId ? "border-red-500" : ""}
-                      />
-                    )}
-                  </Field>
-                </div>
+                <Field
+                  label="STRIX / KART NO"
+                  required
+                  hint="Nəticə vərəqinizin yuxarı hissəsində göstərilir."
+                  error={errors.cardNo?.message}
+                >
+                  {(field) => (
+                    <Input
+                      {...field}
+                      inputMode="numeric"
+                      autoComplete="off"
+                      placeholder="00000000-0000000000"
+                      {...register("cardNo")}
+                      className={`font-mono ${errors.cardNo ? "border-red-500" : ""}`}
+                    />
+                  )}
+                </Field>
 
                 <Field
                   label="Doğum tarixi"
@@ -166,22 +166,25 @@ export default function NeticelerPage() {
                 <Field
                   label="Təhlükəsizlik kodu"
                   required
-                  hint="Qəbzinizdə və ya SMS-də göndərilən kod."
                   error={errors.securityCode?.message}
                 >
                   {(field) => (
-                    <div className="relative">
-                      <Lock
-                        className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400"
-                        aria-hidden="true"
-                      />
-                      <Input
-                        {...field}
-                        autoComplete="off"
-                        placeholder="••••"
-                        {...register("securityCode")}
-                        className={`pl-10 ${errors.securityCode ? "border-red-500" : ""}`}
-                      />
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                      <div className="relative flex-1">
+                        <Lock
+                          className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400"
+                          aria-hidden="true"
+                        />
+                        <Input
+                          {...field}
+                          autoComplete="off"
+                          spellCheck={false}
+                          placeholder="Təhlükəsizlik kodunu daxil edin"
+                          {...register("securityCode")}
+                          className={`pl-10 uppercase ${errors.securityCode ? "border-red-500" : ""}`}
+                        />
+                      </div>
+                      <Captcha onReady={onCaptchaReady} />
                     </div>
                   )}
                 </Field>
