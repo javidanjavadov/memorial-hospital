@@ -1,135 +1,180 @@
-"use client"
-
-import { useId, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { ArrowRight, Search } from "lucide-react"
-import { contactInfo, departments, doctors, telHref } from "@/data"
+import {
+  ArrowRight,
+  CalendarCheck,
+  Clock,
+  Phone,
+  ShieldCheck,
+  Star,
+  Stethoscope,
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { CountUp } from "@/components/animations"
+import {
+  branches,
+  contactInfo,
+  departments,
+  doctors,
+  telHref,
+  YEARS_OF_EXPERIENCE,
+} from "@/data"
 
 /**
- * Deliberately spare: one headline, one input, one link, one image.
+ * Two-column hero: proof and actions on the left, photography with overlapping
+ * cards on the right.
  *
- * Earlier versions stacked a badge, headline, paragraph, search panel, two
- * buttons, an overlapping stat card and a stats rail into the first screen.
- * Removing most of that is the point — the page should open calm, and the
- * things that survive should be the things people actually came for.
+ * Every number is derived from the real roster rather than typed in, so the
+ * hero cannot drift out of step with the rest of the page the way the old
+ * hardcoded "50+ doctors" did.
  */
+
+const badges = [
+  { icon: ShieldCheck, label: "Lisenziyalı klinika" },
+  { icon: Clock, label: "Gəncədə 24/7" },
+  { icon: Star, label: `${YEARS_OF_EXPERIENCE} il təcrübə` },
+]
+
+/** The longest-serving doctor — a real name, not an invented "next available". */
+const featuredDoctor = [...doctors].sort((a, b) => b.experience - a.experience)[0]
+
 export default function HeroSection() {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [selectedDepartment, setSelectedDepartment] = useState("")
-  const router = useRouter()
-  const searchId = useId()
-  const departmentId = useId()
-
-  const handleSearch = (event: React.FormEvent) => {
-    event.preventDefault()
-    const params = new URLSearchParams()
-    if (searchQuery.trim()) params.set("q", searchQuery.trim())
-    if (selectedDepartment) params.set("dept", selectedDepartment)
-    const query = params.toString()
-    router.push(query ? `/hekimler?${query}` : "/hekimler")
-  }
-
   return (
-    <section className="bg-[var(--paper)]">
-      <div className="container mx-auto px-4 pt-16 pb-20 md:pt-24 md:pb-28">
-        <div className="max-w-4xl">
-          <h1 className="font-display animate-fade-in-up text-step-5 text-[var(--ink)]">
-            Həkimi seçin.
-            <br />
-            <span className="text-[var(--ink-muted)]">Qalanını biz edək.</span>
-          </h1>
+    <section className="relative overflow-hidden bg-gradient-to-br from-[var(--paper)] via-[var(--paper)] to-primary/5">
+      <div className="container mx-auto px-4 py-14 md:py-20 lg:py-24">
+        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+          {/* ---------------- Left: message + proof + actions ---------------- */}
+          <div>
+            <ul className="mb-6 flex flex-wrap gap-2">
+              {badges.map(({ icon: Icon, label }) => (
+                <li
+                  key={label}
+                  className="inline-flex items-center gap-2 rounded-full border border-[var(--line)] bg-[var(--paper-raised)] px-3 py-1.5 text-xs font-medium text-[var(--ink-muted)]"
+                >
+                  <Icon className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+                  {label}
+                </li>
+              ))}
+            </ul>
 
-          <form
-            onSubmit={handleSearch}
-            role="search"
-            className="animate-fade-in-up mt-12 max-w-2xl [animation-delay:120ms]"
-          >
-            <div className="border-line flex flex-col gap-px overflow-hidden rounded-xl border bg-[var(--line)] sm:flex-row">
-              <div className="relative flex-1 bg-white">
-                <label htmlFor={searchId} className="sr-only">
-                  Həkim adı və ya ixtisas
-                </label>
-                <Search
-                  className="absolute top-1/2 left-4 h-[18px] w-[18px] -translate-y-1/2 text-[var(--ink-muted)]"
-                  aria-hidden="true"
-                />
-                <input
-                  id={searchId}
-                  type="search"
-                  name="q"
-                  placeholder="Həkim adı və ya ixtisas"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="h-14 w-full bg-transparent pr-4 pl-11 text-base placeholder:text-[var(--ink-muted)]/60 focus-visible:outline-none"
-                />
-              </div>
+            <h1 className="font-display text-step-4 text-[var(--ink)]">
+              Sağlamlığınız üçün{" "}
+              <span className="text-primary">peşəkar qayğı</span>
+            </h1>
 
-              <label htmlFor={departmentId} className="sr-only">
-                İxtisas
-              </label>
-              <select
-                id={departmentId}
-                name="dept"
-                value={selectedDepartment}
-                onChange={(e) => setSelectedDepartment(e.target.value)}
-                className="h-14 bg-white px-4 text-sm text-[var(--ink)] focus-visible:outline-none"
-              >
-                <option value="">Bütün ixtisaslar</option>
-                {departments.map((dept) => (
-                  <option key={dept.id} value={dept.id}>
-                    {dept.name}
-                  </option>
-                ))}
-              </select>
+            <p className="mt-5 max-w-xl text-step-0 text-[var(--ink-muted)]">
+              {doctors.length} həkim, {departments.length} ixtisas və{" "}
+              {branches.length} filial. Laboratoriya analizindən kompleks check-up
+              müayinəyə qədər — hamısı bir yerdə.
+            </p>
 
-              <button
-                type="submit"
-                className="h-14 bg-[var(--ink)] px-7 text-sm font-medium text-white transition-colors hover:bg-[var(--primary)]"
-              >
-                Axtar
-              </button>
+            <dl className="mt-8 grid max-w-lg grid-cols-3 gap-4">
+              {[
+                { value: doctors.length, suffix: "", label: "Həkim" },
+                { value: departments.length, suffix: "", label: "İxtisas" },
+                { value: YEARS_OF_EXPERIENCE, suffix: "+", label: "İl təcrübə" },
+              ].map((stat) => (
+                <div key={stat.label}>
+                  <dd className="font-display text-step-2 text-primary">
+                    <CountUp end={stat.value} suffix={stat.suffix} />
+                  </dd>
+                  <dt className="mt-1 text-sm text-[var(--ink-muted)]">
+                    {stat.label}
+                  </dt>
+                </div>
+              ))}
+            </dl>
+
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Button variant="cta" size="lg" asChild>
+                <Link href="/qebul">
+                  Onlayn qəbula yazıl
+                  <ArrowRight className="h-5 w-5" aria-hidden="true" />
+                </Link>
+              </Button>
+              <Button variant="outline" size="lg" asChild>
+                <Link href="/hekimler">
+                  <Stethoscope className="h-5 w-5" aria-hidden="true" />
+                  Həkimlərə bax
+                </Link>
+              </Button>
             </div>
-          </form>
 
-          <p className="animate-fade-in-up mt-6 text-sm text-[var(--ink-muted)] [animation-delay:200ms]">
-            {doctors.length} həkim · {departments.length} ixtisas · 3 filial ·{" "}
             <a
               href={telHref(contactInfo.phone)}
-              className="text-[var(--ink)] underline underline-offset-4 transition-colors hover:text-[var(--primary)]"
+              className="mt-8 inline-flex items-center gap-4 rounded-xl border border-[var(--line)] bg-[var(--paper-raised)] p-4 transition-colors hover:border-primary/40"
             >
-              {contactInfo.phone}
+              <span
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/10"
+                aria-hidden="true"
+              >
+                <Phone className="h-5 w-5 text-primary" />
+              </span>
+              <span>
+                <span className="block text-xs text-[var(--ink-muted)]">
+                  Çağrı mərkəzi
+                </span>
+                <span className="block font-semibold text-[var(--ink)]">
+                  {contactInfo.phone}
+                </span>
+              </span>
             </a>
-          </p>
+          </div>
+
+          {/* ---------------- Right: photography + overlapping cards --------- */}
+          <div className="relative">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-3xl sm:aspect-[5/4] lg:aspect-[4/5]">
+              <Image
+                src="/hero/hero-1.webp"
+                alt="Memorial Hospital həkimi pasiyenti müayinə edərkən"
+                fill
+                priority
+                sizes="(min-width: 1024px) 45vw, 100vw"
+                className="object-cover"
+              />
+            </div>
+
+            {/*
+              Hidden below lg: overlapping cards need room to sit outside the
+              image, and on a narrow screen they would cover the photograph.
+            */}
+            <div className="pointer-events-none absolute -left-4 top-8 hidden lg:block">
+              <div className="pointer-events-auto flex items-center gap-3 rounded-xl border border-[var(--line)] bg-[var(--paper-raised)] p-4 shadow-lg">
+                <span
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10"
+                  aria-hidden="true"
+                >
+                  <CalendarCheck className="h-5 w-5 text-primary" />
+                </span>
+                <span>
+                  <span className="block text-xs text-[var(--ink-muted)]">
+                    Ən təcrübəli həkimimiz
+                  </span>
+                  <span className="block text-sm font-semibold text-[var(--ink)]">
+                    {featuredDoctor.name.split(" - ")[0]}
+                  </span>
+                  <span className="block text-xs text-[var(--ink-muted)]">
+                    {featuredDoctor.specialty} · {featuredDoctor.experience} il
+                  </span>
+                </span>
+              </div>
+            </div>
+
+            <div className="pointer-events-none absolute -right-4 bottom-8 hidden lg:block">
+              <div className="pointer-events-auto rounded-xl border border-[var(--line)] bg-[var(--paper-raised)] p-4 shadow-lg">
+                <span className="block text-xs text-[var(--ink-muted)]">
+                  Filiallarımız
+                </span>
+                <span className="mt-1 block font-display text-step-1 text-primary">
+                  {branches.length}
+                </span>
+                <span className="block text-xs text-[var(--ink-muted)]">
+                  Bakı və Gəncə
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-
-      {/* Full-bleed image band — one strong visual, no scrim, no text on top */}
-      <div className="animate-fade-in-up relative aspect-[21/9] w-full overflow-hidden md:aspect-[3/1] [animation-delay:160ms]">
-        <Image
-          src="/hero/hero-1.webp"
-          alt="Memorial Hospital"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
-        />
-      </div>
-
-      <div className="container mx-auto px-4">
-        <Link
-          href="/qebul"
-          className="group flex items-center justify-between gap-6 py-8 transition-colors"
-        >
-          <span className="font-display text-step-2 text-[var(--ink)] transition-colors group-hover:text-[var(--primary)]">
-            Onlayn qəbula yazıl
-          </span>
-          <ArrowRight
-            className="h-6 w-6 shrink-0 text-[var(--ink-muted)] transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[var(--primary)]"
-            aria-hidden="true"
-          />
-        </Link>
       </div>
     </section>
   )

@@ -7,6 +7,7 @@ import {
   YEARS_OF_EXPERIENCE,
 } from "@/data"
 import HeroSection from "@/components/hero-section"
+import FindDoctorSection from "@/components/find-doctor-section"
 import DepartmentsSection from "@/components/departments-section"
 import ServicesSection from "@/components/services-section"
 import DoctorsSection from "@/components/doctors-section"
@@ -18,6 +19,7 @@ export default function Home() {
   return (
     <>
       <div id="hero"><HeroSection /></div>
+      <FindDoctorSection />
       <div id="haqqimizda">
         <section className="py-16 md:py-24 bg-[var(--paper)]">
           <div className="container mx-auto px-4">
