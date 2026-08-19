@@ -39,6 +39,8 @@ import {
   optionalText,
   phoneNumber,
 } from "@/lib/validation"
+import { missingProfileFields } from "@/lib/profile-complete"
+import ProfileRequiredNotice from "@/components/profile-required-notice"
 import { useAuthStore } from "@/lib/auth-store"
 import Link from "next/link"
 
@@ -119,6 +121,7 @@ function QebulContent() {
   const user = useAuthStore((s) => s.user)
   const addAppointment = useAuthStore((s) => s.addAppointment)
   const isSlotTaken = useAuthStore((s) => s.isSlotTaken)
+  const missing = user ? missingProfileFields(user) : []
 
   const {
     register,
@@ -697,6 +700,15 @@ function QebulContent() {
                     Davam Et
                     <ArrowRight className="w-4 h-4" aria-hidden="true" />
                   </Button>
+                ) : user && missing.length > 0 ? (
+                  /* Signed in but incomplete. A guest is not stopped here —
+                     the form collects a name and a phone number itself — but
+                     an account the appointment is filed under must be usable. */
+                  <ProfileRequiredNotice
+                    missing={missing}
+                    next="/qebul"
+                    reason="Qəbul hesabınıza yazılır, ona görə profil məlumatları tamamlanmalıdır."
+                  />
                 ) : (
                   <Button
                     type="submit"

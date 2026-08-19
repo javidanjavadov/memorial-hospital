@@ -68,6 +68,19 @@ interface AuthState {
   cancelAppointment: (id: string) => AuthResult
   /** Looks up a stored profile by email, for linking a Google sign-in to an
    *  existing email/password account. Never exposes the password hash. */
+  /**
+   * Creates or updates the stored profile behind a Google session.
+   *
+   * Google verifies the email and hands over nothing else, so the details the
+   * lab needs have to be filled in here. The record carries no usable password
+   * hash, which keeps the email/password login from ever resolving to it.
+   */
+  saveGoogleProfile: (
+    email: string,
+    data: Omit<User, "id" | "createdAt" | "fullName" | "email">
+  ) => AuthResult
+  /** Bumped whenever a stored profile changes, so readers re-render. */
+  profileRevision: number
   linkedProfile: (email: string) => User | null
   isSlotTaken: (branch: string, doctor: string | undefined, date: string, time: string) => boolean
 }
@@ -76,6 +89,9 @@ const USERS_KEY = "memorial-users"
 const APPOINTMENTS_KEY = "memorial-appointments"
 
 type StoredUser = User & { passwordHash: string }
+
+/** Marks a profile that exists only behind a Google session. */
+const GOOGLE_ONLY = "google-only"
 
 const normalizeEmail = (email: string) => email.trim().toLowerCase()
 
@@ -120,6 +136,7 @@ export const useAuthStore = create<AuthState>()(
     (set, get) => ({
       user: null,
       appointments: [],
+      profileRevision: 0,
       hasHydrated: false,
 
       setHasHydrated: () => set({ hasHydrated: true }),
@@ -205,6 +222,37 @@ export const useAuthStore = create<AuthState>()(
         }
 
         set({ user: { ...user, ...next, fullName: buildFullName({ ...user, ...next }) } })
+        return { ok: true }
+      },
+
+      saveGoogleProfile: (email, data) => {
+        const normalized = normalizeEmail(email)
+        const users = getStoredUsers()
+        const idx = users.findIndex(
+          (u) => normalizeEmail(u.email) === normalized
+        )
+
+        const merged: StoredUser = {
+          ...(users[idx] ?? {
+            id: generateId(),
+            createdAt: new Date().toISOString(),
+            // Not a hash in any scheme, so verifyPassword rejects it outright.
+            // A Google-only account must stay unreachable by password login.
+            passwordHash: GOOGLE_ONLY,
+          }),
+          ...data,
+          email: normalized,
+          fullName: buildFullName(data),
+        }
+
+        if (idx === -1) users.push(merged)
+        else users[idx] = merged
+
+        if (!saveStoredUsers(users)) {
+          return { ok: false, error: "Məlumatlar yaddaşa yazıla bilmədi" }
+        }
+
+        set((state) => ({ profileRevision: state.profileRevision + 1 }))
         return { ok: true }
       },
 

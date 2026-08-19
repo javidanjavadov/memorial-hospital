@@ -24,6 +24,8 @@ import {
 import type { BranchKey } from "@/lib/catalog"
 import type { PaymentMethod } from "@/lib/basket-store"
 import { useCurrentUser } from "@/lib/use-current-user"
+import { missingProfileFields } from "@/lib/profile-complete"
+import ProfileRequiredNotice from "@/components/profile-required-notice"
 import { shortServiceName } from "@/lib/service-name"
 import { controlClass } from "@/components/ui/field"
 
@@ -46,6 +48,7 @@ export default function SebetPage() {
   // An order has to be attached to a patient — the lab needs to know whose
   // sample it is, and the results have to reach someone.
   const { user, isLoading } = useCurrentUser()
+  const missing = missingProfileFields(user)
 
   const [sent, setSent] = useState(false)
 
@@ -278,7 +281,15 @@ export default function SebetPage() {
                 </div>
               </dl>
 
-              {user ? (
+              {user && missing.length > 0 ? (
+                <div className="mt-5">
+                  <ProfileRequiredNotice
+                    missing={missing}
+                    next="/sebet"
+                    reason="Nümunə sizin adınıza qeydə alınır, ona görə sifarişdən əvvəl bu məlumatlar tamamlanmalıdır."
+                  />
+                </div>
+              ) : user ? (
                 <Button
                   variant="cta"
                   size="lg"

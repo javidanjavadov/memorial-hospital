@@ -1,5 +1,6 @@
 "use client"
 
+import { useMemo } from "react"
 import { useSession } from "next-auth/react"
 import { useAuthStore, type User } from "@/lib/auth-store"
 
@@ -29,6 +30,16 @@ export function useCurrentUser(): {
   const localUser = useAuthStore((s) => s.user)
   const hasHydrated = useAuthStore((s) => s.hasHydrated)
   const linkedProfile = useAuthStore((s) => s.linkedProfile)
+  // linkedProfile reads localStorage directly, so nothing would re-render after
+  // the Google visitor fills their details in. The revision counter is the
+  // subscription that makes the saved profile appear.
+  const profileRevision = useAuthStore((s) => s.profileRevision)
+  const sessionEmail = session?.user?.email
+  const linked = useMemo(
+    () => (sessionEmail ? linkedProfile(sessionEmail) : null),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- profileRevision is the invalidation signal
+    [sessionEmail, linkedProfile, profileRevision]
+  )
 
   const isLoading = status === "loading" || !hasHydrated
 
@@ -38,8 +49,6 @@ export function useCurrentUser(): {
      * address, reuse its id so the person keeps their appointment history
      * instead of landing in an empty profile.
      */
-    const linked = linkedProfile(session.user.email)
-
     return {
       isLoading,
       source: "google",

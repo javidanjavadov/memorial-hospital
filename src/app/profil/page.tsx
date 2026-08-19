@@ -1,7 +1,7 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
+import { Suspense, useEffect, useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -25,6 +25,7 @@ import {
   CheckCircle,
   Loader2,
 } from "lucide-react"
+import { missingProfileFields } from "@/lib/profile-complete"
 import { useAuthStore } from "@/lib/auth-store"
 import { useCurrentUser } from "@/lib/use-current-user"
 import { getBranchName, getDepartmentName, getDoctorName } from "@/data"
@@ -67,17 +68,28 @@ const statusLabels: Record<string, string> = {
   cancelled: "Ləğv edilib",
 }
 
-export default function ProfilPage() {
+function ProfilPageInner() {
   const router = useRouter()
   // Either login method resolves to the same shape here.
   const { user, isLoading, source } = useCurrentUser()
   const hasHydrated = !isLoading
   const updateProfile = useAuthStore((s) => s.updateProfile)
+  const saveGoogleProfile = useAuthStore((s) => s.saveGoogleProfile)
   const appointments = useAuthStore((s) => s.appointments)
   const cancelAppointment = useAuthStore((s) => s.cancelAppointment)
 
   const [activeTab, setActiveTab] = useState<"profile" | "appointments">("profile")
   const [saved, setSaved] = useState(false)
+  /*
+   * Where to go once the profile is usable. Restricted to a same-site path:
+   * accepting an arbitrary URL would let a link hand someone off to a
+   * look-alike site the moment they finish filling in their FIN.
+   */
+  const nextParam = useSearchParams().get("next")
+  const next =
+    nextParam && nextParam.startsWith("/") && !nextParam.startsWith("//")
+      ? nextParam
+      : null
   const [saveError, setSaveError] = useState("")
   const [cancelError, setCancelError] = useState("")
 
@@ -126,13 +138,24 @@ export default function ProfilPage() {
   const onSubmit = (data: ProfileData) => {
     setSaveError("")
     setSaved(false)
-    if (source === "google") {
-      setSaveError(
-        "Google hesabı ilə daxil olduqda profil məlumatları hələlik dəyişdirilə bilmir."
-      )
-      return
-    }
-    const result = updateProfile(data)
+    /*
+     * A Google session has no local account behind it until this runs. Blocking
+     * the save here — as this did — left those visitors permanently without the
+     * FIN, patronymic and date of birth every other part of the site asks for,
+     * with no way to supply them.
+     */
+    const result =
+      source === "google"
+        ? saveGoogleProfile(user.email, {
+            firstName: data.firstName,
+            lastName: data.lastName,
+            fatherName: data.fatherName,
+            gender: data.gender,
+            birthDate: data.birthDate,
+            phone: data.phone,
+            finCode: data.finCode,
+          })
+        : updateProfile(data)
     if (!result.ok) {
       setSaveError(result.error)
       return
@@ -149,6 +172,8 @@ export default function ProfilPage() {
     const result = cancelAppointment(id)
     if (!result.ok) setCancelError(result.error)
   }
+
+  const missing = missingProfileFields(user)
 
   const initials = user.fullName
     .split(" ")
@@ -172,6 +197,33 @@ export default function ProfilPage() {
             <p className="text-slate-500">{user.email}</p>
           </div>
         </div>
+
+        {missing.length > 0 && (
+          <div
+            role="status"
+            className="mb-6 rounded-xl border border-amber-300 bg-amber-50 p-5"
+          >
+            <p className="flex items-center gap-2 font-medium text-amber-900">
+              <AlertCircle className="h-5 w-5 shrink-0" aria-hidden="true" />
+              Profiliniz tamamlanmayıb
+            </p>
+            <p className="mt-1 text-sm text-amber-900/80">
+              Sifariş vermək və qəbula yazılmaq üçün aşağıdakı məlumatlar
+              tələb olunur — laboratoriya nümunəni bu məlumatlarla sizin adınıza
+              qeyd edir.
+            </p>
+            <ul className="mt-3 flex flex-wrap gap-2">
+              {missing.map((field) => (
+                <li
+                  key={field.key}
+                  className="rounded-md bg-amber-100 px-2 py-1 text-xs font-medium text-amber-900"
+                >
+                  {field.label}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {/* Tabs */}
         <div className="flex gap-2 mb-6" role="tablist" aria-label="Profil bölmələri">
@@ -215,6 +267,14 @@ export default function ProfilPage() {
                       <CheckCircle className="w-4 h-4" aria-hidden="true" />
                       Məlumatlar uğurla yeniləndi!
                     </div>
+                  )}
+                  {/* Only offered once nothing is missing — sending someone
+                      back to a basket that would still refuse the order is
+                      worse than keeping them here. */}
+                  {saved && next && missing.length === 0 && (
+                    <Button variant="cta" className="w-full" asChild>
+                      <Link href={next}>Davam et</Link>
+                    </Button>
                   )}
                   {saveError && (
                     <div
@@ -330,7 +390,7 @@ export default function ProfilPage() {
                     <Field
                       label="FIN Kod"
                       required
-                      hint="7 simvol — analiz nəticələri bu kodla tapılır."
+                      hint="7 simvol — analiz nəticələri bu kodla tapılır. Kod filialda şəxsiyyət vəsiqəsi ilə üzləşdirilir."
                       error={errors.finCode?.message}
                     >
                       {(field) => (
@@ -479,5 +539,17 @@ export default function ProfilPage() {
         )}
       </div>
     </div>
+  )
+}
+
+/**
+ * useSearchParams needs a Suspense boundary, or the route opts out of static
+ * rendering and the build fails outright.
+ */
+export default function ProfilPage() {
+  return (
+    <Suspense fallback={null}>
+      <ProfilPageInner />
+    </Suspense>
   )
 }

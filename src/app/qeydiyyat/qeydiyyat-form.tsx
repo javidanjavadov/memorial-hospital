@@ -261,7 +261,7 @@ export default function QeydiyyatPage({ googleEnabled }: { googleEnabled: boolea
               <Field
                 label="FIN Kod"
                 required
-                hint="Şəxsiyyət vəsiqənizdəki 7 simvol — analiz nəticələri bu kodla tapılır."
+                hint="Şəxsiyyət vəsiqənizdəki 7 simvol — analiz nəticələri bu kodla tapılır. Kod filialda şəxsiyyət vəsiqəsi ilə üzləşdirilir."
                 error={errors.finCode?.message}
                 className="sm:col-span-2"
               >
