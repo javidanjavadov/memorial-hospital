@@ -38,7 +38,12 @@ const badges = [
 
 export default function HeroSection() {
   return (
-    <section className="relative flex h-[78svh] max-h-[760px] min-h-[560px] w-full items-center overflow-hidden">
+    /*
+      Pulled up by the header's height so the photograph starts at the very top
+      of the page and runs behind the (transparent) navbar. The matching top
+      padding puts the content back below it, so nothing sits under the bar.
+    */
+    <section className="relative -mt-16 flex h-[78svh] max-h-[760px] min-h-[560px] w-full items-center overflow-hidden pt-16 md:-mt-20 md:pt-20">
       <Image
         src="/hero/hero-lab.webp"
         alt=""

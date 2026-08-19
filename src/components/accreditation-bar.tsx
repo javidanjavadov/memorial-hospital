@@ -1,4 +1,3 @@
-import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight, ShieldCheck } from "lucide-react"
 import { accreditations } from "@/data/accreditations"
@@ -32,23 +31,21 @@ export default function AccreditationBar() {
           </p>
 
           {/*
-            White chips: the official artwork is dark and would disappear on
-            this teal band. A light plate is also how these marks are normally
-            reproduced, so it is not a liberty taken with someone's logo.
+            Wordmarks here, not the official artwork. The logos are dark and
+            would need white plates to sit on this teal band, which turns a
+            clean strip into a row of boxes. The real marks are reproduced in
+            the section below, where there is room to give them their own
+            treatment.
           */}
-          <ul className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+          <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 sm:gap-x-12">
             {accreditations.map((item) => (
-              <li
-                key={item.mark}
-                className="flex h-14 items-center rounded-lg bg-white px-4 py-2"
-              >
-                <Image
-                  src={item.logo}
-                  alt={`${item.mark} — ${item.markNote}`}
-                  width={item.logoWidth}
-                  height={item.logoHeight}
-                  className="h-7 w-auto object-contain sm:h-8"
-                />
+              <li key={item.mark} className="text-center">
+                <span className="font-display block text-2xl leading-none tracking-tight md:text-3xl">
+                  {item.mark}
+                </span>
+                <span className="mt-1 block text-[0.65rem] tracking-[0.16em] text-white/70 uppercase">
+                  {item.markNote}
+                </span>
               </li>
             ))}
           </ul>

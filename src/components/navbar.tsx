@@ -79,7 +79,9 @@ export default function Navbar() {
   )
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20)
+    // 20px triggered almost immediately, which read as a flicker rather than a
+    // transition. Past the hero's first slice the change has somewhere to go.
+    const handleScroll = () => setScrolled(window.scrollY > 90)
     handleScroll()
     window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
@@ -106,6 +108,14 @@ export default function Navbar() {
     }
   }, [showUserMenu])
 
+  /*
+   * On the home page the header sits over the hero photograph rather than
+   * above it, so until the visitor scrolls it is transparent and its contents
+   * are drawn in white. Everywhere else, and once scrolled, it is the normal
+   * solid bar — a transparent header over white page content would be invisible.
+   */
+  const overHero = pathname === "/" && !scrolled
+
   const initials = user
     ? user.fullName
         .split(" ")
@@ -118,10 +128,12 @@ export default function Navbar() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full transition-[background-color,box-shadow,border-color] duration-300",
-        scrolled
-          ? "bg-white/95 backdrop-blur-md shadow-lg border-b border-teal-100"
-          : "bg-white"
+        "sticky top-0 z-50 w-full transition-[background-color,box-shadow,border-color] duration-700 ease-out",
+        overHero
+          ? "bg-transparent"
+          : scrolled
+            ? "bg-white/95 backdrop-blur-md shadow-lg border-b border-teal-100"
+            : "bg-white"
       )}
     >
       <div className="container mx-auto px-4">
@@ -135,7 +147,12 @@ export default function Navbar() {
               alt="Memorial Hospital — ana səhifə"
               width={144}
               height={50}
-              className="h-8 md:h-10 w-auto"
+              className={cn(
+                "h-8 md:h-10 w-auto transition-[filter] duration-700 ease-out",
+                // The mark is dark artwork; inverting it is cheaper and stays
+                // in sync than shipping a second white file.
+                overHero && "brightness-0 invert"
+              )}
               priority
             />
           </Link>
@@ -146,7 +163,12 @@ export default function Navbar() {
                 key={item.href}
                 type="button"
                 onClick={() => handleNavClick(item.href)}
-                className="px-4 py-2 text-sm font-medium text-slate-700 hover:text-teal-700 rounded-lg hover:bg-teal-50 transition-all duration-200 relative after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-0 after:h-0.5 after:bg-teal-600 after:rounded-full after:transition-all after:duration-300 hover:after:w-3/4 cursor-pointer"
+                className={cn(
+                  "px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-700 ease-out relative after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-0 after:h-0.5 after:rounded-full after:transition-all after:duration-300 hover:after:w-3/4 cursor-pointer",
+                  overHero
+                    ? "text-white hover:bg-white/10 after:bg-white"
+                    : "text-slate-700 hover:text-teal-700 hover:bg-teal-50 after:bg-teal-600"
+                )}
               >
                 {item.label}
               </button>
@@ -160,7 +182,14 @@ export default function Navbar() {
                 Təcili Zəng
               </a>
             </Button>
-            <Button variant="outline" size="sm" asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              className={cn(
+                overHero && "border-white/40 bg-white/10 text-white hover:bg-white/20 hover:text-white"
+              )}
+              asChild
+            >
               <Link href="/neticeler">
                 <FileText className="w-4 h-4" aria-hidden="true" />
                 Nəticələrimə bax
@@ -191,12 +220,18 @@ export default function Navbar() {
                   aria-expanded={showUserMenu}
                   aria-haspopup="menu"
                   aria-label={`Hesab menyusu — ${user.fullName}`}
-                  className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg hover:bg-slate-50 transition-colors"
+                  className={cn(
+                    "flex items-center gap-1.5 px-2 py-1.5 rounded-lg transition-colors",
+                    overHero ? "hover:bg-white/10" : "hover:bg-slate-50"
+                  )}
                 >
                   <span className="w-8 h-8 bg-teal-500 rounded-full flex items-center justify-center text-xs font-bold text-white">
                     {initials}
                   </span>
-                  <ChevronDown className="w-4 h-4 text-slate-500" aria-hidden="true" />
+                  <ChevronDown
+                    className={cn("w-4 h-4", overHero ? "text-white" : "text-slate-500")}
+                    aria-hidden="true"
+                  />
                 </button>
                 {showUserMenu && (
                   <div
@@ -234,19 +269,30 @@ export default function Navbar() {
                 )}
               </div>
             ) : (
-              <Link
-                href="/giris"
-                className="px-4 py-2 text-sm font-medium text-slate-700 hover:text-teal-700 rounded-lg hover:bg-teal-50 transition-all duration-200"
+              <Button
+                variant="outline"
+                size="sm"
+                className={cn(
+                  overHero &&
+                    "border-white/40 bg-white/10 text-white hover:bg-white/20 hover:text-white"
+                )}
+                asChild
               >
-                Daxil Ol
-              </Link>
+                <Link href="/giris">
+                  <User className="w-4 h-4" aria-hidden="true" />
+                  Daxil Ol
+                </Link>
+              </Button>
             )}
           </div>
 
           <Button
             variant="ghost"
             size="icon"
-            className="lg:hidden transition-transform duration-300 active:scale-90"
+            className={cn(
+              "lg:hidden transition-transform duration-300 active:scale-90",
+              overHero && "text-white hover:bg-white/10 hover:text-white"
+            )}
             onClick={() => setIsOpen((open) => !open)}
             aria-expanded={isOpen}
             aria-controls="mobile-menu"
