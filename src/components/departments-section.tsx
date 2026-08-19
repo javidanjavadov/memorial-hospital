@@ -48,13 +48,22 @@ export default function DepartmentsSection() {
           {visible.map((dept, i) => {
             const count = doctorsByDepartment(dept.id).length
             return (
-              <li key={dept.id}>
+              <li key={dept.id} className="h-full">
                 {/*
                   Newly revealed cards animate from index 0 rather than their
                   position in the full list, so the second batch does not sit
                   waiting through the first batch's stagger.
                 */}
-                <AnimateOnScroll delay={(i % INITIAL_COUNT) * 40}>
+                {/*
+                  h-full has to be carried down every level: the grid stretches
+                  the <li>, but this wrapper sits between it and the card, so
+                  without it the card measures against the wrapper's auto height
+                  and each box ends up as tall as its own text.
+                */}
+                <AnimateOnScroll
+                  delay={(i % INITIAL_COUNT) * 40}
+                  className="h-full"
+                >
                   <Link
                     href={`/hekimler?dept=${dept.id}`}
                     className="group flex h-full flex-col rounded-xl bg-white p-5 ring-1 ring-[var(--line)] transition-colors duration-300 hover:ring-[var(--ink)]/25"
