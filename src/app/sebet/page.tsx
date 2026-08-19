@@ -24,6 +24,7 @@ import {
 import type { BranchKey } from "@/lib/catalog"
 import type { PaymentMethod } from "@/lib/basket-store"
 import { useCurrentUser } from "@/lib/use-current-user"
+import { shortServiceName } from "@/lib/service-name"
 import { controlClass } from "@/components/ui/field"
 
 const formatAzn = (value: number) =>
@@ -141,8 +142,11 @@ export default function SebetPage() {
                           Kod: {line.code}
                         </p>
                       )}
-                      <p className="mt-0.5 font-medium text-[var(--ink)]">
-                        {line.name}
+                      <p
+                        title={line.name}
+                        className="mt-0.5 font-medium text-[var(--ink)]"
+                      >
+                        {shortServiceName(line.name)}
                       </p>
                     </div>
                     <div className="flex shrink-0 items-center gap-3">

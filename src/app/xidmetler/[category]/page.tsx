@@ -18,6 +18,7 @@ import {
 import { pageMetadata } from "@/lib/site"
 import ServiceInfoButton from "@/components/service-info-button"
 import AddToBasketButton from "@/components/add-to-basket-button"
+import { shortServiceName } from "@/lib/service-name"
 import BasketPanel from "@/components/basket-panel"
 import CatalogTabs from "@/components/catalog-tabs"
 
@@ -171,8 +172,11 @@ export default async function CategoryPage({ params }: Props) {
                       }}
                     />
                   </div>
-                  <h3 className="mt-0.5 text-sm leading-snug font-medium text-[var(--ink)]">
-                    {item.name}
+                  <h3
+                    title={item.name}
+                    className="mt-0.5 line-clamp-3 text-sm leading-snug font-medium text-[var(--ink)]"
+                  >
+                    {shortServiceName(item.name)}
                   </h3>
 
                   {/* Clamped to two lines: at a fifth of the width an unclamped

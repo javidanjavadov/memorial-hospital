@@ -5,6 +5,7 @@ import { History, ListPlus, RotateCcw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { branches } from "@/data"
 import { useBasketStore } from "@/lib/basket-store"
+import { shortServiceName } from "@/lib/service-name"
 import { cn } from "@/lib/utils"
 
 const formatAzn = (value: number) =>
@@ -134,7 +135,7 @@ export default function CatalogTabs({ children }: { children: ReactNode }) {
                           key={line.slug}
                           className="rounded-md bg-[var(--secondary)] px-2 py-1 text-xs text-[var(--ink)]"
                         >
-                          {line.name}
+                          {shortServiceName(line.name)}
                         </li>
                       ))}
                     </ul>

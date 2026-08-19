@@ -8,6 +8,7 @@ import {
   HOME_COLLECTION_FEE,
   useBasketStore,
 } from "@/lib/basket-store"
+import { shortServiceName } from "@/lib/service-name"
 
 const formatAzn = (value: number) =>
   `${Number.isInteger(value) ? value : value.toFixed(2)} AZN`
@@ -75,8 +76,11 @@ export default function BasketPanel() {
               return (
                 <li key={line.slug} className="flex items-start gap-2 px-4 py-3">
                   <span className="min-w-0 flex-1">
-                    <span className="block text-sm leading-snug text-[var(--ink)]">
-                      {line.name}
+                    <span
+                      title={line.name}
+                      className="block text-sm leading-snug text-[var(--ink)]"
+                    >
+                      {shortServiceName(line.name)}
                     </span>
                     <span className="mt-0.5 block text-xs text-[var(--ink-muted)]">
                       {formatAzn(effective)}
