@@ -558,11 +558,11 @@ export const branches: Branch[] = [
 
 /** Top-level service categories, mirroring how the hospital groups them. */
 export const serviceCategories: ServiceCategory[] = [
-  { id: "laboratoriya", name: "Laboratoriya", description: "Klinik, biokimyəvi, hormonal və genetik analizlər", image: "/services/laboratoriya.svg", href: "/xidmetler#laboratoriya" },
-  { id: "poliklinika", name: "Poliklinika", description: "Ambulator müayinə, diaqnostika və müşahidə", image: "/services/poliklinika.svg", href: "/xidmetler#poliklinika" },
+  { id: "laboratoriya", name: "Laboratoriya", description: "Klinik, biokimyəvi, hormonal və genetik analizlər", image: "/services/laboratoriya.svg", href: "/xidmetler#laboratory-catalog" },
+  { id: "poliklinika", name: "Poliklinika", description: "Ambulator müayinə, diaqnostika və müşahidə", image: "/services/poliklinika.svg", href: "/xidmetler#polyclinic-catalog" },
   { id: "hekim-qebulu", name: "Həkim qəbulu", description: "33 həkim, 15 ixtisas üzrə onlayn qəbul", image: "/services/hekim-qebulu.svg", href: "/hekimler" },
-  { id: "checkup", name: "Check-up müayinə", description: "Tam sağlamlıq yoxlaması — check-up paketləri", image: "/services/checkup.svg", href: "/xidmetler#checkup" },
-  { id: "evde-xidmet", name: "Evdə xidmət", description: "Qan götürmə və müayinə üçün evinizə gəlirik", image: "", href: "/xidmetler#evde-xidmet" },
+  { id: "checkup", name: "Check-up müayinə", description: "Tam sağlamlıq yoxlaması — check-up paketləri", image: "/services/checkup.svg", href: "/elaqe" },
+  { id: "evde-xidmet", name: "Evdə xidmət", description: "Qan götürmə və müayinə üçün evinizə gəlirik", image: "", href: "/elaqe" },
 ]
 
 /** Contact details, matching the hospital's published numbers. */

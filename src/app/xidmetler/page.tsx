@@ -1,156 +1,136 @@
 import type { Metadata } from "next"
-import Image from "next/image"
 import Link from "next/link"
-import { ArrowRight, Home, Phone } from "lucide-react"
+import { ArrowRight, Phone, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { contactInfo, telHref } from "@/data"
 import {
-  contactInfo,
-  departments,
-  doctorsByDepartment,
-  serviceCategories,
-  telHref,
-} from "@/data"
+  catalogTotals,
+  formatAzn,
+  getCategoryItems,
+  getGroupCategories,
+  GROUP_ORDER,
+  priceOf,
+} from "@/lib/catalog"
 import { pageMetadata } from "@/lib/site"
 
 export const metadata: Metadata = pageMetadata({
-  title: "Xidmətlər",
+  title: "Xidmətlər və qiymətlər",
   description:
-    "Memorial Hospital xidmətləri — laboratoriya, poliklinika, həkim qəbulu, check-up müayinə və evdə xidmət.",
+    "Memorial Hospital xidmətləri və qiymətləri — laboratoriya analizləri, USM, rentgen, tomoqrafiya və həkim qəbulu.",
   path: "/xidmetler",
 })
+
+/** Cheapest item in a category, so each card can show a "from" price. */
+function fromPrice(slug: string) {
+  const items = getCategoryItems(slug)
+  return items.length ? priceOf(items[0]) : null
+}
 
 export default function XidmetlerPage() {
   return (
     <div className="min-h-screen bg-[var(--paper)]">
-      <div className="border-b border-slate-200 bg-white">
+      <div className="border-b border-[var(--line)] bg-[var(--paper-raised)]">
         <div className="container mx-auto px-4 py-14 md:py-20">
-          <p className="mb-3 text-sm tracking-[0.14em] text-[var(--ink-muted)] uppercase">
+          <p className="mb-3 text-sm uppercase tracking-[0.14em] text-[var(--ink-muted)]">
             Xidmətlər
           </p>
           <h1 className="font-display text-step-4 max-w-3xl text-[var(--ink)]">
-            Xidmətlərimiz
+            Xidmətlər və qiymətlər
           </h1>
-          <p className="mt-4 max-w-2xl text-lg text-slate-600">
-            Laboratoriya analizlərindən kompleks check-up müayinəyə qədər bütün
-            tibbi xidmətlər üç filialımızda.
+          <p className="mt-4 max-w-2xl text-step-0 text-[var(--ink-muted)]">
+            {catalogTotals.items} analiz və müayinə, kateqoriyalar üzrə. Hər
+            xidmətin kodu, hazırlanma müddəti və qiyməti göstərilib.
           </p>
         </div>
       </div>
 
-      {/* Service groups */}
-      <div className="container mx-auto px-4 py-14">
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {serviceCategories.map((service) => (
-            <section
-              key={service.id}
-              id={service.id}
-              className="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white scroll-mt-28"
-            >
-              <div className="flex items-center justify-center bg-teal-50/60 px-6 py-8">
-                {service.image ? (
-                  <Image
-                    src={service.image}
-                    alt=""
-                    width={200}
-                    height={188}
-                    className="h-32 w-auto"
-                  />
-                ) : (
-                  <Home className="h-24 w-24 text-teal-600" aria-hidden="true" />
-                )}
-              </div>
-              <div className="flex flex-1 flex-col p-6">
-                <h2 className="text-lg font-semibold text-slate-900">
-                  {service.name}
-                </h2>
-                <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-600">
-                  {service.description}
+      <div className="container mx-auto space-y-16 px-4 py-14 md:py-20">
+        {GROUP_ORDER.map((group) => {
+          const categories = getGroupCategories(group.slug)
+          if (!categories.length) return null
+
+          return (
+            <section key={group.slug} id={group.slug}>
+              <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+                <div>
+                  <h2 className="font-display text-step-2 text-[var(--ink)]">
+                    {group.name}
+                  </h2>
+                  <p className="mt-1 text-[var(--ink-muted)]">{group.blurb}</p>
+                </div>
+                <p className="text-sm text-[var(--ink-muted)]">
+                  {categories.reduce((n, c) => n + c.count, 0)} xidmət ·{" "}
+                  {categories.length} kateqoriya
                 </p>
               </div>
+
+              <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {categories.map((category) => {
+                  const from = fromPrice(category.slug)
+                  return (
+                    <li key={category.slug}>
+                      <Link
+                        href={`/xidmetler/${category.slug}`}
+                        className="group flex h-full flex-col justify-between rounded-xl border border-[var(--line)] bg-[var(--paper-raised)] p-5 transition-colors hover:border-primary/40"
+                      >
+                        <div>
+                          <h3 className="font-medium text-[var(--ink)] group-hover:text-primary">
+                            {category.name}
+                          </h3>
+                          <p className="mt-1 text-sm text-[var(--ink-muted)]">
+                            {category.count} xidmət
+                          </p>
+                        </div>
+                        <div className="mt-4 flex items-center justify-between">
+                          {from !== null && (
+                            <span className="text-sm text-[var(--ink-muted)]">
+                              <span className="font-semibold text-primary">
+                                {formatAzn(from)}
+                              </span>
+                              -dən
+                            </span>
+                          )}
+                          <ArrowRight
+                            className="h-4 w-4 text-[var(--ink-muted)] transition-transform group-hover:translate-x-1 group-hover:text-primary"
+                            aria-hidden="true"
+                          />
+                        </div>
+                      </Link>
+                    </li>
+                  )
+                })}
+              </ul>
             </section>
-          ))}
-        </div>
-      </div>
+          )
+        })}
 
-      {/* Specialties */}
-      <div className="border-t border-slate-200 bg-white">
-        <div className="container mx-auto px-4 py-14 md:py-20">
-          <h2 className="font-display text-step-3 text-[var(--ink)]">
-            İxtisaslar üzrə qəbul
-          </h2>
-          <p className="mt-3 max-w-2xl text-slate-600">
-            Həkim qəbulu {departments.length} ixtisas üzrə aparılır.
-          </p>
-
-          <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {departments.map((dept) => {
-              const count = doctorsByDepartment(dept.id).length
-              return (
-                <Link
-                  key={dept.id}
-                  id={dept.id}
-                  href={`/hekimler?dept=${dept.id}`}
-                  className="group flex items-start gap-4 rounded-xl border border-slate-200 p-5 transition-all duration-300 scroll-mt-28 hover:border-teal-300 hover:bg-teal-50/40"
-                >
-                  <span
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-teal-50 text-teal-700"
-                    aria-hidden="true"
-                  >
-                    <dept.icon className="h-5 w-5" />
-                  </span>
-                  <span className="min-w-0">
-                    <span className="block font-semibold text-slate-900 transition-colors group-hover:text-teal-700">
-                      {dept.name}
-                    </span>
-                    <span className="mt-1 block text-sm text-slate-600">
-                      {dept.description}
-                    </span>
-                    {count > 0 && (
-                      <span className="mt-2 block text-xs font-medium text-teal-700">
-                        {count} həkim
-                      </span>
-                    )}
-                  </span>
-                </Link>
-              )
-            })}
-          </div>
-        </div>
-      </div>
-
-      {/* CTA — prices are not listed here on purpose: the hospital publishes
-          per-doctor consultation fees, which are shown on each doctor card. */}
-      <div className="border-t border-slate-200 bg-white">
-        <div className="container mx-auto px-4 py-14">
-          <div className="flex flex-col items-start justify-between gap-6 rounded-2xl bg-teal-900 p-8 md:flex-row md:items-center md:p-10">
+        <section className="rounded-2xl border border-[var(--line)] bg-[var(--paper-raised)] p-6 md:p-8">
+          <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
             <div>
-              <h2 className="text-2xl font-bold text-white">
-                Hansı xidmətin sizə uyğun olduğunu bilmirsiniz?
+              <h2 className="font-display text-step-1 text-[var(--ink)]">
+                Axtardığınızı tapmadınız?
               </h2>
-              <p className="mt-2 text-teal-100">
-                Reqistratura ilə əlaqə saxlayın — sizə uyğun həkimi təyin edək.
+              <p className="mt-2 text-[var(--ink-muted)]">
+                Çağrı mərkəzimiz analizin qiyməti və hazırlıq qaydaları barədə
+                məlumat verir.
               </p>
             </div>
-            <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
-              <Button variant="cta" size="lg" asChild>
-                <Link href="/qebul">
-                  Qəbula yazıl
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </Link>
-              </Button>
-              <Button
-                size="lg"
-                variant="outlineOnDark"
-                asChild
-              >
+            <div className="flex flex-wrap gap-3">
+              <Button variant="cta" asChild>
                 <a href={telHref(contactInfo.phone)}>
                   <Phone className="h-4 w-4" aria-hidden="true" />
                   {contactInfo.phone}
                 </a>
               </Button>
+              <Button variant="outline" asChild>
+                <Link href="/hekimler">
+                  <Search className="h-4 w-4" aria-hidden="true" />
+                  Həkim axtar
+                </Link>
+              </Button>
             </div>
           </div>
-        </div>
+        </section>
       </div>
     </div>
   )
