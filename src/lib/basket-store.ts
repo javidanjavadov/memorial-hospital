@@ -15,8 +15,19 @@ export interface BasketLine {
 /** Home sample collection, matching the fee the hospital charges. */
 export const HOME_COLLECTION_FEE = 5
 
+export interface PastOrder {
+  id: string
+  createdAt: string
+  branch: BranchKey
+  homeCollection: boolean
+  total: number
+  lines: BasketLine[]
+}
+
 interface BasketState {
   lines: BasketLine[]
+  /** Orders already submitted, newest first. Local to this browser. */
+  orders: PastOrder[]
   branch: BranchKey
   homeCollection: boolean
   hasHydrated: boolean
@@ -24,6 +35,9 @@ interface BasketState {
   add: (line: BasketLine) => void
   remove: (slug: string) => void
   clear: () => void
+  /** Moves the basket into order history and empties it. */
+  submit: () => PastOrder | null
+  reorder: (id: string) => void
   setBranch: (branch: BranchKey) => void
   setHomeCollection: (enabled: boolean) => void
   has: (slug: string) => boolean
@@ -43,6 +57,7 @@ export const useBasketStore = create<BasketState>()(
   persist(
     (set, get) => ({
       lines: [],
+      orders: [],
       branch: DEFAULT_BRANCH,
       homeCollection: false,
       hasHydrated: false,
@@ -63,6 +78,45 @@ export const useBasketStore = create<BasketState>()(
 
       clear: () => set({ lines: [], homeCollection: false }),
 
+      submit: () => {
+        const { lines, branch, homeCollection } = get()
+        if (lines.length === 0) return null
+
+        const order: PastOrder = {
+          id:
+            typeof crypto !== "undefined" && "randomUUID" in crypto
+              ? crypto.randomUUID()
+              : String(Date.now()),
+          createdAt: new Date().toISOString(),
+          branch,
+          homeCollection,
+          total:
+            basketSubtotal(lines) + (homeCollection ? HOME_COLLECTION_FEE : 0),
+          lines,
+        }
+
+        set((state) => ({
+          orders: [order, ...state.orders],
+          lines: [],
+          homeCollection: false,
+        }))
+        return order
+      },
+
+      /** Puts a past order's tests back in the basket, skipping any already in it. */
+      reorder: (id) =>
+        set((state) => {
+          const order = state.orders.find((o) => o.id === id)
+          if (!order) return state
+          const existing = new Set(state.lines.map((l) => l.slug))
+          return {
+            lines: [
+              ...state.lines,
+              ...order.lines.filter((l) => !existing.has(l.slug)),
+            ],
+          }
+        }),
+
       setBranch: (branch) => set({ branch }),
       setHomeCollection: (homeCollection) => set({ homeCollection }),
 
@@ -73,6 +127,7 @@ export const useBasketStore = create<BasketState>()(
       skipHydration: true,
       partialize: (state) => ({
         lines: state.lines,
+        orders: state.orders,
         branch: state.branch,
         homeCollection: state.homeCollection,
       }),

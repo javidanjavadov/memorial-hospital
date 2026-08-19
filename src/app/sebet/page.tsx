@@ -31,6 +31,7 @@ export default function SebetPage() {
   const hasHydrated = useBasketStore((s) => s.hasHydrated)
   const remove = useBasketStore((s) => s.remove)
   const clear = useBasketStore((s) => s.clear)
+  const submitOrder = useBasketStore((s) => s.submit)
   const setBranch = useBasketStore((s) => s.setBranch)
   const setHomeCollection = useBasketStore((s) => s.setHomeCollection)
 
@@ -229,7 +230,9 @@ export default function SebetPage() {
                 size="lg"
                 className="mt-5 w-full"
                 onClick={() => {
-                  clear()
+                  // Moves the basket into order history rather than discarding
+                  // it, so "Keçmiş sifarişlər" has something to show.
+                  submitOrder()
                   setSent(true)
                 }}
               >
