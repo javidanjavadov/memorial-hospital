@@ -27,42 +27,40 @@ export default function DoctorCard({
   return (
     <article
       className={cn(
-        "group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white transition-all duration-300 hover:border-teal-300 hover:shadow-[0_12px_32px_-12px_rgba(24,56,62,0.25)]",
+        "group relative flex flex-col overflow-hidden rounded-xl bg-white ring-1 ring-[var(--line)] transition-colors duration-300 hover:ring-[var(--ink)]/25",
         className
       )}
     >
-      <div className="relative aspect-4/5 overflow-hidden bg-slate-100">
+      <div className="relative aspect-square overflow-hidden bg-[var(--secondary)]">
         <Image
           src={doctor.image}
           alt={`${doctor.name}, ${doctor.specialty}`}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
           priority={priority}
-          className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.04]"
+          className="object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
         />
-
-        {/* Specialty sits on the image so the text block below stays uncluttered. */}
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-teal-950/85 to-transparent p-4 pt-10">
-          <p className="text-sm font-medium text-white/95">{doctor.specialty}</p>
-        </div>
       </div>
 
       <div className="flex flex-1 flex-col gap-3 p-5">
         <div>
-          <h3 className="text-base leading-snug font-semibold text-slate-900">
+          <p className="mb-1.5 text-xs tracking-wide text-[var(--ink-muted)] uppercase">
+            {doctor.specialty}
+          </p>
+          <h3 className="font-display text-base leading-snug text-[var(--ink)]">
             {doctor.name}
           </h3>
           {doctor.title && (
-            <p className="mt-1 text-xs leading-relaxed text-slate-500">
+            <p className="mt-1.5 text-xs leading-relaxed text-[var(--ink-muted)]">
               {doctor.title}
             </p>
           )}
         </div>
 
-        <dl className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-600">
+        <dl className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-[var(--ink-muted)]">
           <div className="flex items-center gap-1.5">
             <dt className="sr-only">Filial</dt>
-            <MapPin className="h-4 w-4 text-slate-400" aria-hidden="true" />
+            <MapPin className="h-4 w-4 opacity-60" aria-hidden="true" />
             <dd>{doctor.branch}</dd>
           </div>
           <div>
@@ -71,19 +69,19 @@ export default function DoctorCard({
           </div>
         </dl>
 
-        <div className="mt-auto flex items-center justify-between gap-3 border-t border-slate-100 pt-4">
+        <div className="mt-auto flex items-center justify-between gap-3 border-t border-[var(--line)] pt-4">
           {doctor.price !== null ? (
-            <p className="text-sm font-semibold text-slate-900">
-              {doctor.price} <span className="font-normal text-slate-500">AZN</span>
+            <p className="text-sm font-medium text-[var(--ink)]">
+              {doctor.price} <span className="text-[var(--ink-muted)]">AZN</span>
             </p>
           ) : (
-            <p className="text-xs text-slate-500">Laboratoriya heyəti</p>
+            <p className="text-xs text-[var(--ink-muted)]">Laboratoriya heyəti</p>
           )}
 
           {bookable && (
             <Link
               href={`/qebul?doctor=${doctor.id}`}
-              className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold text-teal-700 transition-colors hover:bg-teal-50"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--primary)] transition-colors hover:text-[var(--ink)]"
             >
               Qəbul
               <ArrowRight

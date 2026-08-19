@@ -8,7 +8,7 @@ import { branches, telHref } from "@/data"
 
 export default function BranchesSection() {
   return (
-    <section className="py-16 md:py-24 bg-gradient-to-b from-slate-50 to-white">
+    <section className="py-16 md:py-24 bg-[var(--paper)]">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12 md:mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
@@ -27,7 +27,7 @@ export default function BranchesSection() {
               id={branch.id}
               className="group border-0 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden hover:-translate-y-1"
             >
-              <div className="h-48 bg-gradient-to-br from-primary/10 to-accent/10 relative overflow-hidden">
+              <div className="h-48 bg-[var(--secondary)] relative overflow-hidden">
                 <div className="absolute inset-0 flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
                   <div className="text-center">
                     <MapPin className="w-12 h-12 text-primary mx-auto mb-2 transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1" />

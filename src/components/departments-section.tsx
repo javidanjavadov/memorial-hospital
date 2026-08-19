@@ -32,23 +32,23 @@ export default function DepartmentsSection() {
               <AnimateOnScroll key={dept.id} delay={i * 40}>
                 <Link
                   href={`/hekimler?dept=${dept.id}`}
-                  className="group flex h-full items-start gap-4 rounded-xl border border-slate-200 bg-white p-5 transition-all duration-300 hover:border-teal-300 hover:bg-teal-50/40"
+                  className="group flex h-full items-start gap-4 rounded-xl bg-white p-5 ring-1 ring-[var(--line)] transition-colors duration-300 hover:ring-[var(--ink)]/25"
                 >
                   <span
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-teal-50 text-teal-700 transition-colors group-hover:bg-teal-100"
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--secondary)] text-[var(--ink)] transition-colors group-hover:bg-[var(--ink)] group-hover:text-white"
                     aria-hidden="true"
                   >
                     <dept.icon className="h-5 w-5" />
                   </span>
                   <span className="min-w-0">
-                    <span className="block font-semibold text-slate-900 transition-colors group-hover:text-teal-700">
+                    <span className="font-display block text-[var(--ink)]">
                       {dept.name}
                     </span>
-                    <span className="mt-1 block text-sm leading-relaxed text-slate-600">
+                    <span className="mt-1 block text-sm leading-relaxed text-[var(--ink-muted)]">
                       {dept.description}
                     </span>
                     {count > 0 && (
-                      <span className="mt-2 block text-xs font-medium text-teal-700">
+                      <span className="mt-2 block text-xs text-[var(--ink-muted)]">
                         {count} həkim
                       </span>
                     )}

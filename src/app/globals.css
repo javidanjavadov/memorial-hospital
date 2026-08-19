@@ -6,38 +6,38 @@
    * brand work. The previous palette put saturated teal on nearly every surface,
    * which is what made the site read as a template; colour is now the exception.
    */
-  --paper: #faf9f7;
+  --paper: #fbfbfa;
   --paper-raised: #ffffff;
-  --ink: #10292e;
-  --ink-muted: #5b6f72;
-  --line: #e8e4dd;
+  --ink: #14181a;
+  --ink-muted: #6b7578;
+  --line: #e6e6e3;
 
-  --background: #faf9f7;
-  --foreground: #10292e;
+  --background: #fbfbfa;
+  --foreground: #14181a;
   --card: #ffffff;
-  --card-foreground: #10292e;
+  --card-foreground: #14181a;
   --popover: #ffffff;
-  --popover-foreground: #10292e;
+  --popover-foreground: #14181a;
   --primary: #14606b;
   --primary-foreground: #ffffff;
-  --secondary: #f1efea;
-  --secondary-foreground: #10292e;
-  --muted: #f1efea;
-  --muted-foreground: #5b6f72;
+  --secondary: #f2f2f0;
+  --secondary-foreground: #14181a;
+  --muted: #f2f2f0;
+  --muted-foreground: #6b7578;
   --accent: #5daaa0;
-  --accent-foreground: #10292e;
+  --accent-foreground: #14181a;
   --destructive: #b4342b;
   --destructive-foreground: #ffffff;
-  --border: #e8e4dd;
-  --input: #ddd8cf;
+  --border: #e6e6e3;
+  --input: #d9d9d5;
   --ring: #14606b;
-  --radius: 0.875rem;
+  --radius: 0.625rem;
 
   --success: #3f8f70;
   --warning: #b8791f;
   --info: #14606b;
 
-  --teal-900: #10292e;
+  --teal-900: #14181a;
   --teal-700: #14606b;
   --teal-500: #5daaa0;
   --teal-300: #94c19f;
@@ -114,11 +114,11 @@ body {
  * looking bloated.
  */
 .font-display {
-  font-family: var(--font-display), Georgia, "Times New Roman", serif;
-  font-optical-sizing: auto;
-  font-variation-settings: "SOFT" 30, "WONK" 1;
-  letter-spacing: -0.015em;
-  font-weight: 400;
+  font-family: var(--font-display), "Inter", system-ui, sans-serif;
+  font-weight: 500;
+  /* Tight tracking is what makes large grotesk headings feel deliberate
+     rather than merely big. */
+  letter-spacing: -0.035em;
 }
 
 .text-step-5 { font-size: var(--step-5); line-height: 1.02; }

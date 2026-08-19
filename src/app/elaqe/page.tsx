@@ -68,7 +68,7 @@ export default function ElaqePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-teal-100/30 to-teal-100/50 py-12 px-4">
+    <div className="min-h-screen bg-[var(--paper)] py-12 px-4">
       <div className="container mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">

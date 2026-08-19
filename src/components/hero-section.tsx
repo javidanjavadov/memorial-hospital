@@ -4,17 +4,16 @@ import { useId, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { ArrowRight, Phone, Search } from "lucide-react"
-import { contactInfo, departments, doctors, stats, telHref } from "@/data"
+import { ArrowRight, Search } from "lucide-react"
+import { contactInfo, departments, doctors, telHref } from "@/data"
 
 /**
- * Editorial split hero.
+ * Deliberately spare: one headline, one input, one link, one image.
  *
- * Replaces a full-bleed photo behind a heavy dark scrim — a layout that buried
- * the photography and made the whole page feel like one saturated colour field.
- * Here the type column and the image column sit side by side on a warm neutral
- * ground, so the photograph is actually legible and the page opens light.
+ * Earlier versions stacked a badge, headline, paragraph, search panel, two
+ * buttons, an overlapping stat card and a stats rail into the first screen.
+ * Removing most of that is the point — the page should open calm, and the
+ * things that survive should be the things people actually came for.
  */
 export default function HeroSection() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -34,141 +33,103 @@ export default function HeroSection() {
 
   return (
     <section className="bg-[var(--paper)]">
-      <div className="container mx-auto px-4 pt-12 pb-8 md:pt-20 lg:pt-24">
-        <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
-          {/* Type column */}
-          <div className="lg:col-span-6 xl:col-span-5">
-            <p className="animate-fade-in-up text-[var(--ink-muted)] mb-6 flex items-center gap-2 text-sm tracking-[0.14em] uppercase">
-              <span className="bg-accent inline-block h-px w-8" aria-hidden="true" />
-              {contactInfo.workingHours.split(":")[0]} · Gəncədə 24/7
-            </p>
+      <div className="container mx-auto px-4 pt-16 pb-20 md:pt-24 md:pb-28">
+        <div className="max-w-4xl">
+          <h1 className="font-display animate-fade-in-up text-step-5 text-[var(--ink)]">
+            Həkimi seçin.
+            <br />
+            <span className="text-[var(--ink-muted)]">Qalanını biz edək.</span>
+          </h1>
 
-            <h1 className="font-display animate-fade-in-up text-step-5 text-[var(--ink)] [animation-delay:80ms]">
-              Sağlamlığınız
-              <span className="text-primary block italic">bizim işimizdir</span>
-            </h1>
-
-            <p className="animate-fade-in-up text-step-1 text-[var(--ink-muted)] mt-7 max-w-lg [animation-delay:160ms]">
-              {doctors.length} həkim, {departments.length} ixtisas və öz
-              laboratoriyamız. Həkimi özünüz seçin — qalanını biz edək.
-            </p>
-
-            <form
-              onSubmit={handleSearch}
-              role="search"
-              className="animate-fade-in-up mt-9 [animation-delay:240ms]"
-            >
-              <div className="border-line flex flex-col gap-2 rounded-2xl border bg-white p-2 shadow-[0_1px_2px_rgba(16,41,46,0.04),0_12px_32px_-16px_rgba(16,41,46,0.18)] sm:flex-row">
-                <div className="relative flex-1">
-                  <label htmlFor={searchId} className="sr-only">
-                    Həkim adı və ya ixtisas
-                  </label>
-                  <Search
-                    className="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-[var(--ink-muted)]"
-                    aria-hidden="true"
-                  />
-                  <input
-                    id={searchId}
-                    type="search"
-                    name="q"
-                    placeholder="Həkim adı və ya ixtisas…"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="h-12 w-full rounded-xl bg-transparent pr-3 pl-11 text-base placeholder:text-[var(--ink-muted)]/70 focus-visible:outline-none"
-                  />
-                </div>
-
-                <label htmlFor={departmentId} className="sr-only">
-                  İxtisas
+          <form
+            onSubmit={handleSearch}
+            role="search"
+            className="animate-fade-in-up mt-12 max-w-2xl [animation-delay:120ms]"
+          >
+            <div className="border-line flex flex-col gap-px overflow-hidden rounded-xl border bg-[var(--line)] sm:flex-row">
+              <div className="relative flex-1 bg-white">
+                <label htmlFor={searchId} className="sr-only">
+                  Həkim adı və ya ixtisas
                 </label>
-                <select
-                  id={departmentId}
-                  name="dept"
-                  value={selectedDepartment}
-                  onChange={(e) => setSelectedDepartment(e.target.value)}
-                  className="text-[var(--ink)]/85 h-12 rounded-xl bg-[var(--secondary)] px-4 text-sm focus-visible:outline-none"
-                >
-                  <option value="">Bütün ixtisaslar</option>
-                  {departments.map((dept) => (
-                    <option key={dept.id} value={dept.id}>
-                      {dept.name}
-                    </option>
-                  ))}
-                </select>
-
-                <Button type="submit" variant="cta" className="h-12 shrink-0 px-6">
-                  Axtar
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </Button>
-              </div>
-            </form>
-
-            <div className="animate-fade-in-up mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 [animation-delay:320ms]">
-              <Link
-                href="/qebul"
-                className="text-primary group inline-flex items-center gap-2 text-base font-semibold"
-              >
-                Onlayn qəbula yazıl
-                <ArrowRight
-                  className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
+                <Search
+                  className="absolute top-1/2 left-4 h-[18px] w-[18px] -translate-y-1/2 text-[var(--ink-muted)]"
                   aria-hidden="true"
                 />
-              </Link>
-              <a
-                href={telHref(contactInfo.phone)}
-                className="text-[var(--ink-muted)] hover:text-[var(--ink)] inline-flex items-center gap-2 text-base transition-colors"
-              >
-                <Phone className="h-4 w-4" aria-hidden="true" />
-                {contactInfo.phone}
-              </a>
-            </div>
-          </div>
-
-          {/* Image column — offset collage rather than a single flat banner */}
-          <div className="lg:col-span-6 xl:col-span-7">
-            <div className="animate-fade-in-right relative [animation-delay:200ms]">
-              <div className="relative aspect-[5/4] overflow-hidden rounded-[2rem] bg-[var(--secondary)] sm:aspect-[16/11]">
-                <Image
-                  src="/hero/hero-1.webp"
-                  alt="Memorial Hospital"
-                  fill
-                  priority
-                  sizes="(max-width: 1024px) 100vw, 55vw"
-                  className="object-cover"
+                <input
+                  id={searchId}
+                  type="search"
+                  name="q"
+                  placeholder="Həkim adı və ya ixtisas"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="h-14 w-full bg-transparent pr-4 pl-11 text-base placeholder:text-[var(--ink-muted)]/60 focus-visible:outline-none"
                 />
               </div>
 
-              {/* Overlapping card grounds the image and carries a real fact. */}
-              <div className="border-line absolute -bottom-6 -left-4 hidden rounded-2xl border bg-white/95 p-5 shadow-[0_16px_40px_-20px_rgba(16,41,46,0.35)] backdrop-blur-sm sm:block lg:-left-8">
-                <p className="font-display text-step-2 text-[var(--ink)]">
-                  {doctors.length}
-                </p>
-                <p className="text-[var(--ink-muted)] mt-1 text-sm">
-                  həkim, {departments.length} ixtisas üzrə
-                </p>
-              </div>
+              <label htmlFor={departmentId} className="sr-only">
+                İxtisas
+              </label>
+              <select
+                id={departmentId}
+                name="dept"
+                value={selectedDepartment}
+                onChange={(e) => setSelectedDepartment(e.target.value)}
+                className="h-14 bg-white px-4 text-sm text-[var(--ink)] focus-visible:outline-none"
+              >
+                <option value="">Bütün ixtisaslar</option>
+                {departments.map((dept) => (
+                  <option key={dept.id} value={dept.id}>
+                    {dept.name}
+                  </option>
+                ))}
+              </select>
+
+              <button
+                type="submit"
+                className="h-14 bg-[var(--ink)] px-7 text-sm font-medium text-white transition-colors hover:bg-[var(--primary)]"
+              >
+                Axtar
+              </button>
             </div>
-          </div>
+          </form>
+
+          <p className="animate-fade-in-up mt-6 text-sm text-[var(--ink-muted)] [animation-delay:200ms]">
+            {doctors.length} həkim · {departments.length} ixtisas · 3 filial ·{" "}
+            <a
+              href={telHref(contactInfo.phone)}
+              className="text-[var(--ink)] underline underline-offset-4 transition-colors hover:text-[var(--primary)]"
+            >
+              {contactInfo.phone}
+            </a>
+          </p>
         </div>
       </div>
 
-      {/* Stats rail — hairline separated, no boxes */}
+      {/* Full-bleed image band — one strong visual, no scrim, no text on top */}
+      <div className="animate-fade-in-up relative aspect-[21/9] w-full overflow-hidden md:aspect-[3/1] [animation-delay:160ms]">
+        <Image
+          src="/hero/hero-1.webp"
+          alt="Memorial Hospital"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
+      </div>
+
       <div className="container mx-auto px-4">
-        <dl className="rule mt-14 grid grid-cols-2 gap-y-8 pt-10 pb-14 md:grid-cols-4">
-          {stats.map((stat) => (
-            <div key={stat.label} className="flex items-baseline gap-3">
-              <dt className="sr-only">{stat.label}</dt>
-              <dd>
-                <span className="font-display text-step-2 text-[var(--ink)] block">
-                  {stat.value}
-                </span>
-                <span className="text-[var(--ink-muted)] mt-1 block text-sm">
-                  {stat.label}
-                </span>
-              </dd>
-            </div>
-          ))}
-        </dl>
+        <Link
+          href="/qebul"
+          className="group flex items-center justify-between gap-6 py-8 transition-colors"
+        >
+          <span className="font-display text-step-2 text-[var(--ink)] transition-colors group-hover:text-[var(--primary)]">
+            Onlayn qəbula yazıl
+          </span>
+          <ArrowRight
+            className="h-6 w-6 shrink-0 text-[var(--ink-muted)] transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[var(--primary)]"
+            aria-hidden="true"
+          />
+        </Link>
       </div>
     </section>
   )

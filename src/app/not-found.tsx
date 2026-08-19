@@ -16,7 +16,7 @@ export const metadata: Metadata = {
  */
 export default function NotFound() {
   return (
-    <div className="min-h-[70vh] bg-gradient-to-br from-white via-teal-50/30 to-teal-100/50 flex items-center justify-center px-4 py-16">
+    <div className="min-h-[70vh] bg-[var(--paper)] flex items-center justify-center px-4 py-16">
       <div className="text-center max-w-md">
         <p className="text-8xl font-bold text-primary/20 mb-4" aria-hidden="true">
           404

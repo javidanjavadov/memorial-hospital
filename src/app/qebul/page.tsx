@@ -85,7 +85,7 @@ export default function QebulPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-gradient-to-br from-white via-teal-100/30 to-teal-100/50 py-16 md:py-24 flex items-center justify-center">
+        <div className="min-h-screen bg-[var(--paper)] py-16 md:py-24 flex items-center justify-center">
           <div className="text-center" role="status">
             <div
               className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"
@@ -235,7 +235,7 @@ function QebulContent() {
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-white via-teal-100/30 to-teal-100/50 py-16 md:py-24">
+      <div className="min-h-screen bg-[var(--paper)] py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-md mx-auto text-center">
             <div
@@ -283,7 +283,7 @@ function QebulContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-teal-100/30 to-teal-100/50 py-16 md:py-24">
+    <div className="min-h-screen bg-[var(--paper)] py-16 md:py-24">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">

@@ -45,7 +45,7 @@ const timeline = [
 
 export default function HaqqimizdaPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-teal-100/30 to-teal-100/50">
+    <div className="min-h-screen bg-[var(--paper)]">
       {/* Hero */}
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-4">

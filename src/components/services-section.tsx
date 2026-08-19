@@ -32,9 +32,9 @@ export default function ServicesSection() {
             <AnimateOnScroll key={service.id} delay={i * 70}>
               <Link
                 href={service.href}
-                className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white transition-all duration-300 hover:border-teal-300 hover:shadow-[0_12px_32px_-12px_rgba(24,56,62,0.22)]"
+                className="group flex h-full flex-col overflow-hidden rounded-xl bg-white ring-1 ring-[var(--line)] transition-colors duration-300 hover:ring-[var(--ink)]/25"
               >
-                <div className="flex items-center justify-center bg-teal-50/60 px-6 py-8">
+                <div className="flex items-center justify-center bg-[var(--secondary)] px-6 py-10">
                   {service.image ? (
                     <Image
                       src={service.image}
@@ -52,13 +52,13 @@ export default function ServicesSection() {
                 </div>
 
                 <div className="flex flex-1 flex-col p-6">
-                  <h3 className="text-lg font-semibold text-slate-900 transition-colors group-hover:text-teal-700">
+                  <h3 className="font-display text-lg text-[var(--ink)]">
                     {service.name}
                   </h3>
-                  <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-600">
+                  <p className="mt-2 flex-1 text-sm leading-relaxed text-[var(--ink-muted)]">
                     {service.description}
                   </p>
-                  <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-teal-700">
+                  <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--primary)]">
                     Ətraflı
                     <ArrowRight
                       className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"

@@ -95,11 +95,11 @@ export default function QeydiyyatPage({ googleEnabled }: { googleEnabled: boolea
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-teal-100/30 to-teal-100/50 flex items-center justify-center py-16 px-4">
+    <div className="min-h-screen bg-[var(--paper)] flex items-center justify-center py-16 px-4">
       <Card className="w-full max-w-lg border-0 shadow-xl">
         <CardHeader className="text-center pb-2">
           <div
-            className="w-16 h-16 bg-gradient-to-br from-teal-700 to-teal-500 rounded-2xl flex items-center justify-center mx-auto mb-4"
+            className="w-16 h-16 bg-[var(--ink)] rounded-2xl flex items-center justify-center mx-auto mb-4"
             aria-hidden="true"
           >
             <UserPlus className="w-8 h-8 text-white" />

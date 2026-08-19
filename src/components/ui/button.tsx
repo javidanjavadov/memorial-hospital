@@ -15,7 +15,7 @@ const buttonVariants = cva(
         ghost: "hover:bg-secondary hover:text-secondary-foreground hover:shadow-sm",
         link: "text-primary underline-offset-4 hover:underline",
         emergency: "bg-destructive text-white shadow-md hover:bg-destructive/90 hover:shadow-xl hover:-translate-y-0.5 animate-pulse",
-        cta: "bg-gradient-to-r from-teal-700 to-teal-500 text-white shadow-md hover:shadow-xl hover:-translate-y-0.5 hover:from-teal-800 hover:to-teal-600 gradient-shift bg-[length:200%_200%]",
+        cta: "bg-[var(--ink)] text-white hover:bg-[var(--primary)]",
         /*
          * Outline for dark surfaces. `outline` sets `bg-background` (white), so
          * pairing it with `text-white` produced an invisible button that only

@@ -16,9 +16,9 @@ import { YEARS_OF_EXPERIENCE, branches, contactInfo, departments, telHref } from
 
 export default function Footer() {
   return (
-    <footer className="bg-gradient-to-b from-teal-900 to-teal-900 text-white">
+    <footer className="bg-[var(--ink)] text-white">
       {/* Pre Footer CTA */}
-      <div className="bg-gradient-to-r from-teal-700 to-teal-500">
+      <div className="bg-[var(--ink)]">
         <div className="container mx-auto px-4 py-10 md:py-14">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="text-center md:text-left">

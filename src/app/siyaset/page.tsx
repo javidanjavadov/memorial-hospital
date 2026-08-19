@@ -12,7 +12,7 @@ export const metadata: Metadata = pageMetadata({
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-teal-50/30 to-teal-100/50 py-16 md:py-24">
+    <div className="min-h-screen bg-[var(--paper)] py-16 md:py-24">
       <div className="container mx-auto px-4 max-w-4xl">
         <Button variant="ghost" size="sm" asChild className="mb-8">
           <Link href="/">

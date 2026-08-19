@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Fraunces } from "next/font/google";
+import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
@@ -17,15 +17,14 @@ const inter = Inter({
 });
 
 /*
- * Display face for headings. Pairing an editorial serif with a neutral UI sans
- * is what shifts the site away from the generic all-Inter template look; the
- * optical-size axis keeps large headings tight and small ones readable.
+ * Display face. A geometric grotesk rather than a serif: the serif read as
+ * traditional, which is the opposite of what a modern clinic should look like.
+ * This keeps the headings distinctive without borrowing an editorial register.
  */
-const fraunces = Fraunces({
+const spaceGrotesk = Space_Grotesk({
   variable: "--font-display",
   subsets: ["latin"],
   display: "swap",
-  axes: ["SOFT", "WONK", "opsz"],
 });
 
 export const viewport: Viewport = {
@@ -81,7 +80,7 @@ export default function RootLayout({
   return (
     <html
       lang="az"
-      className={`${inter.variable} ${fraunces.variable} h-full antialiased`}
+      className={`${inter.variable} ${spaceGrotesk.variable} h-full antialiased`}
       data-scroll-behavior="smooth"
     >
       <head>
