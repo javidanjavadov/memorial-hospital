@@ -6,6 +6,7 @@ import Footer from "@/components/footer";
 import PageTransition from "@/components/page-transition";
 import RouteLoader from "@/components/route-loader";
 import StoreHydration from "@/components/store-hydration";
+import BasketHydration from "@/components/basket-hydration";
 import AuthSessionProvider from "@/components/session-provider";
 import StructuredData from "@/components/structured-data";
 import { siteName, siteUrl } from "@/lib/site";
@@ -120,6 +121,7 @@ export default function RootLayout({
             Əsas məzmuna keç
           </a>
           <StoreHydration />
+          <BasketHydration />
           <RouteLoader />
           <Navbar />
           <main id="main-content" className="flex-1" tabIndex={-1}>

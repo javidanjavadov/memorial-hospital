@@ -17,6 +17,7 @@ import {
 } from "@/lib/catalog"
 import { pageMetadata } from "@/lib/site"
 import ServiceInfoButton from "@/components/service-info-button"
+import AddToBasketButton from "@/components/add-to-basket-button"
 
 /**
  * One statically generated page per catalogue category.
@@ -186,21 +187,33 @@ export default async function CategoryPage({ params }: Props) {
                     </p>
                   )}
 
-                  <div className="mt-2 flex items-baseline gap-1.5 border-t border-[var(--line)] pt-2">
-                    {discounted ? (
-                      <>
+                  <div className="mt-2 flex items-center justify-between gap-2 border-t border-[var(--line)] pt-2">
+                    <span className="flex items-baseline gap-1.5">
+                      {discounted ? (
+                        <>
+                          <span className="font-display text-base text-primary">
+                            {formatAzn(promoted)}
+                          </span>
+                          <span className="text-[0.65rem] text-[var(--ink-muted)] line-through">
+                            {formatAzn(price)}
+                          </span>
+                        </>
+                      ) : (
                         <span className="font-display text-base text-primary">
-                          {formatAzn(promoted)}
-                        </span>
-                        <span className="text-[0.65rem] text-[var(--ink-muted)] line-through">
                           {formatAzn(price)}
                         </span>
-                      </>
-                    ) : (
-                      <span className="font-display text-base text-primary">
-                        {formatAzn(price)}
-                      </span>
-                    )}
+                      )}
+                    </span>
+
+                    <AddToBasketButton
+                      line={{
+                        slug: item.slug,
+                        name: item.name,
+                        code: item.code,
+                        price,
+                        promoted,
+                      }}
+                    />
                   </div>
                 </li>
               )
