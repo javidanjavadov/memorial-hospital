@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import ProfileGate from "@/components/profile-gate";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import PageTransition from "@/components/page-transition";
@@ -125,7 +126,9 @@ export default function RootLayout({
           <RouteLoader />
           <Navbar />
           <main id="main-content" className="flex-1" tabIndex={-1}>
-            <PageTransition>{children}</PageTransition>
+            <ProfileGate>
+              <PageTransition>{children}</PageTransition>
+            </ProfileGate>
           </main>
           <Footer />
         </AuthSessionProvider>
