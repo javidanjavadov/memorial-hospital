@@ -1,13 +1,28 @@
 "use client"
 
+import { useState } from "react"
+import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { MapPin, Phone, Clock, ArrowRight, Navigation } from "lucide-react"
+import {
+  MapPin,
+  Phone,
+  Clock,
+  ArrowRight,
+  Navigation,
+  LayoutGrid,
+  Map as MapIcon,
+} from "lucide-react"
 import { branches, telHref } from "@/data"
 import { AnimateOnScroll } from "@/components/animations"
+import { cn } from "@/lib/utils"
+
+type View = "grid" | "map"
 
 export default function BranchesSection() {
+  const [view, setView] = useState<View>("grid")
+
   return (
     <section className="py-16 md:py-24 bg-[var(--paper)]">
       <div className="container mx-auto px-4">
@@ -23,7 +38,85 @@ export default function BranchesSection() {
         </div>
         </AnimateOnScroll>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div
+          role="tablist"
+          aria-label="Filial görünüşü"
+          className="mb-8 flex justify-center gap-1 rounded-lg border border-[var(--line)] bg-white p-1 mx-auto w-fit"
+        >
+          {([
+            { id: "grid", label: "Siyahı", icon: LayoutGrid },
+            { id: "map", label: "Xəritə", icon: MapIcon },
+          ] as const).map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              role="tab"
+              aria-selected={view === tab.id}
+              onClick={() => setView(tab.id)}
+              className={cn(
+                "inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors",
+                view === tab.id
+                  ? "bg-primary text-white"
+                  : "text-slate-600 hover:bg-slate-50"
+              )}
+            >
+              <tab.icon className="h-4 w-4" aria-hidden="true" />
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {view === "map" && (
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            {branches.map((branch, i) => (
+              <AnimateOnScroll key={branch.id} delay={i * 100}>
+                <div className="overflow-hidden rounded-xl border border-[var(--line)] bg-white">
+                  {/*
+                    OpenStreetMap rather than Google: it embeds without an API
+                    key or a billing account, and sets no advertising cookies on
+                    a page that also handles health data. One map per branch —
+                    Ganja is ~300km from Baku, so a single map holding all three
+                    would be zoomed out to the whole country.
+                  */}
+                  <iframe
+                    title={`${branch.name} xəritədə`}
+                    loading="lazy"
+                    className="h-56 w-full border-0"
+                    src={`https://www.openstreetmap.org/export/embed.html?bbox=${
+                      Number(branch.longitude) - 0.006
+                    }%2C${Number(branch.latitude) - 0.004}%2C${
+                      Number(branch.longitude) + 0.006
+                    }%2C${Number(branch.latitude) + 0.004}&layer=mapnik&marker=${
+                      branch.latitude
+                    }%2C${branch.longitude}`}
+                  />
+                  <div className="p-5">
+                    <h3 className="font-display text-lg text-slate-900">
+                      {branch.name}
+                    </h3>
+                    <p className="mt-1 text-sm text-slate-600">{branch.address}</p>
+                    <a
+                      href={branch.mapUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+                    >
+                      <Navigation className="h-4 w-4" aria-hidden="true" />
+                      Yol göstər
+                    </a>
+                  </div>
+                </div>
+              </AnimateOnScroll>
+            ))}
+          </div>
+        )}
+
+        <div
+          className={cn(
+            "grid grid-cols-1 md:grid-cols-3 gap-6",
+            view !== "grid" && "hidden"
+          )}
+        >
           {branches.map((branch, i) => (
             <AnimateOnScroll key={branch.id} delay={i * 100}>
             <Card
@@ -31,14 +124,15 @@ export default function BranchesSection() {
               className="group border-0 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden hover:-translate-y-1"
             >
               <div className="h-48 bg-[var(--secondary)] relative overflow-hidden">
-                <div className="absolute inset-0 flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
-                  <div className="text-center">
-                    <MapPin className="w-12 h-12 text-primary mx-auto mb-2 transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1" />
-                    <span className="text-sm font-medium text-primary">
-                      Xəritədə bax
-                    </span>
-                  </div>
-                </div>
+                {/* The hospital's own photograph of the building, in place of
+                    the map-pin placeholder that used to sit here. */}
+                <Image
+                  src={branch.image}
+                  alt={branch.name}
+                  fill
+                  sizes="(min-width: 768px) 33vw, 100vw"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
                 <div className="absolute top-4 right-4">
                   <a
                     href={branch.mapUrl}

@@ -5,14 +5,18 @@ import DoctorCard from "@/components/doctor-card"
 import { AnimateOnScroll } from "@/components/animations"
 import { departments, doctors } from "@/data"
 
-/** Doctors shown on the homepage before sending people to the full listing. */
-const FEATURED_COUNT = 8
+/**
+ * Doctors shown on the homepage before sending people to the full listing.
+ * One row, not two — the section is a taster, and "Bütün həkimlər" carries
+ * anyone who wants the rest.
+ */
+const FEATURED_COUNT = 4
 
 export default function DoctorsSection() {
   const featured = doctors.slice(0, FEATURED_COUNT)
 
   return (
-    <section className="bg-[var(--paper)] py-20 md:py-28">
+    <section className="bg-[var(--paper)] py-16 md:py-20">
       <div className="container mx-auto px-4">
         <AnimateOnScroll>
           <div className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">

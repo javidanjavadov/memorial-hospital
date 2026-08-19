@@ -15,6 +15,9 @@ const contentSecurityPolicy = [
   "font-src 'self' https://fonts.gstatic.com data:",
   "img-src 'self' data: blob:",
   "connect-src 'self'",
+  // OpenStreetMap embeds for the branch map view. default-src 'self' would
+  // otherwise block the iframe outright.
+  "frame-src https://www.openstreetmap.org",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",

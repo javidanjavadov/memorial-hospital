@@ -56,6 +56,8 @@ export interface Department {
 
 export interface Branch {
   id: string
+  /** Photograph of the building, from the hospital's own media. */
+  image: string
   name: string
   address: string
   phone: string
@@ -526,6 +528,7 @@ export const doctors: Doctor[] = [
 export const branches: Branch[] = [
   {
     id: "nrimanov",
+    image: "/branches/nrimanov.webp",
     name: "Nərimanov filialı",
     address: "Zaur Nudirəliyev 79 (7 saylı ASAN xidmətlə üzbəüz)",
     phone: "+994 12 210 10 50",
@@ -536,6 +539,7 @@ export const branches: Branch[] = [
   },
   {
     id: "qarayev",
+    image: "/branches/qarayev.webp",
     name: "Qarayev filialı",
     address: "Q.Qarayev pr. 38A",
     phone: "+994 12 210 10 50",
@@ -546,6 +550,7 @@ export const branches: Branch[] = [
   },
   {
     id: "ganca",
+    image: "/branches/ganca.webp",
     name: "Gəncə Memorial Hospital",
     address: "Gəncə şəhəri, Şah İsmayıl Xətai pr. 550A",
     phone: "+994 22 428 97 97",
