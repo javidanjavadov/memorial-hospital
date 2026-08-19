@@ -3,6 +3,14 @@
 import { useEffect, useRef, useState, type ReactNode } from "react"
 import { cn } from "@/lib/utils"
 
+/**
+ * Set the first time any IntersectionObserver callback runs. Once we know the
+ * observer works, no instance needs its scroll fallback — otherwise every
+ * below-the-fold element would attach a redundant listener while waiting its
+ * turn.
+ */
+let observerHasFired = false
+
 /** True when the visitor has asked their OS to minimise motion. */
 const prefersReducedMotion = () =>
   typeof window !== "undefined" &&
@@ -46,22 +54,30 @@ export function AnimateOnScroll({
     if (!node) return
 
     /*
-     * Reveal without waiting on the observer.
+     * Reduced motion is handled in CSS, not here.
      *
-     * Scheduled rather than set inline so the effect body stays free of
-     * synchronous state updates. A timer, not requestAnimationFrame: rAF is
-     * paused while the document is hidden, so a tab opened in the background
-     * would stay at opacity 0 until it was focused.
+     * This used to bail out and reveal everything at once, which removed the
+     * scroll choreography completely: by the time the visitor scrolled, every
+     * section was already shown. The preference is about *movement*, not about
+     * whether content appears as you reach it — so the observer still drives
+     * the reveal and globals.css drops the translate, leaving a plain fade.
+     *
+     * Only a browser without IntersectionObserver reveals immediately. A timer
+     * rather than requestAnimationFrame, which is paused while hidden.
      */
-    if (prefersReducedMotion() || !("IntersectionObserver" in window)) {
+    if (!("IntersectionObserver" in window)) {
       const immediate = setTimeout(() => setIsVisible(true), 0)
       return () => clearTimeout(immediate)
     }
 
     let timer: ReturnType<typeof setTimeout>
+    let triggered = false
+
     const observer = new IntersectionObserver(
       ([entry]) => {
+        observerHasFired = true
         if (entry.isIntersecting) {
+          triggered = true
           timer = setTimeout(() => setIsVisible(true), delay)
           // Unobserve = AOS's `once: true`; it never replays on scroll back.
           observer.unobserve(entry.target)
@@ -79,17 +95,37 @@ export function AnimateOnScroll({
     observer.observe(node)
 
     /*
-     * Safety net. Every animated block starts at opacity 0, so if the observer
-     * never fires the page renders blank — and on a hospital site that failure
-     * is far worse than showing the content unanimated. Reveal regardless after
-     * a few seconds; in the normal case the observer has long since won and
-     * this is a no-op.
+     * Safety net for the observer never firing — every block starts at opacity
+     * 0, so that failure renders a blank page.
+     *
+     * It must NOT simply reveal everything on a timer: that fires for elements
+     * far below the fold too, so by the time the visitor scrolls to them they
+     * are already shown and nothing animates. It only takes over if the
+     * observer has stayed silent, and then reveals each element as it actually
+     * reaches the viewport.
      */
-    const failsafe = setTimeout(() => setIsVisible(true), 3000)
+    let onScroll: (() => void) | null = null
+
+    const failsafe = setTimeout(() => {
+      // Observer is alive and simply has not reached this element yet.
+      if (triggered || observerHasFired) return
+
+      onScroll = () => {
+        const rect = node.getBoundingClientRect()
+        if (rect.top < window.innerHeight - offset && rect.bottom > 0) {
+          setIsVisible(true)
+          if (onScroll) window.removeEventListener("scroll", onScroll)
+          onScroll = null
+        }
+      }
+      onScroll()
+      if (onScroll) window.addEventListener("scroll", onScroll, { passive: true })
+    }, 3000)
 
     return () => {
       clearTimeout(timer)
       clearTimeout(failsafe)
+      if (onScroll) window.removeEventListener("scroll", onScroll)
       observer.disconnect()
     }
   }, [delay, offset])
@@ -117,8 +153,8 @@ export function StaggerContainer({ children, className }: StaggerContainerProps)
     const node = ref.current
     if (!node) return
 
-    if (prefersReducedMotion() || !("IntersectionObserver" in window)) {
-      // Timer, not rAF — rAF is paused while the document is hidden.
+    // Reduced motion is a CSS concern; the reveal stays scroll-driven.
+    if (!("IntersectionObserver" in window)) {
       const immediate = setTimeout(() => setIsVisible(true), 0)
       return () => clearTimeout(immediate)
     }
