@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, Suspense } from "react"
+import { useSearchParams } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -72,14 +73,32 @@ const timeSlots = [
 ]
 
 export default function QebulPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-white via-teal-100/30 to-teal-100/50 py-16 md:py-24 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-slate-600">Yüklənir...</p>
+        </div>
+      </div>
+    }>
+      <QebulContent />
+    </Suspense>
+  )
+}
+
+function QebulContent() {
   const [step, setStep] = useState(1)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const { user, addAppointment } = useAuthStore()
+  const searchParams = useSearchParams()
+  const doctorParam = searchParams.get("doctor")
 
   const {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -91,6 +110,17 @@ export default function QebulPage() {
       finCode: user?.finCode || "",
     },
   })
+
+  useEffect(() => {
+    if (doctorParam) {
+      const doctor = doctors.find((d) => d.id === doctorParam)
+      if (doctor) {
+        setValue("department", doctor.department)
+        setValue("doctor", doctor.id)
+        setStep(2)
+      }
+    }
+  }, [doctorParam, setValue])
 
   const selectedDepartment = watch("department")
   const selectedBranch = watch("branch")

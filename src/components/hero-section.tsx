@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Search, ArrowRight, Phone, Calendar, Shield, Clock, Star } from "lucide-react"
 import { departments, stats } from "@/data"
-import { AnimateOnScroll, StaggerContainer, CountUp } from "@/components/animations"
 
 export default function HeroSection() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -88,24 +87,22 @@ export default function HeroSection() {
             </div>
 
             {/* Quick Stats */}
-            <StaggerContainer>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {stats.map((stat, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-3 bg-white rounded-xl p-3 shadow-sm opacity-0 translate-y-4 transition-all duration-500 hover:shadow-md hover:-translate-y-0.5 cursor-default"
-                  >
-                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center transition-transform duration-300 hover:scale-110 hover:rotate-6">
-                      <stat.icon className="w-5 h-5 text-primary" />
-                    </div>
-                    <div>
-                      <div className="text-xl font-bold text-slate-900">{stat.value}</div>
-                      <div className="text-xs text-slate-500">{stat.label}</div>
-                    </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {stats.map((stat, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-3 bg-white rounded-xl p-3 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-default"
+                >
+                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center transition-transform duration-300 hover:scale-110 hover:rotate-6">
+                    <stat.icon className="w-5 h-5 text-primary" />
                   </div>
-                ))}
-              </div>
-            </StaggerContainer>
+                  <div>
+                    <div className="text-xl font-bold text-slate-900">{stat.value}</div>
+                    <div className="text-xs text-slate-500">{stat.label}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Right Content - Floating Cards */}
@@ -161,7 +158,7 @@ export default function HeroSection() {
       </div>
 
       {/* Mobile Bottom CTA */}
-      <div className="fixed bottom-0 left-0 right-0 md:hidden bg-white border-t shadow-lg z-40 px-4 py-3 animate-slideInBottom">
+      <div className="fixed bottom-0 left-0 right-0 md:hidden bg-white border-t shadow-lg z-40 px-4 py-3">
         <div className="flex gap-3">
           <Button variant="emergency" className="flex-1" asChild>
             <a href="tel:+994557101050">
