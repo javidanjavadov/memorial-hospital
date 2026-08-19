@@ -42,7 +42,11 @@ export default function HeroSection() {
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-[var(--paper)] via-[var(--paper)] to-primary/5">
       <div className="container mx-auto px-4 py-14 md:py-20 lg:py-24">
-        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+        {/*
+          items-stretch, not items-center: the right column should run the full
+          height of the left one rather than floating in the middle of it.
+        */}
+        <div className="grid items-stretch gap-12 lg:grid-cols-2 lg:gap-16">
           {/* ---------------- Left: message + proof + actions ---------------- */}
           <div>
             <ul className="mb-6 flex flex-wrap gap-2">
@@ -123,8 +127,12 @@ export default function HeroSection() {
 
           {/* ---------------- Right: photography + overlapping cards --------- */}
           <div className="relative">
-            {/* 8:5 — half the height of the 4:5 frame this replaced. */}
-            <div className="relative aspect-[8/5] overflow-hidden rounded-3xl">
+            {/*
+              Fixed 8:5 while the columns are stacked, then simply fills the
+              row once they sit side by side — so its height is whatever the
+              text column needs, and the two always line up.
+            */}
+            <div className="relative aspect-[8/5] overflow-hidden rounded-3xl lg:aspect-auto lg:h-full">
               {/*
                 The public/hero/hero-N.webp files are NOT photographs — each is a
                 promotional banner for a single lab test with Azerbaijani text

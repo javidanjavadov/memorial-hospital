@@ -336,6 +336,44 @@ html[data-scroll-behavior="smooth"] {
   transform: translate3d(0, 0, 0) scale(1);
 }
 
+/* Department grid: cards revealed by the show-more button.
+ *
+ * These are opened by a click, not by scrolling, so they do not use the
+ * IntersectionObserver reveal — they animate in on mount and back out before
+ * being removed, so collapsing reads as the reverse of expanding rather than
+ * as the row vanishing.
+ */
+@keyframes deptEnter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes deptExit {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0);
+  }
+}
+
+.dept-enter {
+  animation: deptEnter 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.dept-exit {
+  animation: deptExit 280ms ease-in both;
+  pointer-events: none;
+}
+
 /* Staggered children */
 .stagger-children > *:nth-child(1) { transition-delay: 0ms; }
 .stagger-children > *:nth-child(2) { transition-delay: 100ms; }
@@ -609,6 +647,13 @@ html[data-scroll-behavior="smooth"] {
 
   .scroll-visible {
     opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Same treatment as the scroll reveals: fade, but no travel. */
+  .dept-enter,
+  .dept-exit {
+    animation-duration: 300ms !important;
     transform: none !important;
   }
 

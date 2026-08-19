@@ -1,11 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { AnimateOnScroll } from "@/components/animations"
 import { departments, doctorsByDepartment } from "@/data"
+import { cn } from "@/lib/utils"
 
 /**
  * Specialty directory. Each entry links straight into the filtered doctor
@@ -18,11 +19,42 @@ import { departments, doctorsByDepartment } from "@/data"
 
 /** Two full rows at the widest breakpoint. */
 const INITIAL_COUNT = 10
+/** Between each revealed card, both opening and closing. */
+const STAGGER_MS = 60
+const EXIT_MS = 280
 
 export default function DepartmentsSection() {
   const [expanded, setExpanded] = useState(false)
-  const visible = expanded ? departments : departments.slice(0, INITIAL_COUNT)
-  const remaining = departments.length - INITIAL_COUNT
+  /** Extra cards stay mounted while they animate out. */
+  const [closing, setClosing] = useState(false)
+  const exitTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => () => {
+    if (exitTimer.current) clearTimeout(exitTimer.current)
+  }, [])
+
+  const extraCount = departments.length - INITIAL_COUNT
+
+  const toggle = () => {
+    if (!expanded) {
+      if (exitTimer.current) clearTimeout(exitTimer.current)
+      setClosing(false)
+      setExpanded(true)
+      return
+    }
+    // Collapse: flip the button straight away, but keep the cards mounted long
+    // enough to play their exit — the last one starts after the full stagger.
+    setExpanded(false)
+    setClosing(true)
+    exitTimer.current = setTimeout(
+      () => setClosing(false),
+      EXIT_MS + extraCount * STAGGER_MS + 60
+    )
+  }
+
+  const visible =
+    expanded || closing ? departments : departments.slice(0, INITIAL_COUNT)
+  const remaining = extraCount
 
   return (
     <section className="bg-white py-20 md:py-28">
@@ -47,46 +79,59 @@ export default function DepartmentsSection() {
         >
           {visible.map((dept, i) => {
             const count = doctorsByDepartment(dept.id).length
+            const isExtra = i >= INITIAL_COUNT
+
+            const card = (
+              <Link
+                href={`/hekimler?dept=${dept.id}`}
+                className="group flex h-full flex-col rounded-xl bg-white p-5 ring-1 ring-[var(--line)] transition-colors duration-300 hover:ring-[var(--ink)]/25"
+              >
+                <span
+                  className="mb-4 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--secondary)] text-[var(--ink)] transition-colors group-hover:bg-[var(--ink)] group-hover:text-white"
+                  aria-hidden="true"
+                >
+                  <dept.icon className="h-5 w-5" />
+                </span>
+                <span className="font-display block text-[var(--ink)]">
+                  {dept.name}
+                </span>
+                <span className="mt-1 block flex-1 text-sm leading-relaxed text-[var(--ink-muted)]">
+                  {dept.description}
+                </span>
+                {count > 0 && (
+                  <span className="mt-3 block text-xs text-[var(--ink-muted)]">
+                    {count} həkim
+                  </span>
+                )}
+              </Link>
+            )
+
             return (
               <li key={dept.id} className="h-full">
                 {/*
-                  Newly revealed cards animate from index 0 rather than their
-                  position in the full list, so the second batch does not sit
-                  waiting through the first batch's stagger.
-                */}
-                {/*
                   h-full has to be carried down every level: the grid stretches
-                  the <li>, but this wrapper sits between it and the card, so
+                  the <li>, but these wrappers sit between it and the card, so
                   without it the card measures against the wrapper's auto height
                   and each box ends up as tall as its own text.
+
+                  The first ten are revealed by scrolling; the extras are
+                  revealed by the button, so they run their own enter/exit
+                  animation instead of the observer's.
                 */}
-                <AnimateOnScroll
-                  delay={(i % INITIAL_COUNT) * 40}
-                  className="h-full"
-                >
-                  <Link
-                    href={`/hekimler?dept=${dept.id}`}
-                    className="group flex h-full flex-col rounded-xl bg-white p-5 ring-1 ring-[var(--line)] transition-colors duration-300 hover:ring-[var(--ink)]/25"
+                {isExtra ? (
+                  <div
+                    className={cn("h-full", closing ? "dept-exit" : "dept-enter")}
+                    style={{
+                      animationDelay: `${(i - INITIAL_COUNT) * STAGGER_MS}ms`,
+                    }}
                   >
-                    <span
-                      className="mb-4 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--secondary)] text-[var(--ink)] transition-colors group-hover:bg-[var(--ink)] group-hover:text-white"
-                      aria-hidden="true"
-                    >
-                      <dept.icon className="h-5 w-5" />
-                    </span>
-                    <span className="font-display block text-[var(--ink)]">
-                      {dept.name}
-                    </span>
-                    <span className="mt-1 block flex-1 text-sm leading-relaxed text-[var(--ink-muted)]">
-                      {dept.description}
-                    </span>
-                    {count > 0 && (
-                      <span className="mt-3 block text-xs text-[var(--ink-muted)]">
-                        {count} həkim
-                      </span>
-                    )}
-                  </Link>
-                </AnimateOnScroll>
+                    {card}
+                  </div>
+                ) : (
+                  <AnimateOnScroll delay={i * 40} className="h-full">
+                    {card}
+                  </AnimateOnScroll>
+                )}
               </li>
             )
           })}
@@ -98,7 +143,7 @@ export default function DepartmentsSection() {
               type="button"
               variant="outline"
               size="lg"
-              onClick={() => setExpanded((open) => !open)}
+              onClick={toggle}
               aria-expanded={expanded}
               aria-controls="departments-grid"
             >
