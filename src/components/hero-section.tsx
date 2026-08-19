@@ -123,7 +123,8 @@ export default function HeroSection() {
 
           {/* ---------------- Right: photography + overlapping cards --------- */}
           <div className="relative">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-3xl sm:aspect-[5/4] lg:aspect-[4/5]">
+            {/* 8:5 — half the height of the 4:5 frame this replaced. */}
+            <div className="relative aspect-[8/5] overflow-hidden rounded-3xl">
               {/*
                 The public/hero/hero-N.webp files are NOT photographs — each is a
                 promotional banner for a single lab test with Azerbaijani text
@@ -150,7 +151,7 @@ export default function HeroSection() {
               Hidden below lg: overlapping cards need room to sit outside the
               image, and on a narrow screen they would cover the photograph.
             */}
-            <div className="pointer-events-none absolute -left-4 top-8 hidden lg:block">
+            <div className="pointer-events-none absolute -left-4 top-4 hidden lg:block">
               <div className="pointer-events-auto flex items-center gap-3 rounded-xl border border-[var(--line)] bg-[var(--paper-raised)] p-4 shadow-lg">
                 <span
                   className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10"
@@ -172,7 +173,7 @@ export default function HeroSection() {
               </div>
             </div>
 
-            <div className="pointer-events-none absolute -right-4 bottom-8 hidden lg:block">
+            <div className="pointer-events-none absolute -right-4 -bottom-4 hidden lg:block">
               <div className="pointer-events-auto rounded-xl border border-[var(--line)] bg-[var(--paper-raised)] p-4 shadow-lg">
                 <span className="block text-xs text-[var(--ink-muted)]">
                   Filiallarımız
