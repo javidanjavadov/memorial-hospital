@@ -1,0 +1,279 @@
+"use client"
+
+import { useState } from "react"
+import Link from "next/link"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
+import {
+  AlertCircle,
+  FileText,
+  Loader2,
+  Lock,
+  Phone,
+  ShieldCheck,
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Field } from "@/components/ui/field"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { contactInfo, telHref } from "@/data"
+import { lookupResults, type ResultOrder } from "@/lib/results"
+
+const schema = z.object({
+  patientId: z
+    .string()
+    .min(1, "Pasiyent nömrəsi daxil edin")
+    .max(32, "Pasiyent nömrəsi çox uzundur"),
+  orderId: z
+    .string()
+    .min(1, "Sifariş nömrəsi daxil edin")
+    .max(32, "Sifariş nömrəsi çox uzundur"),
+  birthDate: z
+    .string()
+    .min(1, "Doğum tarixini seçin")
+    .refine((v) => {
+      const d = new Date(v)
+      return !Number.isNaN(d.valueOf()) && d < new Date()
+    }, "Doğum tarixi düzgün deyil"),
+  securityCode: z
+    .string()
+    .min(4, "Təhlükəsizlik kodu minimum 4 simvoldur")
+    .max(16, "Təhlükəsizlik kodu çox uzundur"),
+})
+
+type FormData = z.infer<typeof schema>
+
+export default function NeticelerPage() {
+  const [error, setError] = useState("")
+  const [order, setOrder] = useState<ResultOrder | null>(null)
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      patientId: "",
+      orderId: "",
+      birthDate: "",
+      securityCode: "",
+    },
+  })
+
+  const onSubmit = async (data: FormData) => {
+    setError("")
+    setOrder(null)
+    const outcome = await lookupResults(data)
+    if (outcome.ok) setOrder(outcome.order)
+    else setError(outcome.error)
+  }
+
+  return (
+    <div className="min-h-screen bg-[var(--paper)] py-14 md:py-20">
+      <div className="container mx-auto px-4">
+        <div className="mx-auto max-w-xl">
+          <Card className="border-0 shadow-xl">
+            <CardHeader className="pb-2 text-center">
+              <div
+                className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10"
+                aria-hidden="true"
+              >
+                <FileText className="h-8 w-8 text-primary" />
+              </div>
+              <h1 className="font-display text-step-2 text-[var(--ink)]">
+                Nəticələrimə bax
+              </h1>
+              <p className="mt-2 text-sm text-[var(--ink-muted)]">
+                Analiz cavabınızı görmək üçün sifariş məlumatlarınızı daxil edin.
+              </p>
+            </CardHeader>
+
+            <CardContent>
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="space-y-5"
+                noValidate
+              >
+                {error && (
+                  <div
+                    role="alert"
+                    className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700"
+                  >
+                    <AlertCircle
+                      className="mt-0.5 h-4 w-4 shrink-0"
+                      aria-hidden="true"
+                    />
+                    {error}
+                  </div>
+                )}
+
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <Field
+                    label="Pasiyent nömrəsi"
+                    required
+                    hint="Qəbz üzərində göstərilir."
+                    error={errors.patientId?.message}
+                  >
+                    {(field) => (
+                      <Input
+                        {...field}
+                        inputMode="numeric"
+                        autoComplete="off"
+                        placeholder="Patient ID"
+                        {...register("patientId")}
+                        className={errors.patientId ? "border-red-500" : ""}
+                      />
+                    )}
+                  </Field>
+
+                  <Field
+                    label="Sifariş nömrəsi"
+                    required
+                    hint="Order ID."
+                    error={errors.orderId?.message}
+                  >
+                    {(field) => (
+                      <Input
+                        {...field}
+                        inputMode="numeric"
+                        autoComplete="off"
+                        placeholder="Order ID"
+                        {...register("orderId")}
+                        className={errors.orderId ? "border-red-500" : ""}
+                      />
+                    )}
+                  </Field>
+                </div>
+
+                <Field
+                  label="Doğum tarixi"
+                  required
+                  error={errors.birthDate?.message}
+                >
+                  {(field) => (
+                    <Input
+                      {...field}
+                      type="date"
+                      max={new Date().toISOString().split("T")[0]}
+                      {...register("birthDate")}
+                      className={errors.birthDate ? "border-red-500" : ""}
+                    />
+                  )}
+                </Field>
+
+                <Field
+                  label="Təhlükəsizlik kodu"
+                  required
+                  hint="Qəbzinizdə və ya SMS-də göndərilən kod."
+                  error={errors.securityCode?.message}
+                >
+                  {(field) => (
+                    <div className="relative">
+                      <Lock
+                        className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400"
+                        aria-hidden="true"
+                      />
+                      <Input
+                        {...field}
+                        autoComplete="off"
+                        placeholder="••••"
+                        {...register("securityCode")}
+                        className={`pl-10 ${errors.securityCode ? "border-red-500" : ""}`}
+                      />
+                    </div>
+                  )}
+                </Field>
+
+                <Button
+                  type="submit"
+                  variant="cta"
+                  size="lg"
+                  className="w-full"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" />
+                  ) : (
+                    <FileText className="h-5 w-5" aria-hidden="true" />
+                  )}
+                  {isSubmitting ? "Yoxlanılır..." : "Nəticəni göstər"}
+                </Button>
+
+                <p className="flex items-start gap-2 text-xs text-[var(--ink-muted)]">
+                  <ShieldCheck
+                    className="mt-0.5 h-4 w-4 shrink-0 text-primary"
+                    aria-hidden="true"
+                  />
+                  Nəticələriniz tibbi məlumatdır. Bu məlumatları yalnız özünüz
+                  daxil edin və ortaq kompüterdə istifadə etdikdən sonra
+                  brauzeri bağlayın.
+                </p>
+              </form>
+
+              {order && (
+                <div className="mt-8 border-t border-[var(--line)] pt-6">
+                  <h2 className="font-display text-step-1 text-[var(--ink)]">
+                    {order.patientName}
+                  </h2>
+                  <p className="mt-1 text-sm text-[var(--ink-muted)]">
+                    Sifariş {order.orderId} · {order.reportedAt}
+                  </p>
+                  <ul className="mt-4 space-y-2">
+                    {order.lines.map((line) => (
+                      <li
+                        key={line.code}
+                        className="flex items-baseline justify-between gap-4 rounded-lg border border-[var(--line)] p-3"
+                      >
+                        <span className="min-w-0">
+                          <span className="block text-sm text-[var(--ink)]">
+                            {line.name}
+                          </span>
+                          <span className="block text-xs text-[var(--ink-muted)]">
+                            Referans: {line.referenceRange} {line.unit}
+                          </span>
+                        </span>
+                        <span
+                          className={
+                            line.abnormal
+                              ? "font-semibold text-red-600"
+                              : "font-semibold text-[var(--ink)]"
+                          }
+                        >
+                          {line.value} {line.unit}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          <div className="mt-6 rounded-xl border border-[var(--line)] bg-[var(--paper-raised)] p-5 text-center">
+            <p className="text-sm text-[var(--ink-muted)]">
+              Məlumatlarınızı tapa bilmirsiniz?{" "}
+              <a
+                href={telHref(contactInfo.phone)}
+                className="font-semibold text-primary hover:underline"
+              >
+                {contactInfo.phone}
+              </a>{" "}
+              nömrəsinə zəng edin və ya{" "}
+              <Link href="/elaqe" className="font-semibold text-primary hover:underline">
+                bizə yazın
+              </Link>
+              .
+            </p>
+          </div>
+
+          <p className="mt-4 flex items-start gap-2 text-center text-xs text-[var(--ink-muted)]">
+            <Phone className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+            Nəticələr hazır olduqda telefon nömrənizə bildiriş göndərilir.
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}

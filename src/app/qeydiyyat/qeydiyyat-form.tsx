@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Field } from "@/components/ui/field"
+import { Field, controlClass } from "@/components/ui/field"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import {
   Mail,
@@ -22,23 +22,30 @@ import {
   Loader2,
 } from "lucide-react"
 import {
-  fullName,
-  optionalFinCode,
+  fatherName,
+  firstName,
+  gender,
+  lastName,
   password,
   phoneNumber,
   requiredEmail,
+  requiredFinCode,
 } from "@/lib/validation"
 import { useAuthStore } from "@/lib/auth-store"
 import GoogleAuthSection from "@/components/google-auth-section"
 
 const schema = z
   .object({
-    fullName,
+    // Collected separately: the lab records them as separate fields, and a
+    // single "full name" box cannot be split back apart reliably.
+    firstName,
+    lastName,
+    fatherName,
+    gender,
     email: requiredEmail,
     phone: phoneNumber,
-    // `optionalFinCode` maps "" -> undefined; a plain `.optional()` would
-    // reject the empty string and block registration on an optional field.
-    finCode: optionalFinCode,
+    // Mandatory — the lab identifies patients by FIN.
+    finCode: requiredFinCode,
     password,
     confirmPassword: z.string().min(1, "Şifrəni təkrar daxil edin"),
     consent: z.literal(true, {
@@ -69,7 +76,9 @@ export default function QeydiyyatPage({ googleEnabled }: { googleEnabled: boolea
   } = useForm<FormInput, unknown, FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      fullName: "",
+      firstName: "",
+      lastName: "",
+      fatherName: "",
       email: "",
       phone: "",
       finCode: "",
@@ -81,7 +90,10 @@ export default function QeydiyyatPage({ googleEnabled }: { googleEnabled: boolea
   const onSubmit = async (data: FormData) => {
     setError("")
     const result = await registerUser({
-      fullName: data.fullName,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      fatherName: data.fatherName,
+      gender: data.gender,
       email: data.email,
       phone: data.phone,
       finCode: data.finCode,
@@ -122,12 +134,7 @@ export default function QeydiyyatPage({ googleEnabled }: { googleEnabled: boolea
             <GoogleAuthSection enabled={googleEnabled} label="Google ilə qeydiyyatdan keç" />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Field
-                label="Ad Soyad"
-                required
-                error={errors.fullName?.message}
-                className="sm:col-span-2"
-              >
+              <Field label="Ad" required error={errors.firstName?.message}>
                 {(field) => (
                   <div className="relative">
                     <User
@@ -136,12 +143,53 @@ export default function QeydiyyatPage({ googleEnabled }: { googleEnabled: boolea
                     />
                     <Input
                       {...field}
-                      autoComplete="name"
-                      placeholder="Adınız və soyadınız"
-                      {...register("fullName")}
-                      className={`pl-10 ${errors.fullName ? "border-red-500" : ""}`}
+                      autoComplete="given-name"
+                      placeholder="Adınız"
+                      {...register("firstName")}
+                      className={`pl-10 ${errors.firstName ? "border-red-500" : ""}`}
                     />
                   </div>
+                )}
+              </Field>
+
+              <Field label="Soyad" required error={errors.lastName?.message}>
+                {(field) => (
+                  <Input
+                    {...field}
+                    autoComplete="family-name"
+                    placeholder="Soyadınız"
+                    {...register("lastName")}
+                    className={errors.lastName ? "border-red-500" : ""}
+                  />
+                )}
+              </Field>
+
+              <Field label="Ata adı" required error={errors.fatherName?.message}>
+                {(field) => (
+                  <Input
+                    {...field}
+                    autoComplete="additional-name"
+                    placeholder="Ata adınız"
+                    {...register("fatherName")}
+                    className={errors.fatherName ? "border-red-500" : ""}
+                  />
+                )}
+              </Field>
+
+              <Field label="Cins" required error={errors.gender?.message}>
+                {(field) => (
+                  <select
+                    {...field}
+                    {...register("gender")}
+                    defaultValue=""
+                    className={controlClass}
+                  >
+                    <option value="" disabled>
+                      Seçin
+                    </option>
+                    <option value="FEMALE">Qadın</option>
+                    <option value="MALE">Kişi</option>
+                  </select>
                 )}
               </Field>
 
@@ -185,7 +233,8 @@ export default function QeydiyyatPage({ googleEnabled }: { googleEnabled: boolea
 
               <Field
                 label="FIN Kod"
-                hint="İxtiyari — şəxsiyyət vəsiqənizdəki 7 simvol."
+                required
+                hint="Şəxsiyyət vəsiqənizdəki 7 simvol — analiz nəticələri bu kodla tapılır."
                 error={errors.finCode?.message}
                 className="sm:col-span-2"
               >

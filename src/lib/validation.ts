@@ -49,6 +49,31 @@ export const phoneNumber = z
     { message: "Telefon nömrəsi 9–15 rəqəmdən ibarət olmalıdır" }
   )
 
+/** One name part: no digits, no separators — those belong in their own field. */
+const namePart = (label: string) =>
+  z
+    .string()
+    .min(2, `${label} minimum 2 simvol olmalıdır`)
+    .max(50, `${label} maksimum 50 simvol ola bilər`)
+    .regex(
+      /^[\p{L}\s'-]+$/u,
+      `${label} yalnız hərflərdən ibarət ola bilər`
+    )
+
+export const firstName = namePart("Ad")
+export const lastName = namePart("Soyad")
+export const fatherName = namePart("Ata adı")
+
+export const gender = z.enum(["MALE", "FEMALE"], {
+  message: "Cinsi seçin",
+})
+
+/** Mandatory at registration; the booking form still accepts it as optional. */
+export const requiredFinCode = z
+  .string()
+  .min(1, "FIN kod daxil edin")
+  .regex(/^[A-Za-z0-9]{7}$/, "FIN kod 7 hərf və ya rəqəmdən ibarət olmalıdır")
+
 export const fullName = z
   .string()
   .min(3, "Ad minimum 3 simvol olmalıdır")

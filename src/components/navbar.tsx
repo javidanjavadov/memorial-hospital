@@ -13,6 +13,7 @@ import {
   LogOut,
   Calendar,
   ChevronDown,
+  FileText,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { contactInfo, telHref } from "@/data"
@@ -158,6 +159,12 @@ export default function Navbar() {
                 <Phone className="w-4 h-4" aria-hidden="true" />
                 Təcili Zəng
               </a>
+            </Button>
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/neticeler">
+                <FileText className="w-4 h-4" aria-hidden="true" />
+                Nəticələrimə bax
+              </Link>
             </Button>
             <Button variant="cta" size="sm" asChild>
               <Link href="/qebul">
@@ -336,6 +343,12 @@ export default function Navbar() {
                   <Phone className="w-4 h-4" aria-hidden="true" />
                   Təcili Zəng
                 </a>
+              </Button>
+              <Button variant="outline" size="sm" className="w-full" asChild>
+                <Link href="/neticeler" onClick={() => setIsOpen(false)}>
+                  <FileText className="w-4 h-4" aria-hidden="true" />
+                  Nəticələrimə bax
+                </Link>
               </Button>
               <Button variant="cta" size="sm" className="w-full" asChild>
                 <Link href="/qebul" onClick={() => setIsOpen(false)}>

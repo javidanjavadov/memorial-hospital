@@ -45,10 +45,19 @@ export function useCurrentUser(): {
       source: "google",
       user: {
         id: linked?.id ?? session.user.id,
+        /*
+         * Google only supplies a display name, so the parts stay empty until
+         * the visitor fills them in. FIN in particular cannot be inferred, and
+         * the results lookup needs it — /profil prompts for what is missing.
+         */
+        firstName: linked?.firstName ?? "",
+        lastName: linked?.lastName ?? "",
+        fatherName: linked?.fatherName ?? "",
+        gender: linked?.gender ?? "FEMALE",
         fullName: linked?.fullName || session.user.name || session.user.email,
         email: session.user.email,
         phone: linked?.phone ?? "",
-        finCode: linked?.finCode,
+        finCode: linked?.finCode ?? "",
         createdAt: linked?.createdAt ?? new Date(0).toISOString(),
         image: session.user.image,
         source: "google",

@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Field } from "@/components/ui/field"
+import { Field, controlClass } from "@/components/ui/field"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -29,17 +29,23 @@ import { useAuthStore } from "@/lib/auth-store"
 import { useCurrentUser } from "@/lib/use-current-user"
 import { getBranchName, getDepartmentName, getDoctorName } from "@/data"
 import {
-  fullName,
-  optionalFinCode,
+  fatherName,
+  firstName,
+  gender,
+  lastName,
   phoneNumber,
   requiredEmail,
+  requiredFinCode,
 } from "@/lib/validation"
 
 const profileSchema = z.object({
-  fullName,
+  firstName,
+  lastName,
+  fatherName,
+  gender,
   email: requiredEmail,
   phone: phoneNumber,
-  finCode: optionalFinCode,
+  finCode: requiredFinCode,
 })
 
 type ProfileInput = z.input<typeof profileSchema>
@@ -89,7 +95,10 @@ export default function ProfilPage() {
   } = useForm<ProfileInput, unknown, ProfileData>({
     resolver: zodResolver(profileSchema),
     values: {
-      fullName: user?.fullName ?? "",
+      firstName: user?.firstName ?? "",
+      lastName: user?.lastName ?? "",
+      fatherName: user?.fatherName ?? "",
+      gender: user?.gender ?? "FEMALE",
       email: user?.email ?? "",
       phone: user?.phone ?? "",
       finCode: user?.finCode ?? "",
@@ -215,7 +224,7 @@ export default function ProfilPage() {
                   )}
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Field label="Ad Soyad" required error={errors.fullName?.message}>
+                    <Field label="Ad" required error={errors.firstName?.message}>
                       {(field) => (
                         <div className="relative">
                           <User
@@ -224,11 +233,42 @@ export default function ProfilPage() {
                           />
                           <Input
                             {...field}
-                            autoComplete="name"
-                            {...register("fullName")}
-                            className={`pl-10 ${errors.fullName ? "border-red-500" : ""}`}
+                            autoComplete="given-name"
+                            {...register("firstName")}
+                            className={`pl-10 ${errors.firstName ? "border-red-500" : ""}`}
                           />
                         </div>
+                      )}
+                    </Field>
+
+                    <Field label="Soyad" required error={errors.lastName?.message}>
+                      {(field) => (
+                        <Input
+                          {...field}
+                          autoComplete="family-name"
+                          {...register("lastName")}
+                          className={errors.lastName ? "border-red-500" : ""}
+                        />
+                      )}
+                    </Field>
+
+                    <Field label="Ata adı" required error={errors.fatherName?.message}>
+                      {(field) => (
+                        <Input
+                          {...field}
+                          autoComplete="additional-name"
+                          {...register("fatherName")}
+                          className={errors.fatherName ? "border-red-500" : ""}
+                        />
+                      )}
+                    </Field>
+
+                    <Field label="Cins" required error={errors.gender?.message}>
+                      {(field) => (
+                        <select {...field} {...register("gender")} className={controlClass}>
+                          <option value="FEMALE">Qadın</option>
+                          <option value="MALE">Kişi</option>
+                        </select>
                       )}
                     </Field>
 
@@ -270,7 +310,8 @@ export default function ProfilPage() {
 
                     <Field
                       label="FIN Kod"
-                      hint="İxtiyari — 7 simvol."
+                      required
+                      hint="7 simvol — analiz nəticələri bu kodla tapılır."
                       error={errors.finCode?.message}
                     >
                       {(field) => (

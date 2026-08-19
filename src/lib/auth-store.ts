@@ -2,14 +2,31 @@ import { create } from "zustand"
 import { persist } from "zustand/middleware"
 import { generateId, hashPassword, verifyPassword } from "@/lib/crypto"
 
+export type Gender = "MALE" | "FEMALE"
+
 export interface User {
   id: string
+  firstName: string
+  lastName: string
+  /** Patronymic. Standard on Azerbaijani records and required by the lab. */
+  fatherName: string
+  gender: Gender
+  /**
+   * Display name, derived from the parts on save rather than stored
+   * independently — two sources for one value drift apart.
+   */
   fullName: string
   email: string
   phone: string
-  finCode?: string
+  /** Mandatory: the lab identifies patients by FIN. */
+  finCode: string
   createdAt: string
 }
+
+/** Soyad Ad Ata adı — the order used on Azerbaijani medical records. */
+export const buildFullName = (
+  parts: Pick<User, "firstName" | "lastName" | "fatherName">
+) => `${parts.lastName} ${parts.firstName} ${parts.fatherName}`.trim()
 
 export interface Appointment {
   id: string
@@ -39,7 +56,7 @@ interface AuthState {
   setHasHydrated: () => void
   login: (email: string, password: string) => Promise<AuthResult>
   register: (
-    data: Omit<User, "id" | "createdAt"> & { password: string }
+    data: Omit<User, "id" | "createdAt" | "fullName"> & { password: string }
   ) => Promise<AuthResult>
   logout: () => void
   updateProfile: (data: Partial<Omit<User, "id" | "createdAt">>) => AuthResult
@@ -135,6 +152,7 @@ export const useAuthStore = create<AuthState>()(
         const newUser: StoredUser = {
           ...data,
           email: normalized,
+          fullName: buildFullName(data),
           id: generateId(),
           createdAt: new Date().toISOString(),
           passwordHash: await hashPassword(password),
@@ -177,12 +195,14 @@ export const useAuthStore = create<AuthState>()(
           next.email = normalized
         }
 
-        users[idx] = { ...users[idx], ...next }
+        const merged = { ...users[idx], ...next }
+        merged.fullName = buildFullName(merged)
+        users[idx] = merged
         if (!saveStoredUsers(users)) {
           return { ok: false, error: "Məlumatlar yaddaşa yazıla bilmədi" }
         }
 
-        set({ user: { ...user, ...next } })
+        set({ user: { ...user, ...next, fullName: buildFullName({ ...user, ...next }) } })
         return { ok: true }
       },
 
