@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { signIn } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react"
@@ -38,6 +38,35 @@ export default function GoogleSignInButton({
 }) {
   const [isSigningIn, setIsSigningIn] = useState(false)
 
+  /*
+   * Clear the pending state when the visitor comes back without signing in.
+   *
+   * Pressing Back from Google restores this page from the browser's
+   * back/forward cache, which does NOT remount React — so `isSigningIn` stayed
+   * true and the button was left permanently disabled reading "Yönləndirilir...".
+   *
+   * `pageshow` with `persisted` covers the bfcache restore; `visibilitychange`
+   * covers browsers that do not use bfcache here (and the case where the
+   * redirect never actually happened).
+   */
+  useEffect(() => {
+    const reset = () => setIsSigningIn(false)
+
+    const onPageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) reset()
+    }
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") reset()
+    }
+
+    window.addEventListener("pageshow", onPageShow)
+    document.addEventListener("visibilitychange", onVisibilityChange)
+    return () => {
+      window.removeEventListener("pageshow", onPageShow)
+      document.removeEventListener("visibilitychange", onVisibilityChange)
+    }
+  }, [])
+
   return (
     <Button
       type="button"
@@ -47,9 +76,13 @@ export default function GoogleSignInButton({
       disabled={isSigningIn}
       onClick={() => {
         setIsSigningIn(true)
-        // Full redirect to Google — no state to preserve, so no need to
-        // reset the flag afterwards.
-        signIn("google", { callbackUrl })
+        /*
+         * If the redirect does not happen — offline, popup blocked, provider
+         * misconfigured — nothing else would ever clear this, so release the
+         * button rather than leaving it dead.
+         */
+        signIn("google", { callbackUrl }).catch(() => setIsSigningIn(false))
+        window.setTimeout(() => setIsSigningIn(false), 10_000)
       }}
     >
       {isSigningIn ? (
