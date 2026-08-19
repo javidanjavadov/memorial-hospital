@@ -1,10 +1,18 @@
-import { contactInfo, FOUNDED_YEAR, telHref, YEARS_OF_EXPERIENCE } from "@/data"
+import {
+  branches,
+  contactInfo,
+  doctors,
+  FOUNDED_YEAR,
+  telHref,
+  YEARS_OF_EXPERIENCE,
+} from "@/data"
 import HeroSection from "@/components/hero-section"
 import DepartmentsSection from "@/components/departments-section"
 import ServicesSection from "@/components/services-section"
 import DoctorsSection from "@/components/doctors-section"
 import BranchesSection from "@/components/branches-section"
 import TrustSection from "@/components/trust-section"
+import FaqSection from "@/components/faq-section"
 
 export default function Home() {
   return (
@@ -24,7 +32,8 @@ export default function Home() {
                 </p>
                 <p className="text-lg text-slate-600 leading-relaxed">
                   Missiyamız — hər bir pasiyentin sağlamlığını qorumaq və onlara ən yaxşı tibbi xidməti təqdim etməkdir. 
-                  3 filialımız, 50-dən çox həkimimiz və {YEARS_OF_EXPERIENCE} ildən artıq təcrübəmizlə sizin xidmətinizdəyik.
+                  {branches.length} filialımız, {doctors.length} həkimimiz və {YEARS_OF_EXPERIENCE} ildən
+                  artıq təcrübəmizlə sizin xidmətinizdəyik.
                 </p>
                 <div className="grid grid-cols-2 gap-4 pt-4">
                   <div className="flex items-center gap-3">
@@ -35,13 +44,17 @@ export default function Home() {
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                      <span className="text-primary font-bold text-lg">50+</span>
+                      <span className="text-primary font-bold text-lg">
+                        {doctors.length}
+                      </span>
                     </div>
                     <span className="text-sm font-medium text-slate-700">Təcrübəli həkim</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                      <span className="text-primary font-bold text-lg">3</span>
+                      <span className="text-primary font-bold text-lg">
+                        {branches.length}
+                      </span>
                     </div>
                     <span className="text-sm font-medium text-slate-700">Filial</span>
                   </div>
@@ -89,6 +102,7 @@ export default function Home() {
       <div id="hekimler"><DoctorsSection /></div>
       <div id="filiallar"><BranchesSection /></div>
       <TrustSection />
+      <div id="suallar"><FaqSection /></div>
       <div id="elaqe">
         <section className="py-16 md:py-24 bg-[var(--paper)]">
           <div className="container mx-auto px-4">
