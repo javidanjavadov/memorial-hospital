@@ -79,14 +79,17 @@ export default function SebetPage() {
             Sifarişiniz qeydə alındı
           </h1>
           {/*
-            No payment was taken and none is claimed. The order is a request the
-            call centre confirms — saying anything stronger would leave someone
-            believing they had paid.
+            Says only what actually happened. The order is saved in this browser
+            and nothing is transmitted, so promising a call back — as this did —
+            would leave someone waiting at home for one nobody was told to make.
+            Restore the operator wording only once an endpoint receives orders.
           */}
           <p className="mt-4 text-[var(--ink-muted)]">
-            Sifarişiniz qeydiyyata alındı. Operatorumuz sizinlə əlaqə saxlayaraq
-            vaxtı və ödənişi təsdiqləyəcək. <strong>Onlayn ödəniş alınmadı</strong> —
-            ödəniş klinikada və ya operatorun göndərdiyi keçidlə həyata keçirilir.
+            Sifarişiniz profilinizin <strong>“Sifarişlərim”</strong> bölməsində
+            saxlanıldı. Təsdiq üçün klinikaya zəng etməyiniz xahiş olunur —
+            sifariş avtomatik olaraq klinikaya göndərilmir.{" "}
+            <strong>Onlayn ödəniş alınmadı</strong>; ödəniş filialda həyata
+            keçirilir.
           </p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
             <Button variant="cta" asChild>
@@ -341,8 +344,8 @@ export default function SebetPage() {
                   className="mt-0.5 h-3.5 w-3.5 shrink-0"
                   aria-hidden="true"
                 />
-                Onlayn ödəniş hələlik mövcud deyil. Sifariş göndərildikdən sonra
-                operatorumuz zəng edərək vaxtı və ödənişi təsdiqləyir.
+                Onlayn ödəniş hələlik mövcud deyil və sifariş klinikaya
+                avtomatik göndərilmir — təsdiq üçün zəng etməyiniz xahiş olunur.
               </p>
             </aside>
           </div>
