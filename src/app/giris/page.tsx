@@ -13,6 +13,8 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Mail, Lock, Eye, EyeOff, LogIn, AlertCircle, Loader2 } from "lucide-react"
 import { requiredEmail } from "@/lib/validation"
 import { useAuthStore } from "@/lib/auth-store"
+import GoogleAuthSection from "@/components/google-auth-section"
+import AuthErrorNotice from "@/components/auth-error-notice"
 
 const schema = z.object({
   email: requiredEmail,
@@ -79,6 +81,10 @@ export default function GirisPage() {
                 {error}
               </div>
             )}
+
+            <AuthErrorNotice />
+
+            <GoogleAuthSection />
 
             <Field label="Email" required error={errors.email?.message}>
               {(field) => (

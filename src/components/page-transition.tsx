@@ -1,48 +1,29 @@
 "use client"
 
 import { usePathname } from "next/navigation"
-import { useEffect, useRef, useState } from "react"
 import type { ReactNode } from "react"
 
+/**
+ * Plays an opening animation on every client-side route change.
+ *
+ * The wrapper is keyed by pathname, so React unmounts the old subtree and
+ * mounts a fresh one on navigation — which replays the `pageEnter` CSS
+ * animation defined in globals.css.
+ *
+ * Deliberately *not* a fade-out-then-swap: holding the outgoing page in state
+ * and swapping it on a timer leaves the viewport blank for the whole exit
+ * duration, which reads as a stall rather than as motion, and delays the new
+ * page becoming interactive. Animating the incoming page instead means the new
+ * content is on screen straight away and visibly moves into place.
+ *
+ * `prefers-reduced-motion` disables the animation in globals.css.
+ */
 export default function PageTransition({ children }: { children: ReactNode }) {
   const pathname = usePathname()
-  const [displayChildren, setDisplayChildren] = useState(children)
-  const [phase, setPhase] = useState<"idle" | "exit" | "enter">("idle")
-  const prevPath = useRef(pathname)
-
-  useEffect(() => {
-    if (pathname !== prevPath.current) {
-      setPhase("exit")
-    }
-  }, [pathname])
-
-  useEffect(() => {
-    if (phase === "exit") {
-      const t = setTimeout(() => {
-        setDisplayChildren(children)
-        setPhase("enter")
-        window.scrollTo({ top: 0, behavior: "instant" })
-      }, 200)
-      return () => clearTimeout(t)
-    }
-    if (phase === "enter") {
-      const t = setTimeout(() => {
-        setPhase("idle")
-        prevPath.current = pathname
-      }, 300)
-      return () => clearTimeout(t)
-    }
-  }, [phase, children, pathname])
 
   return (
-    <div
-      style={{
-        opacity: phase === "exit" ? 0 : 1,
-        transform: phase === "exit" ? "translateY(16px)" : "translateY(0)",
-        transition: "opacity 0.2s ease-out, transform 0.2s ease-out",
-      }}
-    >
-      {displayChildren}
+    <div key={pathname} className="page-enter">
+      {children}
     </div>
   )
 }

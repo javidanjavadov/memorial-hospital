@@ -6,6 +6,7 @@ import Footer from "@/components/footer";
 import PageTransition from "@/components/page-transition";
 import RouteLoader from "@/components/route-loader";
 import StoreHydration from "@/components/store-hydration";
+import AuthSessionProvider from "@/components/session-provider";
 import StructuredData from "@/components/structured-data";
 import { siteName, siteUrl } from "@/lib/site";
 
@@ -103,16 +104,18 @@ export default function RootLayout({
         <StructuredData />
       </head>
       <body className="min-h-full flex flex-col">
-        <a href="#main-content" className="skip-link">
-          Əsas məzmuna keç
-        </a>
-        <StoreHydration />
-        <RouteLoader />
-        <Navbar />
-        <main id="main-content" className="flex-1" tabIndex={-1}>
-          <PageTransition>{children}</PageTransition>
-        </main>
-        <Footer />
+        <AuthSessionProvider>
+          <a href="#main-content" className="skip-link">
+            Əsas məzmuna keç
+          </a>
+          <StoreHydration />
+          <RouteLoader />
+          <Navbar />
+          <main id="main-content" className="flex-1" tabIndex={-1}>
+            <PageTransition>{children}</PageTransition>
+          </main>
+          <Footer />
+        </AuthSessionProvider>
       </body>
     </html>
   );

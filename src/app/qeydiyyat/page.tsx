@@ -29,6 +29,7 @@ import {
   requiredEmail,
 } from "@/lib/validation"
 import { useAuthStore } from "@/lib/auth-store"
+import GoogleAuthSection from "@/components/google-auth-section"
 
 const schema = z
   .object({
@@ -117,6 +118,8 @@ export default function QeydiyyatPage() {
                 {error}
               </div>
             )}
+
+            <GoogleAuthSection label="Google ilə qeydiyyatdan keç" />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field

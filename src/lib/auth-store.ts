@@ -47,6 +47,9 @@ interface AuthState {
     data: Omit<Appointment, "id" | "createdAt" | "status">
   ) => AuthResult
   cancelAppointment: (id: string) => AuthResult
+  /** Looks up a stored profile by email, for linking a Google sign-in to an
+   *  existing email/password account. Never exposes the password hash. */
+  linkedProfile: (email: string) => User | null
   isSlotTaken: (branch: string, doctor: string | undefined, date: string, time: string) => boolean
 }
 
@@ -181,6 +184,14 @@ export const useAuthStore = create<AuthState>()(
 
         set({ user: { ...user, ...next } })
         return { ok: true }
+      },
+
+      linkedProfile: (email) => {
+        const normalized = normalizeEmail(email)
+        const found = getStoredUsers().find(
+          (u) => normalizeEmail(u.email) === normalized
+        )
+        return found ? toPublicUser(found) : null
       },
 
       isSlotTaken: (branch, doctor, date, time) => {

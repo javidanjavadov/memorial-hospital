@@ -17,6 +17,9 @@ import {
 import { cn } from "@/lib/utils"
 import { contactInfo, telHref } from "@/data"
 import { useAuthStore } from "@/lib/auth-store"
+import { useCurrentUser } from "@/lib/use-current-user"
+import { signOut } from "next-auth/react"
+import { smoothScrollToElement } from "@/lib/smooth-scroll"
 
 const navItems = [
   { label: "Ana Səhifə", href: "#hero" },
@@ -33,24 +36,32 @@ export default function Navbar() {
   const [showUserMenu, setShowUserMenu] = useState(false)
   const userMenuRef = useRef<HTMLDivElement>(null)
 
-  const user = useAuthStore((s) => s.user)
-  const hasHydrated = useAuthStore((s) => s.hasHydrated)
-  const logout = useAuthStore((s) => s.logout)
-
   const pathname = usePathname()
   const router = useRouter()
+
+  // Covers both login methods — Google session or local email/password account.
+  const { user, isLoading } = useCurrentUser()
+  const hasHydrated = !isLoading
+  const localLogout = useAuthStore((s) => s.logout)
+
+  const handleLogout = useCallback(() => {
+    localLogout()
+    if (user?.source === "google") {
+      // Clears the httpOnly session cookie server-side; a client-only reset
+      // would leave the visitor still signed in on the next request.
+      void signOut({ callbackUrl: "/" })
+    } else {
+      router.push("/")
+    }
+  }, [localLogout, user?.source, router])
+
 
   const scrollToSection = useCallback((href: string) => {
     const el = document.getElementById(href.replace("#", ""))
     if (!el) return
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches
-    const top = el.getBoundingClientRect().top + window.scrollY - 100
-    window.scrollTo({
-      top,
-      behavior: prefersReducedMotion ? "auto" : "smooth",
-    })
+    // Animated frame-by-frame rather than via `behavior: "smooth"`, which the
+    // browser turns into an instant jump when scroll-behavior is forced to auto.
+    smoothScrollToElement(el)
   }, [])
 
   const handleNavClick = useCallback(
@@ -199,9 +210,8 @@ export default function Navbar() {
                       type="button"
                       role="menuitem"
                       onClick={() => {
-                        logout()
                         setShowUserMenu(false)
-                        router.push("/")
+                        handleLogout()
                       }}
                       className="flex items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 w-full transition-colors"
                     >
@@ -292,9 +302,8 @@ export default function Navbar() {
                   <button
                     type="button"
                     onClick={() => {
-                      logout()
                       setIsOpen(false)
-                      router.push("/")
+                      handleLogout()
                     }}
                     className="px-4 py-3 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 flex items-center gap-2"
                   >

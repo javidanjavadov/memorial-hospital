@@ -26,6 +26,7 @@ import {
   Loader2,
 } from "lucide-react"
 import { useAuthStore } from "@/lib/auth-store"
+import { useCurrentUser } from "@/lib/use-current-user"
 import { getBranchName, getDepartmentName, getDoctorName } from "@/data"
 import {
   fullName,
@@ -60,8 +61,9 @@ const statusLabels: Record<string, string> = {
 
 export default function ProfilPage() {
   const router = useRouter()
-  const user = useAuthStore((s) => s.user)
-  const hasHydrated = useAuthStore((s) => s.hasHydrated)
+  // Either login method resolves to the same shape here.
+  const { user, isLoading, source } = useCurrentUser()
+  const hasHydrated = !isLoading
   const updateProfile = useAuthStore((s) => s.updateProfile)
   const appointments = useAuthStore((s) => s.appointments)
   const cancelAppointment = useAuthStore((s) => s.cancelAppointment)
@@ -112,6 +114,12 @@ export default function ProfilPage() {
   const onSubmit = (data: ProfileData) => {
     setSaveError("")
     setSaved(false)
+    if (source === "google") {
+      setSaveError(
+        "Google hesabı ilə daxil olduqda profil məlumatları hələlik dəyişdirilə bilmir."
+      )
+      return
+    }
     const result = updateProfile(data)
     if (!result.ok) {
       setSaveError(result.error)

@@ -25,9 +25,42 @@ http://localhost:3000
 
 ## Environment
 
+`.env.example` faylını `.env.local` adı ilə kopyalayın və doldurun.
+
 | Variable | Default | Nə üçün |
 | --- | --- | --- |
 | `NEXT_PUBLIC_SITE_URL` | `https://yuzuch.dev` | Canonical URL-lər, `sitemap.xml`, Open Graph |
+| `AUTH_SECRET` | — | Sessiya cookie-sinin imzalanması (`npx auth secret`) |
+| `AUTH_GOOGLE_ID` | — | Google OAuth Client ID (boş buraxsanız Google düyməsi gizlənir) |
+| `AUTH_GOOGLE_SECRET` | — | Google OAuth Client Secret — **heç vaxt commit etməyin** |
+| `AUTH_URL` | — | Yalnız production-da: `https://yuzuch.dev` |
+
+### Google ilə giriş
+
+Google Cloud Console → **Google Auth Platform**:
+
+1. **App Information** — ad və dəstək emaili.
+2. **Audience** — `External` (pasiyentlər təşkilatınızın Workspace hesabları deyil).
+   Testing rejimində yalnız əlavə etdiyiniz test istifadəçiləri giriş edə bilir.
+3. **Contact Information** — bildirişlər üçün email.
+4. **Clients → Create client → Web application**:
+
+```
+Authorized JavaScript origins
+  http://localhost:3000
+  https://yuzuch.dev
+
+Authorized redirect URIs      (hərfi-hərfinə uyğun olmalıdır)
+  http://localhost:3000/api/auth/callback/google
+  https://yuzuch.dev/api/auth/callback/google
+```
+
+Alınan Client ID və Secret-i `.env.local` faylına yazın. Netlify-da isə
+Site settings → Environment variables bölməsinə əlavə edin.
+
+Ən çox rast gəlinən xəta `redirect_uri_mismatch` olur — bu, yuxarıdakı redirect
+URI-nin tam üst-üstə düşmədiyini bildirir (protokol, port və `/api/auth/...`
+yolu daxil olmaqla).
 
 ## Structure
 
@@ -56,9 +89,12 @@ Bütün məlumatlar `src/data/index.ts` faylındadır. Həkimlərin filialı
 **Bu build-də backend yoxdur.** Qeydiyyat, giriş və qəbullar yalnız brauzerin
 `localStorage` yaddaşında saxlanılır. Bunun praktiki nəticələri:
 
-- **Autentifikasiya server tərəfindən yoxlanılmır.** Şifrələr PBKDF2 (100k
-  iterasiya, SHA-256) ilə heşlənir, lakin bütün yoxlama client-də getdiyi üçün
-  `localStorage`-ı birbaşa dəyişməklə keçilə bilər.
+- **Google ilə giriş** server tərəfindən Auth.js ilə yoxlanılır və httpOnly
+  sessiya cookie-si istifadə edir — bu yol təhlükəsizdir.
+- **Email/şifrə ilə giriş** hələ də köhnə client-only yoldur: şifrələr PBKDF2
+  (100k iterasiya, SHA-256) ilə heşlənsə də, yoxlama brauzerdə getdiyi üçün
+  `localStorage`-ı dəyişməklə keçilə bilər. Bu yolun tamamilə Google (və ya
+  server tərəfli email/şifrə) ilə əvəzlənməsi planlaşdırılır.
 - **Qəbullar heç kimə göndərilmir.** Reqistratura onları görmür; forma bunu
   açıq şəkildə bildirir və heç bir SMS/email göndərildiyini iddia etmir.
 - **Əlaqə forması** məlumatı serverə yox, istifadəçinin e-poçt proqramına
