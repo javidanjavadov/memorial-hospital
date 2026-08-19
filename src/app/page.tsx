@@ -15,12 +15,14 @@ import DoctorsSection from "@/components/doctors-section"
 import BranchesSection from "@/components/branches-section"
 import TrustSection from "@/components/trust-section"
 import AccreditationSection from "@/components/accreditation-section"
+import AccreditationBar from "@/components/accreditation-bar"
 import FaqSection from "@/components/faq-section"
 
 export default function Home() {
   return (
     <>
       <div id="hero"><HeroSection /></div>
+      <AccreditationBar />
       <FindDoctorSection />
       <div id="haqqimizda">
         <section className="py-16 md:py-24 bg-[var(--paper)]">

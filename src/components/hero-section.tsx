@@ -31,7 +31,7 @@ import {
  */
 
 const badges = [
-  { icon: ShieldCheck, label: "IAS akkreditasiyalı laboratoriya" },
+  { icon: ShieldCheck, label: `${branches.length} filial` },
   { icon: Clock, label: "Gəncədə 24/7" },
   { icon: Star, label: `${YEARS_OF_EXPERIENCE} il təcrübə` },
 ]

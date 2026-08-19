@@ -1,5 +1,5 @@
-import { Award, BadgeCheck, Globe2 } from "lucide-react"
 import { AnimateOnScroll } from "@/components/animations"
+import { accreditations } from "@/data/accreditations"
 
 /**
  * Laboratory accreditation and external quality assessment.
@@ -12,36 +12,10 @@ import { AnimateOnScroll } from "@/components/animations"
  * Every claim here is a verifiable fact about the laboratory — nothing is
  * padded out with invented awards.
  */
-const credentials = [
-  {
-    icon: BadgeCheck,
-    mark: "IAS",
-    markNote: "Akkreditasiya",
-    label: "IAS Akkreditasiyası",
-    title: "Beynəlxalq akkreditasiya",
-    body: "Laboratoriyamız International Accreditation Service (IAS) tərəfindən akkreditə olunub — müayinə nəticələrinin beynəlxalq standartlara uyğunluğunun təsdiqi.",
-  },
-  {
-    icon: Globe2,
-    mark: "RIQAS",
-    markNote: "Participant",
-    label: "RIQAS Participant",
-    title: "Xarici keyfiyyətə nəzarət",
-    body: "Randox International Quality Assessment Scheme (RIQAS) — dünyanın ən böyük xarici keyfiyyət qiymətləndirmə proqramında müntəzəm iştirak edirik.",
-  },
-  {
-    icon: Award,
-    mark: "QCMD",
-    markNote: "Participant",
-    label: "QCMD Participant",
-    title: "Molekulyar diaqnostika",
-    body: "Quality Control for Molecular Diagnostics (QCMD) proqramı molekulyar və PCR testlərimizin dəqiqliyini müstəqil şəkildə yoxlayır.",
-  },
-]
 
 export default function AccreditationSection() {
   return (
-    <section className="bg-[var(--ink)] py-16 text-white md:py-24">
+    <section id="akkreditasiya" className="scroll-mt-24 bg-[var(--ink)] py-16 text-white md:py-24">
       <div className="container mx-auto px-4">
         <AnimateOnScroll>
           <div className="mb-14 max-w-3xl text-center md:mx-auto">
@@ -63,7 +37,7 @@ export default function AccreditationSection() {
             first, explanation second — the card text below carries the detail.
           */}
           <ul className="mb-14 flex flex-wrap items-center justify-center gap-x-10 gap-y-6 border-y border-white/15 py-8 md:gap-x-16">
-            {credentials.map((item) => (
+            {accreditations.map((item) => (
               <li key={`mark-${item.label}`} className="text-center">
                 <span className="font-display block text-step-3 leading-none tracking-tight">
                   {item.mark}
@@ -77,7 +51,7 @@ export default function AccreditationSection() {
         </AnimateOnScroll>
 
         <ul className="grid gap-4 md:grid-cols-3">
-          {credentials.map((item, i) => (
+          {accreditations.map((item, i) => (
             <li key={item.label} className="h-full">
               <AnimateOnScroll delay={i * 100} className="h-full">
                 <div className="flex h-full flex-col rounded-xl border border-white/15 bg-white/5 p-6">
