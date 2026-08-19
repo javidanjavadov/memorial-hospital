@@ -124,9 +124,21 @@ export default function HeroSection() {
           {/* ---------------- Right: photography + overlapping cards --------- */}
           <div className="relative">
             <div className="relative aspect-[4/5] overflow-hidden rounded-3xl sm:aspect-[5/4] lg:aspect-[4/5]">
+              {/*
+                The public/hero/hero-N.webp files are NOT photographs — each is a
+                promotional banner for a single lab test with Azerbaijani text
+                baked into a 1800x600 strip. Cropped into this portrait frame
+                one showed a vertical sliver of that text.
+
+                This is a stock clinical photograph (Unsplash License: free for
+                commercial use, no attribution required). Anonymous by design —
+                no identifiable face and no third-party clinic branding, so it
+                cannot imply a stranger is Memorial staff alongside the 33 real
+                doctor portraits further down the page.
+              */}
               <Image
-                src="/hero/hero-1.webp"
-                alt="Memorial Hospital həkimi pasiyenti müayinə edərkən"
+                src="/hero/hero-consultation.webp"
+                alt="Ağ xalatlı həkim stetoskop tutarkən"
                 fill
                 priority
                 sizes="(min-width: 1024px) 45vw, 100vw"
