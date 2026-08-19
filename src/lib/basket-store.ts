@@ -23,6 +23,12 @@ export type PaymentMethod = "CASH" | "CARD"
 
 export interface PastOrder {
   id: string
+  /**
+   * Who placed it. The store is shared by everyone using this browser, so
+   * without it a second account on the same machine would see the first
+   * account's orders — which are laboratory tests, not shopping.
+   */
+  userId: string
   createdAt: string
   branch: BranchKey
   homeCollection: boolean
@@ -44,7 +50,7 @@ interface BasketState {
   remove: (slug: string) => void
   clear: () => void
   /** Moves the basket into order history and empties it. */
-  submit: () => PastOrder | null
+  submit: (userId: string) => PastOrder | null
   reorder: (id: string) => void
   setBranch: (branch: BranchKey) => void
   setHomeCollection: (enabled: boolean) => void
@@ -88,7 +94,7 @@ export const useBasketStore = create<BasketState>()(
 
       clear: () => set({ lines: [], homeCollection: false }),
 
-      submit: () => {
+      submit: (userId) => {
         const { lines, branch, homeCollection, paymentMethod } = get()
         if (lines.length === 0) return null
 
@@ -97,6 +103,7 @@ export const useBasketStore = create<BasketState>()(
             typeof crypto !== "undefined" && "randomUUID" in crypto
               ? crypto.randomUUID()
               : String(Date.now()),
+          userId,
           createdAt: new Date().toISOString(),
           branch,
           homeCollection,
@@ -150,6 +157,10 @@ export const useBasketStore = create<BasketState>()(
     }
   )
 )
+
+/** This browser's orders belonging to one account. */
+export const ordersFor = (orders: PastOrder[], userId: string | undefined) =>
+  userId ? orders.filter((order) => order.userId === userId) : []
 
 /** Sum of the effective (discounted where available) line prices. */
 export const basketSubtotal = (lines: BasketLine[]) =>

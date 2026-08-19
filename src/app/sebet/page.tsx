@@ -297,7 +297,7 @@ export default function SebetPage() {
                   onClick={() => {
                     // Moves the basket into order history rather than discarding
                     // it, so "Keçmiş sifarişlər" has something to show.
-                    submitOrder()
+                    submitOrder(user.id)
                     setSent(true)
                   }}
                 >

@@ -4,9 +4,21 @@ import { useState, type ReactNode } from "react"
 import { History, ListPlus, RotateCcw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { branches } from "@/data"
-import { useBasketStore } from "@/lib/basket-store"
+import { ordersFor, useBasketStore } from "@/lib/basket-store"
 import { shortServiceName } from "@/lib/service-name"
+import { useCurrentUser } from "@/lib/use-current-user"
 import { cn } from "@/lib/utils"
+
+/**
+ * dd.MM.yyyy, written out rather than left to toLocaleDateString("az-AZ").
+ * Not every engine ships an Azerbaijani calendar format, and the ones that do
+ * not fall back to "2026 M08 20" — which is not a date anyone here reads.
+ */
+const formatDate = (iso: string) => {
+  const d = new Date(iso)
+  const pad = (n: number) => String(n).padStart(2, "0")
+  return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()}`
+}
 
 const formatAzn = (value: number) =>
   `${Number.isInteger(value) ? value : value.toFixed(2)} AZN`
@@ -25,7 +37,9 @@ const formatAzn = (value: number) =>
  */
 export default function CatalogTabs({ children }: { children: ReactNode }) {
   const [tab, setTab] = useState<"services" | "orders">("services")
-  const orders = useBasketStore((s) => s.orders)
+  const allOrders = useBasketStore((s) => s.orders)
+  const { user } = useCurrentUser()
+  const orders = ordersFor(allOrders, user?.id)
   const hasHydrated = useBasketStore((s) => s.hasHydrated)
   const reorder = useBasketStore((s) => s.reorder)
 
@@ -99,11 +113,7 @@ export default function CatalogTabs({ children }: { children: ReactNode }) {
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div>
                         <p className="text-sm font-medium text-[var(--ink)]">
-                          {new Date(order.createdAt).toLocaleDateString("az-AZ", {
-                            day: "2-digit",
-                            month: "long",
-                            year: "numeric",
-                          })}
+                          {formatDate(order.createdAt)}
                         </p>
                         <p className="mt-0.5 text-xs text-[var(--ink-muted)]">
                           {branchName} · {order.lines.length} xidmət
@@ -146,7 +156,8 @@ export default function CatalogTabs({ children }: { children: ReactNode }) {
           )}
 
           <p className="mt-4 text-xs text-[var(--ink-muted)]">
-            Sifariş tarixçəsi yalnız bu brauzerdə saxlanılır.
+            Sifariş tarixçəsi yalnız bu brauzerdə saxlanılır. Tam siyahı üçün
+            profilinizin “Sifarişlərim” bölməsinə baxın.
           </p>
         </div>
       )}

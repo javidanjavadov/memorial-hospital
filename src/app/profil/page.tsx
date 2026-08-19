@@ -17,6 +17,9 @@ import {
   Mail,
   Phone,
   Calendar,
+  FileText,
+  RotateCcw,
+  ShoppingBag,
   Clock,
   MapPin,
   Save,
@@ -28,8 +31,16 @@ import {
 } from "lucide-react"
 import { missingProfileFields } from "@/lib/profile-complete"
 import { useAuthStore } from "@/lib/auth-store"
+import { ordersFor, useBasketStore } from "@/lib/basket-store"
+import { shortServiceName } from "@/lib/service-name"
 import { useCurrentUser } from "@/lib/use-current-user"
-import { getBranchName, getDepartmentName, getDoctorName } from "@/data"
+import {
+  contactInfo,
+  getBranchName,
+  getDepartmentName,
+  getDoctorName,
+  telHref,
+} from "@/data"
 import {
   fatherName,
   firstName,
@@ -55,6 +66,20 @@ const profileSchema = z.object({
 type ProfileInput = z.input<typeof profileSchema>
 type ProfileData = z.output<typeof profileSchema>
 
+/**
+ * dd.MM.yyyy, written out rather than left to toLocaleDateString("az-AZ").
+ * Not every engine ships an Azerbaijani calendar format, and the ones that do
+ * not fall back to "2026 M08 20" — which is not a date anyone here reads.
+ */
+const formatDate = (iso: string) => {
+  const d = new Date(iso)
+  const pad = (n: number) => String(n).padStart(2, "0")
+  return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()}`
+}
+
+const formatAzn = (value: number) =>
+  `${Number.isInteger(value) ? value : value.toFixed(2)} AZN`
+
 const statusColors: Record<string, string> = {
   pending: "bg-amber-100 text-amber-800",
   confirmed: "bg-green-100 text-green-800",
@@ -78,8 +103,12 @@ function ProfilPageInner() {
   const saveGoogleProfile = useAuthStore((s) => s.saveGoogleProfile)
   const appointments = useAuthStore((s) => s.appointments)
   const cancelAppointment = useAuthStore((s) => s.cancelAppointment)
+  const allOrders = useBasketStore((s) => s.orders)
+  const reorder = useBasketStore((s) => s.reorder)
 
-  const [activeTab, setActiveTab] = useState<"profile" | "appointments">("profile")
+  const [activeTab, setActiveTab] = useState<
+    "profile" | "appointments" | "orders" | "results"
+  >("profile")
   const [saved, setSaved] = useState(false)
   /*
    * Where to go once the profile is usable. Restricted to a same-site path:
@@ -175,6 +204,7 @@ function ProfilPageInner() {
   }
 
   const missing = missingProfileFields(user)
+  const orders = ordersFor(allOrders, user.id)
   const isGoogle = source === "google"
 
   const initials = user.fullName
@@ -228,7 +258,7 @@ function ProfilPageInner() {
         )}
 
         {/* Tabs */}
-        <div className="flex gap-2 mb-6" role="tablist" aria-label="Profil bölmələri">
+        <div className="flex flex-wrap gap-2 mb-6" role="tablist" aria-label="Profil bölmələri">
           <Button
             role="tab"
             id="tab-profile"
@@ -249,7 +279,29 @@ function ProfilPageInner() {
             onClick={() => setActiveTab("appointments")}
           >
             <Calendar className="w-4 h-4" aria-hidden="true" />
-            Qəbularım ({appointments.length})
+            Qəbullarım ({appointments.length})
+          </Button>
+          <Button
+            role="tab"
+            id="tab-orders"
+            aria-selected={activeTab === "orders"}
+            aria-controls="panel-orders"
+            variant={activeTab === "orders" ? "cta" : "outline"}
+            onClick={() => setActiveTab("orders")}
+          >
+            <ShoppingBag className="w-4 h-4" aria-hidden="true" />
+            Sifarişlərim ({orders.length})
+          </Button>
+          <Button
+            role="tab"
+            id="tab-results"
+            aria-selected={activeTab === "results"}
+            aria-controls="panel-results"
+            variant={activeTab === "results" ? "cta" : "outline"}
+            onClick={() => setActiveTab("results")}
+          >
+            <FileText className="w-4 h-4" aria-hidden="true" />
+            Nəticələrim
           </Button>
         </div>
 
@@ -563,6 +615,136 @@ function ProfilPageInner() {
                 </Card>
               ))
             )}
+          </div>
+        )}
+
+        {activeTab === "orders" && (
+          <div role="tabpanel" id="panel-orders" aria-labelledby="tab-orders">
+            {orders.length === 0 ? (
+              <Card className="border-0 shadow-lg">
+                <CardContent className="py-16 text-center">
+                  <ShoppingBag
+                    className="w-16 h-16 text-slate-300 mx-auto mb-4"
+                    aria-hidden="true"
+                  />
+                  <h2 className="text-lg font-semibold text-slate-700 mb-2">
+                    Hələ sifarişiniz yoxdur
+                  </h2>
+                  <p className="text-slate-500 mb-6">
+                    Laboratoriya xidmətlərini seçib sifariş verə bilərsiniz
+                  </p>
+                  <Button variant="cta" asChild>
+                    <Link href="/xidmetler">Xidmətlərə bax</Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="space-y-4">
+                {orders.map((order) => (
+                  <Card key={order.id} className="border-0 shadow-lg">
+                    <CardContent className="p-5">
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div>
+                          <p className="font-medium text-slate-900">
+                            {formatDate(order.createdAt)}
+                          </p>
+                          <p className="mt-0.5 text-sm text-slate-500">
+                            {getBranchName(order.branch)} · {order.lines.length}{" "}
+                            xidmət
+                            {order.homeCollection && " · evdə qanalma"}
+                            {" · "}
+                            {order.paymentMethod === "CARD" ? "kart" : "nağd"}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className="font-display text-step-1 text-primary">
+                            {formatAzn(order.total)}
+                          </span>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => reorder(order.id)}
+                          >
+                            <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
+                            Təkrarla
+                          </Button>
+                        </div>
+                      </div>
+
+                      <ul className="mt-4 flex flex-wrap gap-1.5 border-t border-[var(--line)] pt-4">
+                        {order.lines.map((line) => (
+                          <li
+                            key={line.slug}
+                            className="rounded-md bg-[var(--secondary)] px-2 py-1 text-xs text-[var(--ink)]"
+                          >
+                            {shortServiceName(line.name)}
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                ))}
+
+                {/*
+                  Said plainly and next to the orders themselves. There is no
+                  server receiving these yet, so a list that looked like a
+                  hospital record would have someone waiting at home for a call
+                  that is never placed.
+                */}
+                <p className="flex items-start gap-2 text-xs text-slate-500">
+                  <AlertCircle
+                    className="mt-0.5 w-3.5 h-3.5 shrink-0"
+                    aria-hidden="true"
+                  />
+                  Sifarişlər hazırda yalnız bu brauzerdə saxlanılır və klinikaya
+                  avtomatik göndərilmir. Təsdiq üçün{" "}
+                  <a
+                    href={telHref(contactInfo.phone)}
+                    className="font-medium text-primary hover:underline"
+                  >
+                    {contactInfo.phone}
+                  </a>{" "}
+                  nömrəsi ilə əlaqə saxlayın.
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === "results" && (
+          <div role="tabpanel" id="panel-results" aria-labelledby="tab-results">
+            <Card className="border-0 shadow-lg">
+              <CardContent className="py-12 text-center">
+                <FileText
+                  className="w-16 h-16 text-slate-300 mx-auto mb-4"
+                  aria-hidden="true"
+                />
+                <h2 className="text-lg font-semibold text-slate-700 mb-2">
+                  Nəticələr hesabınıza bağlı deyil
+                </h2>
+                {/*
+                  Not an empty list. An empty "Nəticələrim" reads as "you have no
+                  results", which for someone waiting on a biopsy is a different
+                  and much worse statement than "we cannot show them here yet".
+                */}
+                <p className="mx-auto max-w-md text-slate-500">
+                  Analiz nəticələri laboratoriya sistemində saxlanılır. Onları
+                  hesabatınızdakı STRIX / KART NO, doğum tarixi və təhlükəsizlik
+                  kodu ilə görə bilərsiniz.
+                </p>
+                <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+                  <Button variant="cta" asChild>
+                    <Link href="/neticeler">Nəticələrimə bax</Link>
+                  </Button>
+                  <Button variant="outline" asChild>
+                    <a href={telHref(contactInfo.phone)}>
+                      <Phone className="w-4 h-4" aria-hidden="true" />
+                      {contactInfo.phone}
+                    </a>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         )}
       </div>
