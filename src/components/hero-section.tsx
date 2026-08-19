@@ -1,20 +1,32 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useId, useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Search, ArrowRight, Phone, Calendar, Shield, Clock, Star } from "lucide-react"
-import { departments, stats } from "@/data"
+import { contactInfo, departments, stats, telHref } from "@/data"
 
 export default function HeroSection() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedDepartment, setSelectedDepartment] = useState("")
-  const [mounted, setMounted] = useState(false)
+  const router = useRouter()
+  const searchId = useId()
+  const departmentId = useId()
 
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+  /**
+   * The panel used to be decorative: both inputs were discarded and the button
+   * was a bare link to /hekimler. It now carries the query into that page.
+   */
+  const handleSearch = (event: React.FormEvent) => {
+    event.preventDefault()
+    const params = new URLSearchParams()
+    if (searchQuery.trim()) params.set("q", searchQuery.trim())
+    if (selectedDepartment) params.set("dept", selectedDepartment)
+    const query = params.toString()
+    router.push(query ? `/hekimler?${query}` : "/hekimler")
+  }
 
   return (
     <section className="relative min-h-[90vh] flex items-center overflow-hidden">
@@ -30,60 +42,73 @@ export default function HeroSection() {
           {/* Left Content */}
           <div className="space-y-8">
             <div className="space-y-4">
-              <div className={`inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium transition-all duration-700 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+              <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium animate-fade-in-up">
                 <Shield className="w-4 h-4" />
                 Bakıdakı ən etibarlı xəstəxana
               </div>
-              <h1 className={`text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight transition-all duration-700 delay-150 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight animate-fade-in-up [animation-delay:120ms]">
                 Sağlamlığınız
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
                   {" "}
                   Bizim Prioritetimiz
                 </span>
               </h1>
-              <p className={`text-lg text-slate-600 max-w-xl transition-all duration-700 delay-300 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+              <p className="text-lg text-slate-600 max-w-xl animate-fade-in-up [animation-delay:240ms]">
                 Müasir tibbi avadanlıqlar və təcrübəli həkim heyəti ilə
                 keyfiyyətli səhiyyə xidməti. İndi qəbula yazılın.
               </p>
             </div>
 
             {/* Search Panel */}
-            <div className={`bg-white rounded-2xl shadow-xl p-6 space-y-4 transition-all duration-700 delay-500 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
-              <h3 className="font-semibold text-slate-900 flex items-center gap-2">
-                <Search className="w-5 h-5 text-primary" />
+            <div className="bg-white rounded-2xl shadow-xl p-6 space-y-4 animate-fade-in-up [animation-delay:360ms]">
+              <h2 className="font-semibold text-slate-900 flex items-center gap-2">
+                <Search className="w-5 h-5 text-primary" aria-hidden="true" />
                 Həkim və ya şöbə axtar
-              </h3>
-              <div className="flex flex-col sm:flex-row gap-3">
-                <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                  <Input
-                    type="text"
-                    placeholder="Həkim adı və ya şöbə..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 h-12"
-                  />
+              </h2>
+              <form onSubmit={handleSearch} className="space-y-4" role="search">
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <div className="relative flex-1">
+                    <label htmlFor={searchId} className="sr-only">
+                      Həkim adı və ya ixtisas
+                    </label>
+                    <Search
+                      className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"
+                      aria-hidden="true"
+                    />
+                    <Input
+                      id={searchId}
+                      type="search"
+                      name="q"
+                      placeholder="Həkim adı və ya şöbə..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-10 h-12"
+                    />
+                  </div>
+                  <label htmlFor={departmentId} className="sr-only">
+                    Şöbə
+                  </label>
+                  <select
+                    id={departmentId}
+                    name="dept"
+                    value={selectedDepartment}
+                    onChange={(e) => setSelectedDepartment(e.target.value)}
+                    className="h-12 px-4 rounded-lg border border-input bg-background text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-all duration-200 hover:border-primary"
+                  >
+                    <option value="">Bütün şöbələr</option>
+                    {departments.map((dept) => (
+                      <option key={dept.id} value={dept.id}>
+                        {dept.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
-                <select
-                  value={selectedDepartment}
-                  onChange={(e) => setSelectedDepartment(e.target.value)}
-                  className="h-12 px-4 rounded-lg border border-input bg-background text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-all duration-200 hover:border-primary"
-                >
-                  <option value="">Bütün şöbələr</option>
-                  {departments.map((dept) => (
-                    <option key={dept.id} value={dept.id}>
-                      {dept.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <Button variant="cta" size="lg" className="w-full sm:w-auto" asChild>
-                <Link href="/hekimler">
-                  <Search className="w-5 h-5" />
+                <Button type="submit" variant="cta" size="lg" className="w-full sm:w-auto">
+                  <Search className="w-5 h-5" aria-hidden="true" />
                   Axtar
-                  <ArrowRight className="w-5 h-5" />
-                </Link>
-              </Button>
+                  <ArrowRight className="w-5 h-5" aria-hidden="true" />
+                </Button>
+              </form>
             </div>
 
             {/* Quick Stats */}
@@ -109,7 +134,7 @@ export default function HeroSection() {
           <div className="relative hidden lg:block">
             <div className="relative">
               {/* Main Card */}
-              <div className={`bg-white rounded-3xl shadow-2xl p-8 transition-all duration-700 delay-300 ${mounted ? "opacity-100 rotate-2 translate-y-0" : "opacity-0 rotate-6 translate-y-8"} hover:rotate-0 hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.2)]`}>
+              <div className="bg-white rounded-3xl shadow-2xl p-8 rotate-2 transition-transform duration-300 animate-fade-in-up [animation-delay:240ms] hover:rotate-0 hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.2)]">
                 <div className="w-20 h-20 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center mb-6 transition-transform duration-300 hover:scale-110 hover:rotate-6">
                   <Calendar className="w-10 h-10 text-white" />
                 </div>
@@ -128,7 +153,7 @@ export default function HeroSection() {
               </div>
 
               {/* Floating Card 1 */}
-              <div className={`absolute -top-4 -right-4 bg-white rounded-2xl shadow-lg p-4 transition-all duration-700 delay-500 ${mounted ? "opacity-100 -rotate-3 translate-x-0" : "opacity-0 -rotate-6 translate-x-8"} hover:rotate-0 hover:shadow-xl hover:scale-105`}>
+              <div className="absolute -top-4 -right-4 bg-white rounded-2xl shadow-lg p-4 -rotate-3 transition-transform duration-300 animate-fade-in-right [animation-delay:420ms] hover:rotate-0 hover:shadow-xl hover:scale-105">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center transition-transform duration-300 hover:scale-110">
                     <Clock className="w-6 h-6 text-green-600" />
@@ -141,7 +166,7 @@ export default function HeroSection() {
               </div>
 
               {/* Floating Card 2 */}
-              <div className={`absolute -bottom-4 -left-4 bg-white rounded-2xl shadow-lg p-4 transition-all duration-700 delay-700 ${mounted ? "opacity-100 rotate-3 translate-x-0" : "opacity-0 rotate-6 -translate-x-8"} hover:rotate-0 hover:shadow-xl hover:scale-105`}>
+              <div className="absolute -bottom-4 -left-4 bg-white rounded-2xl shadow-lg p-4 rotate-3 transition-transform duration-300 animate-fade-in-left [animation-delay:560ms] hover:rotate-0 hover:shadow-xl hover:scale-105">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center transition-transform duration-300 hover:scale-110">
                     <Star className="w-6 h-6 text-amber-600" />
@@ -161,7 +186,7 @@ export default function HeroSection() {
       <div className="fixed bottom-0 left-0 right-0 md:hidden bg-white border-t shadow-lg z-40 px-4 py-3">
         <div className="flex gap-3">
           <Button variant="emergency" className="flex-1" asChild>
-            <a href="tel:+994557101050">
+            <a href={telHref(contactInfo.phone)}>
               <Phone className="w-5 h-5" />
               Təcili Zəng
             </a>

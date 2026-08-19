@@ -1,8 +1,18 @@
+import type { Metadata } from "next"
+import { pageMetadata } from "@/lib/site"
+
+export const metadata: Metadata = pageMetadata({
+  title: "Filiallar",
+  description:
+    "Memorial Hospital filialları — ünvanlar, telefon nömrələri və iş saatları.",
+  path: "/filiallar",
+})
+
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { MapPin, Phone, Clock, ArrowRight, Navigation } from "lucide-react"
-import { branches } from "@/data"
+import { branches, telHref } from "@/data"
 
 export default function FiliallarPage() {
   return (
@@ -47,7 +57,7 @@ export default function FiliallarPage() {
                   </div>
                   <div className="flex items-start gap-3">
                     <Phone className="w-5 h-5 text-teal-700 mt-0.5 shrink-0" />
-                    <a href={`tel:${branch.phone}`} className="text-sm text-slate-600 hover:text-teal-700 transition-colors">
+                    <a href={telHref(branch.phone)} className="text-sm text-slate-600 hover:text-teal-700 transition-colors">
                       {branch.phone}
                     </a>
                   </div>
@@ -58,7 +68,7 @@ export default function FiliallarPage() {
                 </div>
                 <div className="mt-6 pt-4 border-t flex gap-3">
                   <Button variant="outline" className="flex-1" asChild>
-                    <a href={`tel:${branch.phone}`}>
+                    <a href={telHref(branch.phone)}>
                       <Phone className="w-4 h-4" />
                       Zəng Et
                     </a>

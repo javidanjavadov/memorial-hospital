@@ -3,8 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
-import PageTransition from "@/components/page-transition";
-import RouteLoader from "@/components/route-loader";
+import RouteChange from "@/components/route-change";
 
 const inter = Inter({
   variable: "--font-geist-sans",
@@ -46,9 +45,8 @@ export default function RootLayout({
   return (
     <html lang="az" className={`${inter.variable} h-full antialiased`} data-scroll-behavior="smooth" suppressHydrationWarning>
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
-        <RouteLoader />
         <Navbar />
-        <main className="flex-1"><PageTransition>{children}</PageTransition></main>
+        <main className="flex-1"><RouteChange>{children}</RouteChange></main>
         <Footer />
       </body>
     </html>

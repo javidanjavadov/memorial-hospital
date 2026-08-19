@@ -1,10 +1,13 @@
 "use client"
 
 import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
+import { Field, textareaClass } from "@/components/ui/field"
 import {
   Phone,
   Mail,
@@ -14,10 +17,55 @@ import {
   MessageCircle,
   CheckCircle,
 } from "lucide-react"
-import { branches, contactInfo } from "@/data"
+import { contactInfo, telHref } from "@/data"
+import { fullName, phoneNumber, requiredEmail } from "@/lib/validation"
+
+const schema = z.object({
+  name: fullName,
+  email: requiredEmail,
+  phone: phoneNumber,
+  message: z
+    .string()
+    .min(10, "Mesaj minimum 10 simvol olmalıdır")
+    .max(2000, "Mesaj maksimum 2000 simvol ola bilər"),
+})
+
+type FormData = z.infer<typeof schema>
 
 export default function ElaqePage() {
   const [sent, setSent] = useState(false)
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+    defaultValues: { name: "", email: "", phone: "", message: "" },
+  })
+
+  /**
+   * There is no backend to post to. Rather than pretending the message was
+   * delivered — the previous behaviour, which silently discarded everything —
+   * the form hands the composed message to the visitor's mail client.
+   */
+  const onSubmit = (data: FormData) => {
+    const subject = `Sayt müraciəti — ${data.name}`
+    const body = [
+      `Ad: ${data.name}`,
+      `Email: ${data.email}`,
+      `Telefon: ${data.phone}`,
+      "",
+      data.message,
+    ].join("\n")
+
+    window.location.assign(
+      `mailto:${contactInfo.email}?subject=${encodeURIComponent(
+        subject
+      )}&body=${encodeURIComponent(body)}`
+    )
+    setSent(true)
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-teal-100/30 to-teal-100/50 py-12 px-4">
@@ -40,51 +88,111 @@ export default function ElaqePage() {
             <CardContent>
               {sent ? (
                 <div className="text-center py-12">
-                  <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">
-                    Mesajınız göndərildi!
-                  </h3>
-                  <p className="text-slate-500">
-                    Tezliklə sizinlə əlaqə saxlayacağıq.
+                  <CheckCircle
+                    className="w-16 h-16 text-green-500 mx-auto mb-4"
+                    aria-hidden="true"
+                  />
+                  <h2 className="text-xl font-bold text-slate-900 mb-2">
+                    Mesajınız hazırlandı
+                  </h2>
+                  <p className="text-slate-500 mb-4">
+                    E-poçt proqramınızda mesaj açıldı — göndərməni orada
+                    tamamlayın.
                   </p>
+                  <p className="text-sm text-slate-500">
+                    Proqram açılmadısa, bizə birbaşa yazın:{" "}
+                    <a
+                      href={`mailto:${contactInfo.email}`}
+                      className="text-teal-700 font-semibold hover:underline"
+                    >
+                      {contactInfo.email}
+                    </a>{" "}
+                    və ya zəng edin{" "}
+                    <a
+                      href={telHref(contactInfo.phone)}
+                      className="text-teal-700 font-semibold hover:underline"
+                    >
+                      {contactInfo.phone}
+                    </a>
+                  </p>
+                  <Button
+                    variant="outline"
+                    className="mt-6"
+                    onClick={() => setSent(false)}
+                  >
+                    Yeni mesaj yaz
+                  </Button>
                 </div>
               ) : (
                 <form
-                  onSubmit={(e) => {
-                    e.preventDefault()
-                    setSent(true)
-                  }}
+                  onSubmit={handleSubmit(onSubmit)}
                   className="space-y-4"
+                  noValidate
                 >
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-slate-700">Ad</label>
-                      <Input placeholder="Adınız" required />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-slate-700">Soyad</label>
-                      <Input placeholder="Soyadınız" required />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-700">Email</label>
-                    <Input type="email" placeholder="email@example.com" required />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-700">Telefon</label>
-                    <Input type="tel" placeholder="+994 XX XXX XX XX" required />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-700">Mesaj</label>
-                    <textarea
-                      rows={4}
-                      placeholder="Mesajınızı yazın..."
-                      className="w-full px-4 py-3 rounded-lg border border-input bg-background text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring resize-none"
-                      required
-                    />
-                  </div>
-                  <Button type="submit" variant="cta" size="lg" className="w-full">
-                    <Send className="w-5 h-5" />
+                  <Field label="Ad Soyad" required error={errors.name?.message}>
+                    {(field) => (
+                      <Input
+                        {...field}
+                        autoComplete="name"
+                        placeholder="Adınız və soyadınız"
+                        {...register("name")}
+                        className={errors.name ? "border-red-500" : ""}
+                      />
+                    )}
+                  </Field>
+
+                  <Field label="Email" required error={errors.email?.message}>
+                    {(field) => (
+                      <Input
+                        {...field}
+                        type="email"
+                        autoComplete="email"
+                        placeholder="email@example.com"
+                        {...register("email")}
+                        className={errors.email ? "border-red-500" : ""}
+                      />
+                    )}
+                  </Field>
+
+                  <Field label="Telefon" required error={errors.phone?.message}>
+                    {(field) => (
+                      <Input
+                        {...field}
+                        type="tel"
+                        autoComplete="tel"
+                        placeholder="+994 XX XXX XX XX"
+                        {...register("phone")}
+                        className={errors.phone ? "border-red-500" : ""}
+                      />
+                    )}
+                  </Field>
+
+                  <Field
+                    label="Mesaj"
+                    required
+                    hint="Zəhmət olmasa şəxsi sağlamlıq məlumatlarınızı bu formda yazmayın."
+                    error={errors.message?.message}
+                  >
+                    {(field) => (
+                      <textarea
+                        {...field}
+                        rows={4}
+                        maxLength={2000}
+                        placeholder="Mesajınızı yazın..."
+                        {...register("message")}
+                        className={textareaClass}
+                      />
+                    )}
+                  </Field>
+
+                  <Button
+                    type="submit"
+                    variant="cta"
+                    size="lg"
+                    className="w-full"
+                    disabled={isSubmitting}
+                  >
+                    <Send className="w-5 h-5" aria-hidden="true" />
                     Göndər
                   </Button>
                 </form>
@@ -103,7 +211,7 @@ export default function ElaqePage() {
                   </div>
                   <div>
                     <h4 className="font-medium text-slate-900">Telefon</h4>
-                    <a href={`tel:${contactInfo.phone}`} className="text-teal-700 font-semibold">
+                    <a href={telHref(contactInfo.phone)} className="text-teal-700 font-semibold">
                       {contactInfo.phone}
                     </a>
                   </div>
@@ -154,7 +262,7 @@ export default function ElaqePage() {
                     WhatsApp
                   </a>
                   <a
-                    href={`tel:${contactInfo.phone}`}
+                    href={telHref(contactInfo.phone)}
                     className="flex items-center gap-2 px-4 py-2 bg-teal-100 text-teal-700 rounded-lg hover:bg-teal-200 transition-colors"
                   >
                     <Phone className="w-5 h-5" />

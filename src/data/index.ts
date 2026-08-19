@@ -8,11 +8,8 @@ import {
   Syringe,
   Activity,
   Shield,
-  Clock,
   Users,
   MapPin,
-  Phone,
-  Mail,
   type LucideIcon,
 } from "lucide-react"
 
@@ -21,10 +18,12 @@ export interface Doctor {
   name: string
   specialty: string
   department: string
+  /** Canonical branch id — must match a `Branch.id`. Used for all filtering. */
+  branchId: string
+  /** Short display name of the branch. Never compare against this. */
   branch: string
   experience: number
   rating: number
-  image: string
   available: boolean
   languages: string[]
   education: string
@@ -121,10 +120,10 @@ export const doctors: Doctor[] = [
     name: "Dr. Əli Hüseynov",
     specialty: "Kardioloq",
     department: "kardiologiya",
+    branchId: "nrimanov",
     branch: "Nərimanov",
     experience: 15,
     rating: 4.9,
-    image: "/doctors/doctor-1.jpg",
     available: true,
     languages: ["Azərbaycanca", "Rusca", "İngiliscə"],
     education: "Bakı Dövlət Tibb Universiteti",
@@ -134,10 +133,10 @@ export const doctors: Doctor[] = [
     name: "Dr. Leyla Əhmədova",
     specialty: "Nevropatoloq",
     department: "nevrologiya",
+    branchId: "qarayev",
     branch: "Qarayev",
     experience: 12,
     rating: 4.8,
-    image: "/doctors/doctor-2.jpg",
     available: true,
     languages: ["Azərbaycanca", "Rusca"],
     education: "Azərbaycan Tibb Universiteti",
@@ -147,10 +146,10 @@ export const doctors: Doctor[] = [
     name: "Dr. Murad Əliyev",
     specialty: "Terapevt",
     department: "terapiya",
+    branchId: "nrimanov",
     branch: "Nərimanov",
     experience: 10,
     rating: 4.7,
-    image: "/doctors/doctor-3.jpg",
     available: true,
     languages: ["Azərbaycanca", "İngiliscə"],
     education: "Bakı Dövlət Tibb Universiteti",
@@ -160,10 +159,10 @@ export const doctors: Doctor[] = [
     name: "Dr. Günel Məmmədova",
     specialty: "Pediatr",
     department: "pediatriya",
+    branchId: "ganca",
     branch: "Gəncə",
     experience: 8,
     rating: 4.9,
-    image: "/doctors/doctor-4.jpg",
     available: false,
     languages: ["Azərbaycanca", "Rusca"],
     education: "Azərbaycan Tibb Universiteti",
@@ -173,10 +172,10 @@ export const doctors: Doctor[] = [
     name: "Dr. Rəşad Quliyev",
     specialty: "Ortoped",
     department: "ortopediya",
+    branchId: "nrimanov",
     branch: "Nərimanov",
     experience: 18,
     rating: 4.8,
-    image: "/doctors/doctor-5.jpg",
     available: true,
     languages: ["Azərbaycanca", "Rusca", "İngiliscə"],
     education: "Bakı Dövlət Tibb Universiteti",
@@ -186,10 +185,10 @@ export const doctors: Doctor[] = [
     name: "Dr. Aynur Kərimova",
     specialty: "Oftalmoloq",
     department: "oftalmologiya",
+    branchId: "qarayev",
     branch: "Qarayev",
     experience: 14,
     rating: 4.9,
-    image: "/doctors/doctor-6.jpg",
     available: true,
     languages: ["Azərbaycanca", "Rusca"],
     education: "Azərbaycan Tibb Universiteti",
@@ -258,9 +257,17 @@ export const services: Service[] = [
   },
 ]
 
+/** Year the hospital opened. Keep YEARS_OF_EXPERIENCE in sync with it. */
+export const FOUNDED_YEAR = 2009
+/**
+ * Hardcoded rather than derived from `new Date()` so that statically rendered
+ * markup can never disagree with what the client computes (hydration mismatch).
+ */
+export const YEARS_OF_EXPERIENCE = 17
+
 export const stats = [
   { label: "Təcrübəli Həkim", value: "50+", icon: Users },
-  { label: "İllik Təcrübə", value: "15+", icon: Shield },
+  { label: "İllik Təcrübə", value: `${YEARS_OF_EXPERIENCE}+`, icon: Shield },
   { label: "Müalicə Olunan", value: "100K+", icon: Heart },
   { label: "Filial Sayı", value: "3", icon: MapPin },
 ]
@@ -270,4 +277,47 @@ export const contactInfo = {
   email: "info@memorialhospital.az",
   workingHours: "B.e - Cümə: 08:00 - 20:00, Şənbə: 09:00 - 17:00",
   address: "Bakı ş., Nərimanov r., Ü.Hacıbəyli küç. 42",
+}
+
+/**
+ * `tel:` URIs must not contain spaces — `tel:+994 55 710 10 50` is malformed and
+ * some dialers drop everything after the first space.
+ */
+export const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, "")}`
+
+/** Branch id -> branch, for O(1) lookups in render paths. */
+const branchById = new Map(branches.map((b) => [b.id, b]))
+const departmentById = new Map(departments.map((d) => [d.id, d]))
+const doctorById = new Map(doctors.map((d) => [d.id, d]))
+
+export const getBranch = (id: string | undefined) =>
+  id ? branchById.get(id) : undefined
+export const getDepartment = (id: string | undefined) =>
+  id ? departmentById.get(id) : undefined
+export const getDoctor = (id: string | undefined) =>
+  id ? doctorById.get(id) : undefined
+
+export const getBranchName = (id: string | undefined) => getBranch(id)?.name ?? id ?? "-"
+export const getDepartmentName = (id: string | undefined) =>
+  getDepartment(id)?.name ?? id ?? "-"
+export const getDoctorName = (id: string | undefined) => getDoctor(id)?.name ?? id ?? "-"
+
+/**
+ * Every branch id referenced by a doctor must exist in `branches`. A mismatch
+ * here silently empties the doctor picker on the booking form, so we fail loudly
+ * in development instead.
+ */
+if (process.env.NODE_ENV !== "production") {
+  for (const doctor of doctors) {
+    if (!branchById.has(doctor.branchId)) {
+      throw new Error(
+        `Doctor "${doctor.name}" references unknown branchId "${doctor.branchId}"`
+      )
+    }
+    if (!departmentById.has(doctor.department)) {
+      throw new Error(
+        `Doctor "${doctor.name}" references unknown department "${doctor.department}"`
+      )
+    }
+  }
 }

@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Memorial Hospital
 
-## Getting Started
+Bakıdakı Memorial Hospital üçün sayt — onlayn qəbul, həkim kataloqu, filial və
+xidmət məlumatları. Next.js 16 (App Router), React 19, Tailwind CSS 4.
 
-First, run the development server:
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Script | Nə edir |
+| --- | --- |
+| `npm run dev` | Development server |
+| `npm run build` | Production build |
+| `npm start` | Built saytı işə salır |
+| `npm run typecheck` | `tsc --noEmit` |
+| `npm run lint` | ESLint |
+| `npm run check` | typecheck + lint + build (CI ilə eyni) |
 
-## Learn More
+## Environment
 
-To learn more about Next.js, take a look at the following resources:
+| Variable | Default | Nə üçün |
+| --- | --- | --- |
+| `NEXT_PUBLIC_SITE_URL` | `https://yuzuch.dev` | Canonical URL-lər, `sitemap.xml`, Open Graph |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+src/
+  app/            App Router route-ları (+ sitemap / robots / manifest)
+  components/     UI və layout komponentləri
+  components/ui/  Baza primitivləri (Button, Input, Field, Card …)
+  data/           Həkim, şöbə, filial və xidmət məlumatları
+  lib/            Auth store, validasiya sxemləri, kriptoqrafiya, sayt konfiqi
+```
 
-## Deploy on Vercel
+Bütün məlumatlar `src/data/index.ts` faylındadır. Həkimlərin filialı
+`branchId` sahəsi ilə bağlanır — bu id mütləq `branches` siyahısındakı bir id ilə
+üst-üstə düşməlidir; development rejimində uyğunsuzluq halında build xəta verir.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Accessibility
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Bütün form sahələri `<Field>` komponenti vasitəsilə label-a bağlanır.
+- `prefers-reduced-motion` tam dəstəklənir: animasiyalar söndürülür, məzmun
+  həmişə görünür qalır.
+- JavaScript söndürülübsə, scroll-animasiyalı bölmələr gizli qalmır.
+
+## Known limitations
+
+**Bu build-də backend yoxdur.** Qeydiyyat, giriş və qəbullar yalnız brauzerin
+`localStorage` yaddaşında saxlanılır. Bunun praktiki nəticələri:
+
+- **Autentifikasiya server tərəfindən yoxlanılmır.** Şifrələr PBKDF2 (100k
+  iterasiya, SHA-256) ilə heşlənir, lakin bütün yoxlama client-də getdiyi üçün
+  `localStorage`-ı birbaşa dəyişməklə keçilə bilər.
+- **Qəbullar heç kimə göndərilmir.** Reqistratura onları görmür; forma bunu
+  açıq şəkildə bildirir və heç bir SMS/email göndərildiyini iddia etmir.
+- **Əlaqə forması** məlumatı serverə yox, istifadəçinin e-poçt proqramına
+  ötürür (`mailto:`).
+- Sağlamlıq məlumatları şifrələnməmiş formada cihazda qalır.
+
+Real pasiyent məlumatları ilə istifadədən əvvəl bunlar mütləqdir: server tərəfli
+autentifikasiya (httpOnly sessiya cookie-ləri), şifrələnmiş baza, qəbul
+sorğularının serverdə saxlanması və audit jurnalı.
+
+## Deployment
+
+Canonical domen: **https://yuzuch.dev** (`src/lib/site.ts`). Netlify deploy-preview
+üçün `process.env.URL` avtomatik istifadə olunur; başqa domen lazımdırsa
+`NEXT_PUBLIC_SITE_URL` təyin edin.
+
+
+Netlify (`netlify.toml`, `@netlify/plugin-nextjs`). Node 20 pinlənib.
+Təhlükəsizlik başlıqları (CSP, HSTS, `X-Frame-Options` …) `next.config.ts`
+faylındadır.

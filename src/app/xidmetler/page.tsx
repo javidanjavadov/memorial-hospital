@@ -1,3 +1,13 @@
+import type { Metadata } from "next"
+import { pageMetadata } from "@/lib/site"
+
+export const metadata: Metadata = pageMetadata({
+  title: "Xidmətlər",
+  description:
+    "Memorial Hospital xidmətləri və qiymətləri — kompleks müayinə, kardioloji müayinə, laboratoriya analizləri və daha çox.",
+  path: "/xidmetler",
+})
+
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"

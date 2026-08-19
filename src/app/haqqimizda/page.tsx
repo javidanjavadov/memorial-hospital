@@ -1,5 +1,15 @@
+import type { Metadata } from "next"
 import { Card, CardContent } from "@/components/ui/card"
-import { Shield, Award, Users, Heart, Target, Eye } from "lucide-react"
+import { Shield, Award, Heart, Target } from "lucide-react"
+import { FOUNDED_YEAR, YEARS_OF_EXPERIENCE } from "@/data"
+import { pageMetadata } from "@/lib/site"
+
+export const metadata: Metadata = pageMetadata({
+  title: "Haqqımızda",
+  description:
+    "Memorial Hospital tarixi, dəyərləri və komandası — 2009-cu ildən Bakıda keyfiyyətli tibbi xidmət.",
+  path: "/haqqimizda",
+})
 
 const values = [
   {
@@ -25,7 +35,7 @@ const values = [
 ]
 
 const timeline = [
-  { year: "2009", event: "Memorial Hospital təsis edildi" },
+  { year: String(FOUNDED_YEAR), event: "Memorial Hospital təsis edildi" },
   { year: "2012", event: "Qarayev filialı açıldı" },
   { year: "2015", event: "Laboratoriya mərkəzi istifadəyə verildi" },
   { year: "2018", event: "Gəncə filialı açıldı" },
@@ -44,8 +54,8 @@ export default function HaqqimizdaPage() {
               Haqqımızda
             </h1>
             <p className="text-lg text-slate-600 leading-relaxed">
-              Memorial Hospital 2009-cu ildən Bakıda keyfiyyətli tibbi xidmət
-              göstərir. 15 ildən artıq təcrübəmiz, 50-dən çox təcrübəli
+              Memorial Hospital {FOUNDED_YEAR}-cu ildən Bakıda keyfiyyətli tibbi
+              xidmət göstərir. {YEARS_OF_EXPERIENCE} ildən artıq təcrübəmiz, 50-dən çox təcrübəli
               həkimimiz və 3 filialımız ilə sizlərin xidmətindəyik.
             </p>
           </div>

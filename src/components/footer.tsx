@@ -12,7 +12,7 @@ import {
   Calendar,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { branches, contactInfo, departments } from "@/data"
+import { YEARS_OF_EXPERIENCE, branches, contactInfo, departments, telHref } from "@/data"
 
 export default function Footer() {
   return (
@@ -36,7 +36,7 @@ export default function Footer() {
                 className="border-white text-white hover:bg-white hover:text-primary"
                 asChild
               >
-                <a href={`tel:${contactInfo.phone}`}>
+                <a href={telHref(contactInfo.phone)}>
                   <Phone className="w-5 h-5" />
                   Zəng Edin
                 </a>
@@ -72,13 +72,14 @@ export default function Footer() {
             </Link>
             <p className="text-slate-400 text-sm leading-relaxed">
               Memorial Hospital — Bakıdakı müasir klinik xidmətlər mərkəzi.
-              15 ildən artıq təcrübə ilə keyfiyyətli tibbi xidmət göstəririk.
+              {YEARS_OF_EXPERIENCE} ildən artıq təcrübə ilə keyfiyyətli tibbi xidmət göstəririk.
             </p>
             <div className="flex gap-3">
               <a
                 href="https://www.facebook.com/MemorialHospital.az"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="Facebook səhifəmiz (yeni pəncərədə açılır)"
                 className="w-10 h-10 rounded-full bg-white/10 hover:bg-accent flex items-center justify-center transition-all duration-300 hover:scale-110 hover:-translate-y-0.5"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -89,6 +90,7 @@ export default function Footer() {
                 href="https://www.instagram.com/memorialhospital.az/"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="Instagram səhifəmiz (yeni pəncərədə açılır)"
                 className="w-10 h-10 rounded-full bg-white/10 hover:bg-accent flex items-center justify-center transition-all duration-300 hover:scale-110 hover:-translate-y-0.5"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -99,9 +101,10 @@ export default function Footer() {
                 href="https://api.whatsapp.com/send?phone=994557101050"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="WhatsApp ilə yazın (yeni pəncərədə açılır)"
                 className="w-10 h-10 rounded-full bg-white/10 hover:bg-green-600 flex items-center justify-center transition-all duration-300 hover:scale-110 hover:-translate-y-0.5"
               >
-                <MessageCircle className="w-5 h-5" />
+                <MessageCircle className="w-5 h-5" aria-hidden="true" />
               </a>
             </div>
           </div>
@@ -156,7 +159,7 @@ export default function Footer() {
                 <Phone className="w-5 h-5 text-primary mt-0.5 shrink-0" />
                 <div>
                   <a
-                    href={`tel:${contactInfo.phone}`}
+                    href={telHref(contactInfo.phone)}
                     className="text-sm text-white hover:text-primary transition-colors block"
                   >
                     {contactInfo.phone}
@@ -191,7 +194,10 @@ export default function Footer() {
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-white/60 text-sm text-center md:text-left">
-              © {new Date().getFullYear()} Memorial Hospital. Bütün hüquqlar qorunur.
+              {/* Scoped suppression: the prerendered year and the client's year
+                  differ only across a New Year boundary, and only here. */}
+              © <span suppressHydrationWarning>{new Date().getFullYear()}</span>{" "}
+              Memorial Hospital. Bütün hüquqlar qorunur.
             </p>
             <div className="flex items-center gap-4 text-sm text-white/60">
               <Link href="/siyaset" className="hover:text-white transition-colors duration-200">

@@ -1,3 +1,4 @@
+import { contactInfo, FOUNDED_YEAR, telHref, YEARS_OF_EXPERIENCE } from "@/data"
 import HeroSection from "@/components/hero-section"
 import DepartmentsSection from "@/components/departments-section"
 import ServicesSection from "@/components/services-section"
@@ -18,17 +19,17 @@ export default function Home() {
                   Memorial Hospital <span className="text-primary">Haqqında</span>
                 </h2>
                 <p className="text-lg text-slate-600 leading-relaxed">
-                  2009-cu ildən fəaliyyət göstərən Memorial Hospital, Bakının aparıcı tibbi mərkəzlərindən biridir. 
+                  {FOUNDED_YEAR}-cu ildən fəaliyyət göstərən Memorial Hospital, Bakının aparıcı tibbi mərkəzlərindən biridir. 
                   Müasir texnologiyalar və təcrübəli həkim heyəti ilə pasiyentlərimizə yüksək keyfiyyətli tibbi xidmət göstəririk.
                 </p>
                 <p className="text-lg text-slate-600 leading-relaxed">
                   Missiyamız — hər bir pasiyentin sağlamlığını qorumaq və onlara ən yaxşı tibbi xidməti təqdim etməkdir. 
-                  3 filialımız, 50-dən çox həkimimiz və 15 ildən artıq təcrübəmizlə sizin xidmətinizdəyik.
+                  3 filialımız, 50-dən çox həkimimiz və {YEARS_OF_EXPERIENCE} ildən artıq təcrübəmizlə sizin xidmətinizdəyik.
                 </p>
                 <div className="grid grid-cols-2 gap-4 pt-4">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                      <span className="text-primary font-bold text-lg">15+</span>
+                      <span className="text-primary font-bold text-lg">{YEARS_OF_EXPERIENCE}+</span>
                     </div>
                     <span className="text-sm font-medium text-slate-700">İllik təcrübə</span>
                   </div>
@@ -105,7 +106,7 @@ export default function Home() {
                   <svg className="w-6 h-6 text-primary" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" /></svg>
                 </div>
                 <h3 className="font-semibold text-slate-900 mb-1">Zəng Edin</h3>
-                <a href="tel:+994557101050" className="text-primary font-medium hover:underline">+994 55 710 10 50</a>
+                <a href={telHref(contactInfo.phone)} className="text-primary font-medium hover:underline">+994 55 710 10 50</a>
               </div>
               <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm text-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                 <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-4">

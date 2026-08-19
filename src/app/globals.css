@@ -65,8 +65,7 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter);
 }
 
 * {
@@ -244,6 +243,12 @@ html[data-scroll-behavior="smooth"] {
   transition: opacity 0.7s ease-out, transform 0.7s ease-out;
 }
 
+.scroll-hidden-down {
+  opacity: 0;
+  transform: translateY(-30px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+
 .scroll-hidden-left {
   opacity: 0;
   transform: translateX(-40px);
@@ -346,10 +351,7 @@ html[data-scroll-behavior="smooth"] {
   width: 100%;
 }
 
-/* Page transition */
-.page-enter {
-  animation: fadeInUp 0.4s ease-out;
-}
+/* ===== ROUTE / PAGE TRANSITIONS ===== */
 
 @keyframes fadeIn {
   from {
@@ -360,6 +362,69 @@ html[data-scroll-behavior="smooth"] {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0) scale(0.994);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes pageExit {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, -8px, 0);
+  }
+}
+
+/*
+ * Remounted on every route change (keyed by pathname), which replays the
+ * animation. `will-change` is scoped to the animation only so we do not keep a
+ * compositor layer alive for the whole page lifetime.
+ */
+.page-enter {
+  animation: pageEnter 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  will-change: opacity, transform;
+}
+
+.page-enter[data-transition-state="exiting"] {
+  animation: pageExit 170ms cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+/* The animation is finished — drop the compositor hint. */
+.page-enter[data-transition-state="settled"] {
+  animation: none;
+  will-change: auto;
+}
+
+/* Top-of-page navigation progress bar. */
+@keyframes routeProgress {
+  0%   { transform: translateX(-100%); }
+  55%  { transform: translateX(-28%); }
+  80%  { transform: translateX(-12%); }
+  100% { transform: translateX(-6%); }
+}
+
+@keyframes routeLoaderIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.route-loader {
+  animation: routeLoaderIn 120ms ease-out both;
+}
+
+.route-loader__bar {
+  animation: routeProgress 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Number counter animation */
@@ -376,4 +441,101 @@ html[data-scroll-behavior="smooth"] {
 
 .animate-count {
   animation: count-up 0.5s ease-out forwards;
+}
+
+/* ===== ACCESSIBILITY ===== */
+
+/* Visible only to assistive technology. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* "Skip to content" — first tab stop, revealed on focus. */
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -100%;
+  z-index: 200;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-weight: 600;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus-visible {
+  top: 1rem;
+}
+
+/* A consistent, always-visible keyboard focus ring. */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: calc(var(--radius) - 4px);
+}
+
+/*
+ * Without JavaScript the IntersectionObserver in <AnimateOnScroll> never runs,
+ * which would leave every scroll-animated section permanently at opacity 0.
+ * The <noscript> block in app/layout.tsx reveals them in that case.
+ */
+
+/* ===== REDUCED MOTION (WCAG 2.3.3) ===== */
+
+/*
+ * Users who ask their OS for less motion get none of it. Content must still be
+ * fully visible, so the scroll-reveal start states are neutralised rather than
+ * merely having their transition removed.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  html,
+  html[data-scroll-behavior="smooth"] {
+    scroll-behavior: auto !important;
+  }
+
+  .scroll-hidden,
+  .scroll-hidden-down,
+  .scroll-hidden-left,
+  .scroll-hidden-right,
+  .scroll-hidden-scale {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .page-enter,
+  .page-enter[data-transition-state="exiting"] {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .animate-float,
+  .animate-pulse-gentle {
+    animation: none !important;
+  }
+}
+
+@media print {
+  .route-loader,
+  .skip-link {
+    display: none !important;
+  }
 }

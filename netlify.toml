@@ -1,5 +1,9 @@
 [build]
   command = "npm run build"
 
+[build.environment]
+  # Pin the runtime so local and CI builds cannot drift apart.
+  NODE_VERSION = "20"
+
 [[plugins]]
   package = "@netlify/plugin-nextjs"

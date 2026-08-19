@@ -1,11 +1,14 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { pageMetadata } from "@/lib/site"
 
-export const metadata = {
-  title: "İstifadə Şərtləri | Memorial Hospital",
-  description: "Memorial Hospital-ın istifadə şərtləri",
-}
+export const metadata: Metadata = pageMetadata({
+  title: "İstifadə Şərtləri",
+  description: "Memorial Hospital saytının istifadə şərtləri.",
+  path: "/sertler",
+})
 
 export default function TermsPage() {
   return (

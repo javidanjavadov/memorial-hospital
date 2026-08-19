@@ -1,11 +1,14 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { pageMetadata } from "@/lib/site"
 
-export const metadata = {
-  title: "Məxfilik Siyasəti | Memorial Hospital",
-  description: "Memorial Hospital-ın məxfilik siyasəti və məlumatların qorunması",
-}
+export const metadata: Metadata = pageMetadata({
+  title: "Məxfilik Siyasəti",
+  description: "Memorial Hospital-ın məxfilik siyasəti və məlumatların qorunması.",
+  path: "/siyaset",
+})
 
 export default function PrivacyPolicyPage() {
   return (
@@ -65,8 +68,51 @@ export default function PrivacyPolicyPage() {
           <section className="space-y-4">
             <h2 className="text-2xl font-semibold text-slate-900">4. Məlumatların Qorunması</h2>
             <p className="text-slate-600 leading-relaxed">
-              Şəxsi məlumatlarınız şifrələnmiş serverlərdə saxlanılır və lazım olan təhlükəsizlik tədbirləri görülür. 
+              Şəxsi məlumatlarınız şifrələnmiş serverlərdə saxlanılır və lazım olan təhlükəsizlik tədbirləri görülür.
               Məlumatlarınız yalnız səlahiyyətli personal tərəfindən giriş üçün açıqdır.
+            </p>
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-5 space-y-2">
+              <h3 className="font-semibold text-amber-900">
+                Bu saytın hazırkı versiyası barədə vacib qeyd
+              </h3>
+              <p className="text-amber-800 text-sm leading-relaxed">
+                Saytın bu versiyasında qeydiyyat və qəbul məlumatları <strong>serverə
+                göndərilmir</strong> — onlar yalnız sizin brauzerinizin yaddaşında
+                (localStorage) saxlanılır. Bu o deməkdir ki, məlumatlar həmin cihazda
+                qalır və həmin cihaza girişi olan digər şəxslər tərəfindən görünə bilər.
+                Ortaq və ya ictimai kompüterdən istifadə edirsinizsə, işiniz bitdikdən
+                sonra hesabdan çıxın və brauzer məlumatlarını təmizləyin.
+              </p>
+              <p className="text-amber-800 text-sm leading-relaxed">
+                Şifrələr açıq mətnlə deyil, PBKDF2 alqoritmi ilə heşlənmiş formada
+                saxlanılır. Buna baxmayaraq, həssas sağlamlıq məlumatlarını bu formda
+                daxil etməməyinizi tövsiyə edirik.
+              </p>
+            </div>
+          </section>
+
+          <section className="space-y-4">
+            <h2 className="text-2xl font-semibold text-slate-900">
+              4.1. Brauzer Yaddaşı (Cookie və localStorage)
+            </h2>
+            <p className="text-slate-600 leading-relaxed">
+              Sayt reklam və ya analitika məqsədilə üçüncü tərəf cookie-lərindən istifadə
+              etmir. Yalnız aşağıdakı texniki yaddaş elementləri istifadə olunur:
+            </p>
+            <ul className="list-disc list-inside text-slate-600 space-y-2 ml-4">
+              <li>
+                <code>memorial-auth</code> — aktiv sessiya (adınız, əlaqə məlumatlarınız,
+                qəbullarınız)
+              </li>
+              <li>
+                <code>memorial-users</code> — hesab məlumatları və heşlənmiş şifrə
+              </li>
+              <li>
+                <code>memorial-appointments</code> — yaradılmış qəbul sorğuları
+              </li>
+            </ul>
+            <p className="text-slate-600 leading-relaxed">
+              Bu məlumatları brauzerinizin parametrlərindən istənilən vaxt silə bilərsiniz.
             </p>
           </section>
 

@@ -3,10 +3,29 @@
 import { useEffect, useRef, useState, type ReactNode } from "react"
 import { cn } from "@/lib/utils"
 
+/** True when the visitor has asked their OS to minimise motion. */
+const prefersReducedMotion = () =>
+  typeof window !== "undefined" &&
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches
+
+type Animation = "up" | "down" | "left" | "right" | "scale"
+
+/**
+ * Each direction needs its own start state. `down` previously shared the `up`
+ * class, so `animation="down"` silently did the same thing as the default.
+ */
+const startClass: Record<Animation, string> = {
+  up: "scroll-hidden",
+  down: "scroll-hidden-down",
+  left: "scroll-hidden-left",
+  right: "scroll-hidden-right",
+  scale: "scroll-hidden-scale",
+}
+
 interface AnimateOnScrollProps {
   children: ReactNode
   className?: string
-  animation?: "up" | "down" | "left" | "right" | "scale"
+  animation?: Animation
   delay?: number
   threshold?: number
 }
@@ -22,38 +41,39 @@ export function AnimateOnScroll({
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
+    const node = ref.current
+    if (!node) return
+
+    // Reveal immediately rather than animating, and skip the observer entirely.
+    // Scheduled rather than set inline so the effect body stays free of
+    // synchronous state updates (cascading renders).
+    if (prefersReducedMotion() || !("IntersectionObserver" in window)) {
+      const frame = requestAnimationFrame(() => setIsVisible(true))
+      return () => cancelAnimationFrame(frame)
+    }
+
+    let timer: ReturnType<typeof setTimeout>
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setTimeout(() => setIsVisible(true), delay)
+          timer = setTimeout(() => setIsVisible(true), delay)
           observer.unobserve(entry.target)
         }
       },
       { threshold }
     )
 
-    if (ref.current) {
-      observer.observe(ref.current)
+    observer.observe(node)
+    return () => {
+      clearTimeout(timer)
+      observer.disconnect()
     }
-
-    return () => observer.disconnect()
   }, [delay, threshold])
-
-  const baseClass =
-    animation === "up"
-      ? "scroll-hidden"
-      : animation === "down"
-        ? "scroll-hidden"
-        : animation === "left"
-          ? "scroll-hidden-left"
-          : animation === "right"
-            ? "scroll-hidden-right"
-            : "scroll-hidden-scale"
 
   return (
     <div
       ref={ref}
-      className={cn(baseClass, isVisible && "scroll-visible", className)}
+      className={cn(startClass[animation], isVisible && "scroll-visible", className)}
     >
       {children}
     </div>
@@ -70,6 +90,14 @@ export function StaggerContainer({ children, className }: StaggerContainerProps)
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
+    const node = ref.current
+    if (!node) return
+
+    if (prefersReducedMotion() || !("IntersectionObserver" in window)) {
+      const frame = requestAnimationFrame(() => setIsVisible(true))
+      return () => cancelAnimationFrame(frame)
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -80,10 +108,7 @@ export function StaggerContainer({ children, className }: StaggerContainerProps)
       { threshold: 0.1 }
     )
 
-    if (ref.current) {
-      observer.observe(ref.current)
-    }
-
+    observer.observe(node)
     return () => observer.disconnect()
   }, [])
 
@@ -108,44 +133,65 @@ interface CountUpProps {
   duration?: number
 }
 
-export function CountUp({ end, suffix = "", className, duration = 2000 }: CountUpProps) {
+export function CountUp({
+  end,
+  suffix = "",
+  className,
+  duration = 2000,
+}: CountUpProps) {
   const ref = useRef<HTMLSpanElement>(null)
   const [count, setCount] = useState(0)
   const [started, setStarted] = useState(false)
 
   useEffect(() => {
+    const node = ref.current
+    if (!node) return
+
+    if (prefersReducedMotion() || !("IntersectionObserver" in window)) {
+      const frame = requestAnimationFrame(() => setStarted(true))
+      return () => cancelAnimationFrame(frame)
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !started) {
+        if (entry.isIntersecting) {
           setStarted(true)
+          observer.unobserve(entry.target)
         }
       },
       { threshold: 0.5 }
     )
 
-    if (ref.current) {
-      observer.observe(ref.current)
-    }
-
+    observer.observe(node)
     return () => observer.disconnect()
-  }, [started])
+  }, [])
 
   useEffect(() => {
     if (!started) return
 
-    let start = 0
-    const increment = end / (duration / 16)
-    const timer = setInterval(() => {
-      start += increment
-      if (start >= end) {
-        setCount(end)
-        clearInterval(timer)
-      } else {
-        setCount(Math.floor(start))
-      }
-    }, 16)
+    /*
+     * Driven by rAF rather than a 16ms interval: setInterval drifts under load
+     * and keeps firing in background tabs, which made the counter overshoot.
+     * Reduced motion collapses the duration to zero, so the final figure is
+     * painted on the first frame instead of ticking up to it.
+     */
+    const effectiveDuration = prefersReducedMotion() ? 0 : duration
+    let frame = 0
+    const start = performance.now()
 
-    return () => clearInterval(timer)
+    const tick = (now: number) => {
+      const progress =
+        effectiveDuration === 0
+          ? 1
+          : Math.min((now - start) / effectiveDuration, 1)
+      // easeOutCubic
+      const eased = 1 - Math.pow(1 - progress, 3)
+      setCount(Math.round(end * eased))
+      if (progress < 1) frame = requestAnimationFrame(tick)
+    }
+
+    frame = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(frame)
   }, [started, end, duration])
 
   return (
