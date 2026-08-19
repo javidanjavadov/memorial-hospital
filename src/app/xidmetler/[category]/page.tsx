@@ -16,6 +16,7 @@ import {
   promotedPriceOf,
 } from "@/lib/catalog"
 import { pageMetadata } from "@/lib/site"
+import ServiceInfoButton from "@/components/service-info-button"
 
 /**
  * One statically generated page per catalogue category.
@@ -126,7 +127,16 @@ export default async function CategoryPage({ params }: Props) {
         </aside>
 
         <div className="min-w-0">
-          <ul className="space-y-3">
+          {/*
+            A grid rather than one card per row. A category like Spesifik
+            Allergenlər holds 224 tests, and stacked full-width each carried a
+            short code, a short name and a price across the whole column — a
+            very long page made almost entirely of empty space.
+
+            The card stacks vertically now (code, name, prep, price) so it stays
+            readable at a fifth of the width.
+          */}
+          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             {items.map((item) => {
               const price = priceOf(item)
               const promoted = promotedPriceOf(item)
@@ -135,52 +145,59 @@ export default async function CategoryPage({ params }: Props) {
               return (
                 <li
                   key={item.slug}
-                  className={`rounded-xl border border-[var(--line)] bg-[var(--paper-raised)] ${
-                    compact ? "px-5 py-3" : "p-5"
-                  }`}
+                  className="flex h-full flex-col rounded-xl border border-[var(--line)] bg-[var(--paper-raised)] p-3"
                 >
-                  <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                    <div className="min-w-0 flex-1">
-                      {item.code && (
-                        <p className="font-mono text-xs text-[var(--ink-muted)]">
-                          {item.code}
-                        </p>
-                      )}
-                      <h3 className="mt-1 font-medium text-[var(--ink)]">
-                        {item.name}
-                      </h3>
-                      {!compact && item.description && (
-                        <p className="mt-2 text-sm leading-relaxed text-[var(--ink-muted)]">
-                          {item.description}
-                        </p>
-                      )}
-                      {item.prep && (
-                        <p className={`inline-flex items-center gap-1.5 text-xs text-[var(--ink-muted)] ${compact ? "mt-1" : "mt-3"}`}>
-                          <Clock className="h-3.5 w-3.5" aria-hidden="true" />
-                          Hazırlanma müddəti {item.prep}
-                        </p>
-                      )}
-                    </div>
+                  <div className="flex items-start justify-between gap-1">
+                    <p className="font-mono text-[0.65rem] text-[var(--ink-muted)]">
+                      {item.code}
+                    </p>
+                    <ServiceInfoButton
+                      service={{
+                        name: item.name,
+                        code: item.code,
+                        description: item.description,
+                        prep: item.prep,
+                        categoryName: item.categoryName,
+                        prices: item.prices,
+                      }}
+                    />
+                  </div>
+                  <h3 className="mt-0.5 text-sm leading-snug font-medium text-[var(--ink)]">
+                    {item.name}
+                  </h3>
 
-                    <div className="shrink-0 text-right">
-                      {discounted ? (
-                        <>
-                          <p className="text-sm text-[var(--ink-muted)] line-through">
-                            {formatAzn(price)}
-                          </p>
-                          <p className="font-display text-step-1 text-primary">
-                            {formatAzn(promoted)}
-                          </p>
-                          <p className="text-xs text-[var(--ink-muted)]">
-                            onlayn qiymət
-                          </p>
-                        </>
-                      ) : (
-                        <p className="font-display text-step-1 text-primary">
+                  {/* Clamped to two lines: at a fifth of the width an unclamped
+                      paragraph would set the row height for every sibling. */}
+                  {!compact && item.description && (
+                    <p className="mt-1 line-clamp-2 text-[0.7rem] leading-snug text-[var(--ink-muted)]">
+                      {item.description}
+                    </p>
+                  )}
+
+                  <div className="flex-1" />
+
+                  {item.prep && (
+                    <p className="mt-2 inline-flex items-start gap-1 text-[0.65rem] leading-tight text-[var(--ink-muted)]">
+                      <Clock className="mt-px h-3 w-3 shrink-0" aria-hidden="true" />
+                      {item.prep}
+                    </p>
+                  )}
+
+                  <div className="mt-2 flex items-baseline gap-1.5 border-t border-[var(--line)] pt-2">
+                    {discounted ? (
+                      <>
+                        <span className="font-display text-base text-primary">
+                          {formatAzn(promoted)}
+                        </span>
+                        <span className="text-[0.65rem] text-[var(--ink-muted)] line-through">
                           {formatAzn(price)}
-                        </p>
-                      )}
-                    </div>
+                        </span>
+                      </>
+                    ) : (
+                      <span className="font-display text-base text-primary">
+                        {formatAzn(price)}
+                      </span>
+                    )}
                   </div>
                 </li>
               )

@@ -10,7 +10,9 @@ import catalogData from "@/data/catalog.json"
  * category at a time on the server, so only those rows reach the HTML.
  */
 
-export type BranchKey = "nerimanov" | "qarayev" | "gence"
+/** Must match `Branch.id` in @/data — the price keys in catalog.json are
+ *  keyed by it, and a mismatch silently drops branches from the price table. */
+export type BranchKey = "nrimanov" | "qarayev" | "ganca"
 
 export interface CatalogPrice {
   price: number
@@ -118,7 +120,7 @@ export const allCategorySlugs = () =>
  * priced differently anywhere — so it is the sensible figure to lead with, with
  * the branch named next to it rather than implied.
  */
-export const DEFAULT_BRANCH: BranchKey = "nerimanov"
+export const DEFAULT_BRANCH: BranchKey = "nrimanov"
 
 export const priceOf = (item: CatalogItem, branch: BranchKey = DEFAULT_BRANCH) =>
   item.prices[branch]?.price ?? Object.values(item.prices)[0]?.price ?? 0
