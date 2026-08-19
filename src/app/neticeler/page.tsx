@@ -13,6 +13,7 @@ import {
   Phone,
   ShieldCheck,
 } from "lucide-react"
+import { useCurrentUser } from "@/lib/use-current-user"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Field } from "@/components/ui/field"
@@ -44,6 +45,14 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>
 
 export default function NeticelerPage() {
+  /*
+   * This lookup exists for visitors who have no account: it proves identity
+   * with the card number, date of birth and security code printed on the
+   * report. A signed-in visitor has already proved it, so asking again is
+   * asking them to go and find a piece of paper for no reason.
+   */
+  const { user, isLoading } = useCurrentUser()
+
   const [error, setError] = useState("")
   const [order, setOrder] = useState<ResultOrder | null>(null)
 
@@ -88,6 +97,39 @@ export default function NeticelerPage() {
       setValue("securityCode", "")
       setError(outcome.error)
     }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center" role="status">
+        <span className="text-[var(--ink-muted)]">Yüklənir...</span>
+      </div>
+    )
+  }
+
+  if (user) {
+    return (
+      <div className="min-h-screen bg-[var(--paper)] py-14 md:py-20">
+        <div className="container mx-auto max-w-lg px-4 text-center">
+          <div
+            className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10"
+            aria-hidden="true"
+          >
+            <FileText className="h-8 w-8 text-primary" />
+          </div>
+          <h1 className="font-display text-step-2 text-[var(--ink)]">
+            Nəticələriniz hesabınıza bağlıdır
+          </h1>
+          <p className="mt-3 text-[var(--ink-muted)]">
+            Daxil olduğunuz üçün kart nömrəsi və təhlükəsizlik koduna ehtiyac
+            yoxdur. Nəticələr profilinizin “Nəticələrim” bölməsindədir.
+          </p>
+          <Button variant="cta" size="lg" className="mt-6" asChild>
+            <Link href="/profil?tab=results">Nəticələrim</Link>
+          </Button>
+        </div>
+      </div>
+    )
   }
 
   return (

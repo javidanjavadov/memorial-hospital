@@ -106,16 +106,24 @@ function ProfilPageInner() {
   const allOrders = useBasketStore((s) => s.orders)
   const reorder = useBasketStore((s) => s.reorder)
 
+  const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState<
     "profile" | "appointments" | "orders" | "results"
-  >("profile")
+  >(() => {
+    // Deep link, so "Nəticələrimə bax" in the header can open this section
+    // directly instead of dropping the visitor on the profile form.
+    const tab = searchParams.get("tab")
+    return tab === "results" || tab === "orders" || tab === "appointments"
+      ? tab
+      : "profile"
+  })
   const [saved, setSaved] = useState(false)
   /*
    * Where to go once the profile is usable. Restricted to a same-site path:
    * accepting an arbitrary URL would let a link hand someone off to a
    * look-alike site the moment they finish filling in their FIN.
    */
-  const nextParam = useSearchParams().get("next")
+  const nextParam = searchParams.get("next")
   const next =
     nextParam && nextParam.startsWith("/") && !nextParam.startsWith("//")
       ? nextParam
@@ -714,29 +722,58 @@ function ProfilPageInner() {
         {activeTab === "results" && (
           <div role="tabpanel" id="panel-results" aria-labelledby="tab-results">
             <Card className="border-0 shadow-lg">
-              <CardContent className="py-12 text-center">
-                <FileText
-                  className="w-16 h-16 text-slate-300 mx-auto mb-4"
-                  aria-hidden="true"
-                />
-                <h2 className="text-lg font-semibold text-slate-700 mb-2">
-                  Nəticələr hesabınıza bağlı deyil
-                </h2>
+              <CardHeader>
+                <CardTitle>Nəticələrim</CardTitle>
+              </CardHeader>
+              <CardContent>
                 {/*
-                  Not an empty list. An empty "Nəticələrim" reads as "you have no
-                  results", which for someone waiting on a biopsy is a different
-                  and much worse statement than "we cannot show them here yet".
+                  Signed in, the card number, date of birth and security code
+                  are pointless: they exist to prove identity, and the account
+                  has already done that. The lookup form stays for visitors who
+                  are not signed in.
                 */}
-                <p className="mx-auto max-w-md text-slate-500">
-                  Analiz nəticələri laboratoriya sistemində saxlanılır. Onları
-                  hesabatınızdakı STRIX / KART NO, doğum tarixi və təhlükəsizlik
-                  kodu ilə görə bilərsiniz.
+                <p className="text-sm text-[var(--ink-muted)]">
+                  Nəticələr aşağıdakı məlumatlarla hesabınıza bağlanır. Kart
+                  nömrəsi və təhlükəsizlik kodu tələb olunmur.
                 </p>
-                <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
-                  <Button variant="cta" asChild>
-                    <Link href="/neticeler">Nəticələrimə bax</Link>
-                  </Button>
-                  <Button variant="outline" asChild>
+
+                <dl className="mt-4 grid gap-3 sm:grid-cols-2">
+                  <div className="rounded-lg border border-[var(--line)] p-3">
+                    <dt className="text-xs text-[var(--ink-muted)]">FIN kod</dt>
+                    <dd className="font-mono text-sm text-[var(--ink)]">
+                      {user.finCode}
+                    </dd>
+                  </div>
+                  <div className="rounded-lg border border-[var(--line)] p-3">
+                    <dt className="text-xs text-[var(--ink-muted)]">
+                      Doğum tarixi
+                    </dt>
+                    <dd className="text-sm text-[var(--ink)]">
+                      {user.birthDate ? formatDate(user.birthDate) : "-"}
+                    </dd>
+                  </div>
+                </dl>
+
+                {/*
+                  An empty list would read as "you have no results", which to
+                  someone waiting on a biopsy is a different and much worse
+                  statement than "these cannot be shown here yet". Results live
+                  in the laboratory system and nothing here can reach it.
+                */}
+                <div className="mt-6 rounded-xl border border-[var(--line)] bg-[var(--secondary)] p-6 text-center">
+                  <FileText
+                    className="mx-auto mb-3 h-10 w-10 text-slate-400"
+                    aria-hidden="true"
+                  />
+                  <p className="font-medium text-[var(--ink)]">
+                    Nəticələr hələ bu səhifəyə gətirilmir
+                  </p>
+                  <p className="mx-auto mt-1 max-w-md text-sm text-[var(--ink-muted)]">
+                    Analiz cavabları laboratoriya sistemində saxlanılır. Hazır
+                    olduqda filialdan və ya çağrı mərkəzindən əldə edə
+                    bilərsiniz.
+                  </p>
+                  <Button variant="outline" className="mt-4" asChild>
                     <a href={telHref(contactInfo.phone)}>
                       <Phone className="w-4 h-4" aria-hidden="true" />
                       {contactInfo.phone}
@@ -747,6 +784,7 @@ function ProfilPageInner() {
             </Card>
           </div>
         )}
+
       </div>
     </div>
   )

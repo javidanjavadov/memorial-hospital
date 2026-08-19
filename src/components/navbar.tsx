@@ -192,7 +192,10 @@ export default function Navbar() {
               )}
               asChild
             >
-              <Link href="/neticeler">
+              {/* Signed in, the card number and security code are not needed
+                  — the account already identifies the patient — so the button
+                  goes to the profile section instead of the public lookup. */}
+              <Link href={user ? "/profil?tab=results" : "/neticeler"}>
                 <FileText className="w-4 h-4" aria-hidden="true" />
                 Nəticələrimə bax
               </Link>
@@ -393,7 +396,10 @@ export default function Navbar() {
                 </a>
               </Button>
               <Button variant="outline" size="sm" className="w-full" asChild>
-                <Link href="/neticeler" onClick={() => setIsOpen(false)}>
+                <Link
+                  href={user ? "/profil?tab=results" : "/neticeler"}
+                  onClick={() => setIsOpen(false)}
+                >
                   <FileText className="w-4 h-4" aria-hidden="true" />
                   Nəticələrimə bax
                 </Link>
