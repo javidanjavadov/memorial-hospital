@@ -1,38 +1,24 @@
-"use client"
-
-import { useEffect, useState } from "react"
-import { getProviders } from "next-auth/react"
 import GoogleSignInButton from "@/components/google-sign-in-button"
 
 /**
- * Renders the Google button and its divider only when Google is actually
- * configured.
+ * Google button plus its divider, rendered only when Google is configured.
  *
- * `googleConfigured` in auth.ts is a server-only value (the credentials are not
- * `NEXT_PUBLIC_*`, and must never be), and a Client Component page cannot be
- * handed props by its server layout. Asking Auth.js which providers are
- * registered keeps it to one source of truth instead of a second env var that
- * could drift out of sync.
+ * `enabled` is resolved on the server and passed in, rather than discovered in
+ * the browser via `getProviders()`. That earlier approach meant a network round
+ * trip to /api/auth/providers before the button could appear at all, so on a
+ * cold serverless function it showed up seconds late — the same defect the
+ * navbar's login button had.
+ *
+ * No "use client" here: this renders no interactivity of its own, so it stays a
+ * Server Component and ships in the initial HTML.
  */
-export default function GoogleAuthSection({ label }: { label?: string }) {
-  const [enabled, setEnabled] = useState<boolean | null>(null)
-
-  useEffect(() => {
-    let active = true
-    getProviders()
-      .then((providers) => {
-        if (active) setEnabled(Boolean(providers?.google))
-      })
-      .catch(() => {
-        if (active) setEnabled(false)
-      })
-    return () => {
-      active = false
-    }
-  }, [])
-
-  // `null` while unknown: rendering the button first and pulling it away would
-  // shift the form under the pointer.
+export default function GoogleAuthSection({
+  enabled,
+  label,
+}: {
+  enabled: boolean
+  label?: string
+}) {
   if (!enabled) return null
 
   return (
