@@ -31,9 +31,8 @@ export default function Footer() {
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
               <Button
-                variant="outline"
+                variant="outlineOnDark"
                 size="lg"
-                className="border-white text-white hover:bg-white hover:text-primary"
                 asChild
               >
                 <a href={telHref(contactInfo.phone)}>

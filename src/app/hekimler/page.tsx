@@ -54,14 +54,14 @@ function HekimlerContent() {
     "h-11 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 transition-colors hover:border-slate-300 focus-visible:border-teal-500 focus-visible:ring-2 focus-visible:ring-teal-500/30 focus-visible:outline-none"
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[var(--paper)]">
       {/* Header */}
       <div className="border-b border-slate-200 bg-white">
         <div className="container mx-auto px-4 py-14 md:py-20">
-          <p className="mb-3 text-sm font-semibold tracking-wide text-teal-700 uppercase">
+          <p className="mb-3 text-sm tracking-[0.14em] text-[var(--ink-muted)] uppercase">
             Həkim heyəti
           </p>
-          <h1 className="max-w-3xl text-4xl font-bold tracking-tight text-slate-900 md:text-5xl">
+          <h1 className="font-display text-step-4 max-w-3xl text-[var(--ink)]">
             Həkimlərimiz
           </h1>
           <p className="mt-4 max-w-2xl text-lg text-slate-600">

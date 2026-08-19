@@ -21,13 +21,13 @@ export const metadata: Metadata = pageMetadata({
 
 export default function XidmetlerPage() {
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[var(--paper)]">
       <div className="border-b border-slate-200 bg-white">
         <div className="container mx-auto px-4 py-14 md:py-20">
-          <p className="mb-3 text-sm font-semibold tracking-wide text-teal-700 uppercase">
+          <p className="mb-3 text-sm tracking-[0.14em] text-[var(--ink-muted)] uppercase">
             Xidmətlər
           </p>
-          <h1 className="max-w-3xl text-4xl font-bold tracking-tight text-slate-900 md:text-5xl">
+          <h1 className="font-display text-step-4 max-w-3xl text-[var(--ink)]">
             Xidmətlərimiz
           </h1>
           <p className="mt-4 max-w-2xl text-lg text-slate-600">
@@ -75,7 +75,7 @@ export default function XidmetlerPage() {
       {/* Specialties */}
       <div className="border-t border-slate-200 bg-white">
         <div className="container mx-auto px-4 py-14 md:py-20">
-          <h2 className="text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
+          <h2 className="font-display text-step-3 text-[var(--ink)]">
             İxtisaslar üzrə qəbul
           </h2>
           <p className="mt-3 max-w-2xl text-slate-600">
@@ -140,8 +140,7 @@ export default function XidmetlerPage() {
               </Button>
               <Button
                 size="lg"
-                variant="outline"
-                className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white"
+                variant="outlineOnDark"
                 asChild
               >
                 <a href={telHref(contactInfo.phone)}>

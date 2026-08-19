@@ -16,6 +16,13 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         emergency: "bg-destructive text-white shadow-md hover:bg-destructive/90 hover:shadow-xl hover:-translate-y-0.5 animate-pulse",
         cta: "bg-gradient-to-r from-teal-700 to-teal-500 text-white shadow-md hover:shadow-xl hover:-translate-y-0.5 hover:from-teal-800 hover:to-teal-600 gradient-shift bg-[length:200%_200%]",
+        /*
+         * Outline for dark surfaces. `outline` sets `bg-background` (white), so
+         * pairing it with `text-white` produced an invisible button that only
+         * appeared on hover — keep this as the on-dark option instead.
+         */
+        outlineOnDark:
+          "border-2 border-white/40 bg-transparent text-white hover:bg-white hover:text-teal-900",
       },
       size: {
         default: "h-10 px-5 py-2",

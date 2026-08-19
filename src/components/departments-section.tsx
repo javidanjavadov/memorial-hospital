@@ -13,13 +13,13 @@ export default function DepartmentsSection() {
       <div className="container mx-auto px-4">
         <AnimateOnScroll>
           <div className="mb-12 max-w-2xl">
-            <p className="mb-3 text-sm font-semibold tracking-wide text-teal-700 uppercase">
+            <p className="mb-3 text-sm tracking-[0.14em] text-[var(--ink-muted)] uppercase">
               İxtisaslar
             </p>
-            <h2 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+            <h2 className="font-display text-step-3 text-[var(--ink)]">
               Şöbələrimiz
             </h2>
-            <p className="mt-4 text-lg text-slate-600">
+            <p className="mt-4 text-step-1 text-[var(--ink-muted)]">
               {departments.length} ixtisas üzrə diaqnostika və müalicə.
             </p>
           </div>

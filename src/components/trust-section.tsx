@@ -62,14 +62,14 @@ const capabilities = [
 
 export default function TrustSection() {
   return (
-    <section className="bg-teal-950 py-20 md:py-28">
+    <section className="bg-[var(--ink)] py-20 md:py-28">
       <div className="container mx-auto px-4">
         <AnimateOnScroll>
           <div className="max-w-2xl">
             <p className="mb-3 text-sm font-semibold tracking-wide text-teal-400 uppercase">
               Niyə Memorial Hospital?
             </p>
-            <h2 className="text-3xl font-bold tracking-tight text-white md:text-4xl">
+            <h2 className="font-display text-step-3 text-white">
               Rəqəmlərlə Memorial
             </h2>
           </div>
@@ -77,9 +77,9 @@ export default function TrustSection() {
 
         <div className="mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 lg:grid-cols-4">
           {facts.map((fact) => (
-            <div key={fact.label} className="bg-teal-950 p-6">
+            <div key={fact.label} className="bg-[var(--ink)] p-6">
               <fact.icon className="mb-4 h-6 w-6 text-teal-400" aria-hidden="true" />
-              <div className="text-3xl font-bold text-white">{fact.value}</div>
+              <div className="font-display text-step-2 text-white">{fact.value}</div>
               <div className="mt-1 font-medium text-teal-100">{fact.label}</div>
               <p className="mt-2 text-sm leading-relaxed text-teal-200/70">
                 {fact.detail}

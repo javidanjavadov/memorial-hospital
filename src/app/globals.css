@@ -1,36 +1,56 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #18383E;
+  /*
+   * Warm neutral base rather than pure white, with a single deep teal doing the
+   * brand work. The previous palette put saturated teal on nearly every surface,
+   * which is what made the site read as a template; colour is now the exception.
+   */
+  --paper: #faf9f7;
+  --paper-raised: #ffffff;
+  --ink: #10292e;
+  --ink-muted: #5b6f72;
+  --line: #e8e4dd;
+
+  --background: #faf9f7;
+  --foreground: #10292e;
   --card: #ffffff;
-  --card-foreground: #18383E;
+  --card-foreground: #10292e;
   --popover: #ffffff;
-  --popover-foreground: #18383E;
-  --primary: #267B8D;
+  --popover-foreground: #10292e;
+  --primary: #14606b;
   --primary-foreground: #ffffff;
-  --secondary: #f0f8f5;
-  --secondary-foreground: #18383E;
-  --muted: #f1f5f4;
-  --muted-foreground: #5a7a7e;
-  --accent: #5DAAA0;
-  --accent-foreground: #ffffff;
-  --destructive: #dc2626;
+  --secondary: #f1efea;
+  --secondary-foreground: #10292e;
+  --muted: #f1efea;
+  --muted-foreground: #5b6f72;
+  --accent: #5daaa0;
+  --accent-foreground: #10292e;
+  --destructive: #b4342b;
   --destructive-foreground: #ffffff;
-  --border: #d4e4e0;
-  --input: #d4e4e0;
-  --ring: #267B8D;
-  --radius: 0.75rem;
+  --border: #e8e4dd;
+  --input: #ddd8cf;
+  --ring: #14606b;
+  --radius: 0.875rem;
 
-  --success: #5DAAA0;
-  --warning: #d97706;
-  --info: #267B8D;
+  --success: #3f8f70;
+  --warning: #b8791f;
+  --info: #14606b;
 
-  --teal-900: #18383E;
-  --teal-700: #267B8D;
-  --teal-500: #5DAAA0;
-  --teal-300: #94C19F;
-  --teal-100: #e6f5ef;
+  --teal-900: #10292e;
+  --teal-700: #14606b;
+  --teal-500: #5daaa0;
+  --teal-300: #94c19f;
+  --teal-100: #e6f0ec;
+
+  /* Type scale — one ratio, so headings relate to each other predictably. */
+  --step--1: clamp(0.83rem, 0.8rem + 0.15vw, 0.9rem);
+  --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.09rem);
+  --step-1: clamp(1.25rem, 1.16rem + 0.44vw, 1.5rem);
+  --step-2: clamp(1.56rem, 1.4rem + 0.8vw, 2.06rem);
+  --step-3: clamp(1.95rem, 1.68rem + 1.35vw, 2.83rem);
+  --step-4: clamp(2.44rem, 2rem + 2.2vw, 3.89rem);
+  --step-5: clamp(3.05rem, 2.35rem + 3.5vw, 5.35rem);
 }
 
 @theme inline {
@@ -66,16 +86,51 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --font-sans: var(--font-inter);
+  --font-display: var(--font-display);
 }
 
-* {
-  border-color: var(--border);
+/*
+ * Must sit in @layer base. Written unlayered, this beat every Tailwind
+ * `border-*` utility in the cascade — `border-white`, `hover:border-teal-300`
+ * and friends all silently resolved to the default border colour site-wide.
+ */
+@layer base {
+  * {
+    border-color: var(--border);
+  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/*
+ * Editorial display type. `font-optical-sizing` lets Fraunces tighten its
+ * proportions at large sizes, which is what keeps a big serif heading from
+ * looking bloated.
+ */
+.font-display {
+  font-family: var(--font-display), Georgia, "Times New Roman", serif;
+  font-optical-sizing: auto;
+  font-variation-settings: "SOFT" 30, "WONK" 1;
+  letter-spacing: -0.015em;
+  font-weight: 400;
+}
+
+.text-step-5 { font-size: var(--step-5); line-height: 1.02; }
+.text-step-4 { font-size: var(--step-4); line-height: 1.06; }
+.text-step-3 { font-size: var(--step-3); line-height: 1.12; }
+.text-step-2 { font-size: var(--step-2); line-height: 1.2; }
+.text-step-1 { font-size: var(--step-1); line-height: 1.35; }
+.text-step-0 { font-size: var(--step-0); line-height: 1.6; }
+
+/* Hairline rule used to separate editorial sections without boxing them in. */
+.rule {
+  border-top: 1px solid var(--line);
 }
 
 html {

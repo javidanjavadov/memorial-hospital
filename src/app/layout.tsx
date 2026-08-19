@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Fraunces } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
@@ -14,6 +14,18 @@ const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin", "latin-ext"],
   display: "swap",
+});
+
+/*
+ * Display face for headings. Pairing an editorial serif with a neutral UI sans
+ * is what shifts the site away from the generic all-Inter template look; the
+ * optical-size axis keeps large headings tight and small ones readable.
+ */
+const fraunces = Fraunces({
+  variable: "--font-display",
+  subsets: ["latin"],
+  display: "swap",
+  axes: ["SOFT", "WONK", "opsz"],
 });
 
 export const viewport: Viewport = {
@@ -69,7 +81,7 @@ export default function RootLayout({
   return (
     <html
       lang="az"
-      className={`${inter.variable} h-full antialiased`}
+      className={`${inter.variable} ${fraunces.variable} h-full antialiased`}
       data-scroll-behavior="smooth"
     >
       <head>

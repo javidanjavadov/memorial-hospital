@@ -10,17 +10,17 @@ import { serviceCategories } from "@/data"
  */
 export default function ServicesSection() {
   return (
-    <section className="bg-slate-50 py-20 md:py-28">
+    <section className="bg-white py-20 md:py-28">
       <div className="container mx-auto px-4">
         <AnimateOnScroll>
           <div className="mb-12 max-w-2xl">
-            <p className="mb-3 text-sm font-semibold tracking-wide text-teal-700 uppercase">
+            <p className="mb-3 text-sm tracking-[0.14em] text-[var(--ink-muted)] uppercase">
               Xidmətlər
             </p>
-            <h2 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+            <h2 className="font-display text-step-3 text-[var(--ink)]">
               Nə üçün müraciət edirsiniz?
             </h2>
-            <p className="mt-4 text-lg text-slate-600">
+            <p className="mt-4 text-step-1 text-[var(--ink-muted)]">
               Laboratoriya analizindən kompleks check-up müayinəyə qədər bütün
               xidmətlər bir yerdə.
             </p>
