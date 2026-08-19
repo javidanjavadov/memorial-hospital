@@ -5,5 +5,20 @@
   # Pin the runtime so local and CI builds cannot drift apart.
   NODE_VERSION = "20"
 
+  # NEXT_PUBLIC_* variables are inlined into the client bundle by design, so
+  # Netlify's secret scanner finds the value in the build output and reports it
+  # as leaked. A public site URL is not a secret.
+  #
+  # Only this one key is exempted — scanning stays ON, so AUTH_SECRET and
+  # AUTH_GOOGLE_SECRET are still caught if they ever reach the bundle.
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_SITE_URL"
+
+  # Turbopack's build cache stores the raw values of env vars it inlined during
+  # compilation, so AUTH_SECRET / AUTH_GOOGLE_SECRET turn up there once those
+  # are configured. The cache is never served — verified that the deployed
+  # artifacts (.next/static and .next/server) contain neither secret — so the
+  # scanner should skip it rather than fail the build on a non-issue.
+  SECRETS_SCAN_OMIT_PATHS = ".next/cache/**,.next/dev/**"
+
 [[plugins]]
   package = "@netlify/plugin-nextjs"
