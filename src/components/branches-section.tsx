@@ -5,11 +5,13 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { MapPin, Phone, Clock, ArrowRight, Navigation } from "lucide-react"
 import { branches, telHref } from "@/data"
+import { AnimateOnScroll } from "@/components/animations"
 
 export default function BranchesSection() {
   return (
     <section className="py-16 md:py-24 bg-[var(--paper)]">
       <div className="container mx-auto px-4">
+        <AnimateOnScroll>
         <div className="text-center mb-12 md:mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
             Filiallarımız
@@ -19,11 +21,12 @@ export default function BranchesSection() {
             yararlanın
           </p>
         </div>
+        </AnimateOnScroll>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {branches.map((branch) => (
+          {branches.map((branch, i) => (
+            <AnimateOnScroll key={branch.id} delay={i * 100}>
             <Card
-              key={branch.id}
               id={branch.id}
               className="group border-0 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden hover:-translate-y-1"
             >
@@ -91,6 +94,7 @@ export default function BranchesSection() {
                 </div>
               </CardContent>
             </Card>
+            </AnimateOnScroll>
           ))}
         </div>
       </div>

@@ -291,40 +291,49 @@ html[data-scroll-behavior="smooth"] {
   animation: bounce-in 0.6s ease-out forwards;
 }
 
-/* Scroll-triggered animation states */
+/* Scroll-triggered animation states
+ *
+ * Values match AOS (Animate On Scroll), which the reference template uses:
+ * 100px of travel, scale(0.6) for zoom, 600ms ease-in-out, and each element
+ * animates once. Our earlier 30px/scale(0.9) was subtle enough to be easy to
+ * miss entirely.
+ *
+ * Naming is by the side the element STARTS on, so `left` here is AOS's
+ * `fade-right` (it begins left and moves right).
+ */
 .scroll-hidden {
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  transform: translate3d(0, 100px, 0);
+  transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
 }
 
 .scroll-hidden-down {
   opacity: 0;
-  transform: translateY(-30px);
-  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  transform: translate3d(0, -100px, 0);
+  transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
 }
 
 .scroll-hidden-left {
   opacity: 0;
-  transform: translateX(-40px);
-  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  transform: translate3d(-100px, 0, 0);
+  transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
 }
 
 .scroll-hidden-right {
   opacity: 0;
-  transform: translateX(40px);
-  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  transform: translate3d(100px, 0, 0);
+  transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
 }
 
 .scroll-hidden-scale {
   opacity: 0;
-  transform: scale(0.9);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  transform: scale(0.6);
+  transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
 }
 
 .scroll-visible {
   opacity: 1;
-  transform: translateY(0) translateX(0) scale(1);
+  transform: translate3d(0, 0, 0) scale(1);
 }
 
 /* Staggered children */
@@ -578,11 +587,27 @@ html[data-scroll-behavior="smooth"] {
     scroll-behavior: auto !important;
   }
 
+  /*
+   * Scroll reveals keep their fade but lose all movement, matching how the
+   * page transition behaves. Forcing `opacity: 1` here instead would remove
+   * the reveal entirely, so a visitor with reduced motion enabled sees the
+   * page as completely static.
+   *
+   * Duration is restated because the blanket `*` rule above collapses every
+   * transition to 0.001ms.
+   */
   .scroll-hidden,
   .scroll-hidden-down,
   .scroll-hidden-left,
   .scroll-hidden-right,
   .scroll-hidden-scale {
+    transform: none !important;
+    transition-property: opacity !important;
+    transition-duration: 500ms !important;
+    transition-timing-function: ease-in-out !important;
+  }
+
+  .scroll-visible {
     opacity: 1 !important;
     transform: none !important;
   }

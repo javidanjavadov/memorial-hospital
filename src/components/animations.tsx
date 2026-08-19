@@ -27,7 +27,8 @@ interface AnimateOnScrollProps {
   className?: string
   animation?: Animation
   delay?: number
-  threshold?: number
+  /** Pixels before the element reaches the viewport bottom. Mirrors AOS `offset`. */
+  offset?: number
 }
 
 export function AnimateOnScroll({
@@ -35,7 +36,7 @@ export function AnimateOnScroll({
   className,
   animation = "up",
   delay = 0,
-  threshold = 0.15,
+  offset = 120,
 }: AnimateOnScrollProps) {
   const ref = useRef<HTMLDivElement>(null)
   const [isVisible, setIsVisible] = useState(false)
@@ -44,12 +45,17 @@ export function AnimateOnScroll({
     const node = ref.current
     if (!node) return
 
-    // Reveal immediately rather than animating, and skip the observer entirely.
-    // Scheduled rather than set inline so the effect body stays free of
-    // synchronous state updates (cascading renders).
+    /*
+     * Reveal without waiting on the observer.
+     *
+     * Scheduled rather than set inline so the effect body stays free of
+     * synchronous state updates. A timer, not requestAnimationFrame: rAF is
+     * paused while the document is hidden, so a tab opened in the background
+     * would stay at opacity 0 until it was focused.
+     */
     if (prefersReducedMotion() || !("IntersectionObserver" in window)) {
-      const frame = requestAnimationFrame(() => setIsVisible(true))
-      return () => cancelAnimationFrame(frame)
+      const immediate = setTimeout(() => setIsVisible(true), 0)
+      return () => clearTimeout(immediate)
     }
 
     let timer: ReturnType<typeof setTimeout>
@@ -57,18 +63,36 @@ export function AnimateOnScroll({
       ([entry]) => {
         if (entry.isIntersecting) {
           timer = setTimeout(() => setIsVisible(true), delay)
+          // Unobserve = AOS's `once: true`; it never replays on scroll back.
           observer.unobserve(entry.target)
         }
       },
-      { threshold }
+      /*
+       * A negative bottom margin fires the animation once the element is
+       * `offset` px inside the viewport, which is how AOS behaves. A percentage
+       * threshold instead meant a tall section had to be 15% on screen — so
+       * full-height blocks animated late, or not until well past their top.
+       */
+      { rootMargin: `0px 0px -${offset}px 0px`, threshold: 0 }
     )
 
     observer.observe(node)
+
+    /*
+     * Safety net. Every animated block starts at opacity 0, so if the observer
+     * never fires the page renders blank — and on a hospital site that failure
+     * is far worse than showing the content unanimated. Reveal regardless after
+     * a few seconds; in the normal case the observer has long since won and
+     * this is a no-op.
+     */
+    const failsafe = setTimeout(() => setIsVisible(true), 3000)
+
     return () => {
       clearTimeout(timer)
+      clearTimeout(failsafe)
       observer.disconnect()
     }
-  }, [delay, threshold])
+  }, [delay, offset])
 
   return (
     <div
@@ -94,8 +118,9 @@ export function StaggerContainer({ children, className }: StaggerContainerProps)
     if (!node) return
 
     if (prefersReducedMotion() || !("IntersectionObserver" in window)) {
-      const frame = requestAnimationFrame(() => setIsVisible(true))
-      return () => cancelAnimationFrame(frame)
+      // Timer, not rAF — rAF is paused while the document is hidden.
+      const immediate = setTimeout(() => setIsVisible(true), 0)
+      return () => clearTimeout(immediate)
     }
 
     const observer = new IntersectionObserver(
@@ -148,8 +173,9 @@ export function CountUp({
     if (!node) return
 
     if (prefersReducedMotion() || !("IntersectionObserver" in window)) {
-      const frame = requestAnimationFrame(() => setStarted(true))
-      return () => cancelAnimationFrame(frame)
+      // Timer, not rAF — rAF is paused while the document is hidden.
+      const immediate = setTimeout(() => setStarted(true), 0)
+      return () => clearTimeout(immediate)
     }
 
     const observer = new IntersectionObserver(

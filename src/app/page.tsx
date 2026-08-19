@@ -6,6 +6,7 @@ import {
   telHref,
   YEARS_OF_EXPERIENCE,
 } from "@/data"
+import { AnimateOnScroll } from "@/components/animations"
 import HeroSection from "@/components/hero-section"
 import FindDoctorSection from "@/components/find-doctor-section"
 import DepartmentsSection from "@/components/departments-section"
@@ -24,6 +25,7 @@ export default function Home() {
         <section className="py-16 md:py-24 bg-[var(--paper)]">
           <div className="container mx-auto px-4">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <AnimateOnScroll animation="left">
               <div className="space-y-6">
                 <h2 className="text-3xl md:text-4xl font-bold text-slate-900">
                   Memorial Hospital <span className="text-primary">Haqqında</span>
@@ -68,6 +70,8 @@ export default function Home() {
                   </div>
                 </div>
               </div>
+              </AnimateOnScroll>
+              <AnimateOnScroll animation="right" delay={150}>
               <div className="relative">
                 <div className="bg-[var(--ink)] rounded-3xl p-8 text-white shadow-2xl">
                   <h3 className="text-2xl font-bold mb-4">Niyə Memorial Hospital?</h3>
@@ -95,6 +99,7 @@ export default function Home() {
                   </ul>
                 </div>
               </div>
+              </AnimateOnScroll>
             </div>
           </div>
         </section>
