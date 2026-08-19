@@ -64,34 +64,41 @@ export default function XidmetlerPage() {
                 </p>
               </div>
 
-              <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {/*
+                Five and six across on wide screens. At three columns the 80-odd
+                categories ran to a very long page for one line of text each,
+                and the cards were far wider than their content needed.
+              */}
+              <ul className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
                 {categories.map((category) => {
                   const from = fromPrice(category.slug)
                   return (
                     <li key={category.slug}>
                       <Link
                         href={`/xidmetler/${category.slug}`}
-                        className="group flex h-full flex-col justify-between rounded-xl border border-[var(--line)] bg-[var(--paper-raised)] p-5 transition-colors hover:border-primary/40"
+                        className="group flex h-full flex-col justify-between gap-2 rounded-lg border border-[var(--line)] bg-[var(--paper-raised)] p-3 transition-colors hover:border-primary/40"
                       >
                         <div>
-                          <h3 className="font-medium text-[var(--ink)] group-hover:text-primary">
+                          <h3 className="text-sm leading-snug font-medium text-[var(--ink)] group-hover:text-primary">
                             {category.name}
                           </h3>
-                          <p className="mt-1 text-sm text-[var(--ink-muted)]">
+                          <p className="mt-0.5 text-xs text-[var(--ink-muted)]">
                             {category.count} xidmət
                           </p>
                         </div>
-                        <div className="mt-4 flex items-center justify-between">
-                          {from !== null && (
-                            <span className="text-sm text-[var(--ink-muted)]">
+                        <div className="flex items-center justify-between gap-1">
+                          {from !== null ? (
+                            <span className="text-xs text-[var(--ink-muted)]">
                               <span className="font-semibold text-primary">
                                 {formatAzn(from)}
                               </span>
                               -dən
                             </span>
+                          ) : (
+                            <span />
                           )}
                           <ArrowRight
-                            className="h-4 w-4 text-[var(--ink-muted)] transition-transform group-hover:translate-x-1 group-hover:text-primary"
+                            className="h-3.5 w-3.5 shrink-0 text-[var(--ink-muted)] transition-transform group-hover:translate-x-0.5 group-hover:text-primary"
                             aria-hidden="true"
                           />
                         </div>
