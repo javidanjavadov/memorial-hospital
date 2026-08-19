@@ -1,13 +1,15 @@
 import type { Metadata } from "next"
 
 /**
- * Canonical origin. Netlify/Vercel expose the deploy URL at build time; the
- * literal is the production fallback so `metadataBase` is never undefined
- * (which would leave every Open Graph URL unresolved).
+ * Canonical origin.
+ *
+ * Only `NEXT_PUBLIC_*` is read here: those are inlined at build time, so this
+ * stays a static constant. Reading a non-public variable (e.g. Netlify's `URL`)
+ * would be a *runtime* lookup, which marks every segment that imports this file
+ * as dynamic.
  */
 export const siteUrl = (
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  (process.env.URL || "https://yuzuch.dev")
+  process.env.NEXT_PUBLIC_SITE_URL || "https://yuzuch.dev"
 ).replace(/\/$/, "")
 
 export const siteName = "Memorial Hospital"

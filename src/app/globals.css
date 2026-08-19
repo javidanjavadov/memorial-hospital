@@ -367,7 +367,7 @@ html[data-scroll-behavior="smooth"] {
 @keyframes pageEnter {
   from {
     opacity: 0;
-    transform: translate3d(0, 12px, 0) scale(0.994);
+    transform: translate3d(0, 30px, 0) scale(0.98);
   }
   to {
     opacity: 1;
