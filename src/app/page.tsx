@@ -4,7 +4,7 @@ import DepartmentsSection from "@/components/departments-section"
 import ServicesSection from "@/components/services-section"
 import DoctorsSection from "@/components/doctors-section"
 import BranchesSection from "@/components/branches-section"
-import TestimonialsSection from "@/components/testimonials-section"
+import TrustSection from "@/components/trust-section"
 
 export default function Home() {
   return (
@@ -88,7 +88,7 @@ export default function Home() {
       <ServicesSection />
       <div id="hekimler"><DoctorsSection /></div>
       <div id="filiallar"><BranchesSection /></div>
-      <TestimonialsSection />
+      <TrustSection />
       <div id="elaqe">
         <section className="py-16 md:py-24 bg-gradient-to-br from-teal-50 to-white">
           <div className="container mx-auto px-4">

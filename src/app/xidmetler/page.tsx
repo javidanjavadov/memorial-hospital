@@ -1,116 +1,154 @@
 import type { Metadata } from "next"
+import Image from "next/image"
+import Link from "next/link"
+import { ArrowRight, Home, Phone } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import {
+  contactInfo,
+  departments,
+  doctorsByDepartment,
+  serviceCategories,
+  telHref,
+} from "@/data"
 import { pageMetadata } from "@/lib/site"
 
 export const metadata: Metadata = pageMetadata({
   title: "Xidmətlər",
   description:
-    "Memorial Hospital xidmətləri və qiymətləri — kompleks müayinə, kardioloji müayinə, laboratoriya analizləri və daha çox.",
+    "Memorial Hospital xidmətləri — laboratoriya, poliklinika, həkim qəbulu, check-up müayinə və evdə xidmət.",
   path: "/xidmetler",
 })
 
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Clock, CheckCircle, ArrowRight } from "lucide-react"
-import { departments, services } from "@/data"
-import Link from "next/link"
-
 export default function XidmetlerPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-teal-100/30 to-teal-100/50 py-12 px-4">
-      <div className="container mx-auto">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
+    <div className="min-h-screen bg-slate-50">
+      <div className="border-b border-slate-200 bg-white">
+        <div className="container mx-auto px-4 py-14 md:py-20">
+          <p className="mb-3 text-sm font-semibold tracking-wide text-teal-700 uppercase">
+            Xidmətlər
+          </p>
+          <h1 className="max-w-3xl text-4xl font-bold tracking-tight text-slate-900 md:text-5xl">
             Xidmətlərimiz
           </h1>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Müasir tibbi avadanlıqlar və təcrübəli həkim heyəti ilə geniş spektrdə
-            tibbi xidmətlər
+          <p className="mt-4 max-w-2xl text-lg text-slate-600">
+            Laboratoriya analizlərindən kompleks check-up müayinəyə qədər bütün
+            tibbi xidmətlər üç filialımızda.
           </p>
         </div>
+      </div>
 
-        {/* Departments */}
-        <div className="mb-16">
-          <h2 className="text-2xl font-bold text-slate-900 mb-8">Şöbələr</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {departments.map((dept) => (
-              <Card key={dept.id} className="group border-0 shadow-md hover:shadow-xl transition-all">
-                <CardContent className="p-6">
-                  <div className={`w-14 h-14 bg-gradient-to-br ${dept.color} rounded-xl flex items-center justify-center mb-4`}>
-                    <dept.icon className="w-7 h-7 text-white" />
-                  </div>
-                  <h3 className="text-lg font-bold text-slate-900 mb-2">{dept.name}</h3>
-                  <p className="text-sm text-slate-600">{dept.description}</p>
-                </CardContent>
-              </Card>
-            ))}
+      {/* Service groups */}
+      <div className="container mx-auto px-4 py-14">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {serviceCategories.map((service) => (
+            <section
+              key={service.id}
+              id={service.id}
+              className="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white scroll-mt-28"
+            >
+              <div className="flex items-center justify-center bg-teal-50/60 px-6 py-8">
+                {service.image ? (
+                  <Image
+                    src={service.image}
+                    alt=""
+                    width={200}
+                    height={188}
+                    className="h-32 w-auto"
+                  />
+                ) : (
+                  <Home className="h-24 w-24 text-teal-600" aria-hidden="true" />
+                )}
+              </div>
+              <div className="flex flex-1 flex-col p-6">
+                <h2 className="text-lg font-semibold text-slate-900">
+                  {service.name}
+                </h2>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-600">
+                  {service.description}
+                </p>
+              </div>
+            </section>
+          ))}
+        </div>
+      </div>
+
+      {/* Specialties */}
+      <div className="border-t border-slate-200 bg-white">
+        <div className="container mx-auto px-4 py-14 md:py-20">
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
+            İxtisaslar üzrə qəbul
+          </h2>
+          <p className="mt-3 max-w-2xl text-slate-600">
+            Həkim qəbulu {departments.length} ixtisas üzrə aparılır.
+          </p>
+
+          <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {departments.map((dept) => {
+              const count = doctorsByDepartment(dept.id).length
+              return (
+                <Link
+                  key={dept.id}
+                  id={dept.id}
+                  href={`/hekimler?dept=${dept.id}`}
+                  className="group flex items-start gap-4 rounded-xl border border-slate-200 p-5 transition-all duration-300 scroll-mt-28 hover:border-teal-300 hover:bg-teal-50/40"
+                >
+                  <span
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-teal-50 text-teal-700"
+                    aria-hidden="true"
+                  >
+                    <dept.icon className="h-5 w-5" />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block font-semibold text-slate-900 transition-colors group-hover:text-teal-700">
+                      {dept.name}
+                    </span>
+                    <span className="mt-1 block text-sm text-slate-600">
+                      {dept.description}
+                    </span>
+                    {count > 0 && (
+                      <span className="mt-2 block text-xs font-medium text-teal-700">
+                        {count} həkim
+                      </span>
+                    )}
+                  </span>
+                </Link>
+              )
+            })}
           </div>
         </div>
+      </div>
 
-        {/* Services */}
-        <div>
-          <h2 className="text-2xl font-bold text-slate-900 mb-8">Populyar Xidmətlər</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {services.map((service) => (
-              <Card key={service.id} className="group border-0 shadow-md hover:shadow-xl transition-all">
-                <CardContent className="p-6">
-                  <div className="flex items-start gap-4">
-                    <div className="w-14 h-14 bg-teal-100 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-teal-700 transition-colors">
-                      <service.icon className="w-7 h-7 text-teal-700 group-hover:text-white transition-colors" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-lg font-bold text-slate-900 mb-1">{service.name}</h3>
-                      <p className="text-sm text-slate-600 mb-3">{service.description}</p>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                          <Badge variant="secondary">{service.price}</Badge>
-                          <span className="text-sm text-slate-500 flex items-center gap-1">
-                            <Clock className="w-4 h-4" />
-                            {service.duration}
-                          </span>
-                        </div>
-                        <Button variant="ghost" size="sm" asChild>
-                          <Link href="/qebul">
-                            Sifariş Et
-                            <ArrowRight className="w-4 h-4" />
-                          </Link>
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-
-        {/* Features */}
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="flex items-start gap-4 bg-white rounded-2xl p-6 shadow-sm">
-            <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center shrink-0">
-              <CheckCircle className="w-6 h-6 text-green-600" />
-            </div>
+      {/* CTA — prices are not listed here on purpose: the hospital publishes
+          per-doctor consultation fees, which are shown on each doctor card. */}
+      <div className="border-t border-slate-200 bg-white">
+        <div className="container mx-auto px-4 py-14">
+          <div className="flex flex-col items-start justify-between gap-6 rounded-2xl bg-teal-900 p-8 md:flex-row md:items-center md:p-10">
             <div>
-              <h4 className="font-semibold text-slate-900 mb-1">Sürətli Nəticə</h4>
-              <p className="text-sm text-slate-600">Laboratoriya nəticələri 1-2 saat ərzində</p>
+              <h2 className="text-2xl font-bold text-white">
+                Hansı xidmətin sizə uyğun olduğunu bilmirsiniz?
+              </h2>
+              <p className="mt-2 text-teal-100">
+                Reqistratura ilə əlaqə saxlayın — sizə uyğun həkimi təyin edək.
+              </p>
             </div>
-          </div>
-          <div className="flex items-start gap-4 bg-white rounded-2xl p-6 shadow-sm">
-            <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center shrink-0">
-              <CheckCircle className="w-6 h-6 text-blue-600" />
-            </div>
-            <div>
-              <h4 className="font-semibold text-slate-900 mb-1">Online Qəbul</h4>
-              <p className="text-sm text-slate-600">Evdən çıxmadan qəbula yazılın</p>
-            </div>
-          </div>
-          <div className="flex items-start gap-4 bg-white rounded-2xl p-6 shadow-sm">
-            <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center shrink-0">
-              <CheckCircle className="w-6 h-6 text-purple-600" />
-            </div>
-            <div>
-              <h4 className="font-semibold text-slate-900 mb-1">Sığorta Qəbulu</h4>
-              <p className="text-sm text-slate-600">Bütün növ tibbi sığortaları qəbul edirik</p>
+            <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
+              <Button variant="cta" size="lg" asChild>
+                <Link href="/qebul">
+                  Qəbula yazıl
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white"
+                asChild
+              >
+                <a href={telHref(contactInfo.phone)}>
+                  <Phone className="h-4 w-4" aria-hidden="true" />
+                  {contactInfo.phone}
+                </a>
+              </Button>
             </div>
           </div>
         </div>

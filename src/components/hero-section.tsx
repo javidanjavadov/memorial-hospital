@@ -1,12 +1,12 @@
 "use client"
 
 import { useId, useState } from "react"
+import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Search, ArrowRight, Phone, Calendar, Shield, Clock, Star } from "lucide-react"
-import { contactInfo, departments, stats, telHref } from "@/data"
+import { ArrowRight, Calendar, Phone, Search } from "lucide-react"
+import { branches, contactInfo, departments, doctors, stats, telHref } from "@/data"
 
 export default function HeroSection() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -15,10 +15,7 @@ export default function HeroSection() {
   const searchId = useId()
   const departmentId = useId()
 
-  /**
-   * The panel used to be decorative: both inputs were discarded and the button
-   * was a bare link to /hekimler. It now carries the query into that page.
-   */
+  /** Carries the query into /hekimler rather than discarding it. */
   const handleSearch = (event: React.FormEvent) => {
     event.preventDefault()
     const params = new URLSearchParams()
@@ -29,174 +26,126 @@ export default function HeroSection() {
   }
 
   return (
-    <section className="relative min-h-[90vh] flex items-center overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white via-teal-100/30 to-teal-100/50">
-        <div className="absolute top-20 right-20 w-72 h-72 bg-teal-300/20 rounded-full blur-3xl animate-float" />
-        <div className="absolute bottom-20 left-20 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl" style={{ animation: "float 4s ease-in-out infinite 1s" }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-teal-300/10 rounded-full blur-3xl" style={{ animation: "float 5s ease-in-out infinite 0.5s" }} />
+    <section className="relative overflow-hidden bg-teal-950">
+      {/* Photography carries the hero; the overlay keeps text contrast legible
+          over an image whose composition we do not control. */}
+      <div className="absolute inset-0">
+        <Image
+          src="/hero/hero-1.webp"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div
+          className="absolute inset-0 bg-gradient-to-r from-teal-950 via-teal-950/90 to-teal-950/60"
+          aria-hidden="true"
+        />
       </div>
 
-      <div className="container mx-auto px-4 py-16 md:py-24 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left Content */}
-          <div className="space-y-8">
-            <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium animate-fade-in-up">
-                <Shield className="w-4 h-4" />
-                Bakıdakı ən etibarlı xəstəxana
-              </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight animate-fade-in-up [animation-delay:120ms]">
-                Sağlamlığınız
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
-                  {" "}
-                  Bizim Prioritetimiz
-                </span>
-              </h1>
-              <p className="text-lg text-slate-600 max-w-xl animate-fade-in-up [animation-delay:240ms]">
-                Müasir tibbi avadanlıqlar və təcrübəli həkim heyəti ilə
-                keyfiyyətli səhiyyə xidməti. İndi qəbula yazılın.
-              </p>
-            </div>
+      <div className="relative container mx-auto px-4 py-20 md:py-28 lg:py-32">
+        <div className="max-w-2xl">
+          <p className="animate-fade-in-up mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm font-medium text-teal-50 backdrop-blur-sm">
+            {branches.length} filial · Gəncədə 24/7
+          </p>
 
-            {/* Search Panel */}
-            <div className="bg-white rounded-2xl shadow-xl p-6 space-y-4 animate-fade-in-up [animation-delay:360ms]">
-              <h2 className="font-semibold text-slate-900 flex items-center gap-2">
-                <Search className="w-5 h-5 text-primary" aria-hidden="true" />
-                Həkim və ya şöbə axtar
-              </h2>
-              <form onSubmit={handleSearch} className="space-y-4" role="search">
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <div className="relative flex-1">
-                    <label htmlFor={searchId} className="sr-only">
-                      Həkim adı və ya ixtisas
-                    </label>
-                    <Search
-                      className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"
-                      aria-hidden="true"
-                    />
-                    <Input
-                      id={searchId}
-                      type="search"
-                      name="q"
-                      placeholder="Həkim adı və ya şöbə..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10 h-12"
-                    />
-                  </div>
-                  <label htmlFor={departmentId} className="sr-only">
-                    Şöbə
-                  </label>
-                  <select
-                    id={departmentId}
-                    name="dept"
-                    value={selectedDepartment}
-                    onChange={(e) => setSelectedDepartment(e.target.value)}
-                    className="h-12 px-4 rounded-lg border border-input bg-background text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-all duration-200 hover:border-primary"
-                  >
-                    <option value="">Bütün şöbələr</option>
-                    {departments.map((dept) => (
-                      <option key={dept.id} value={dept.id}>
-                        {dept.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <Button type="submit" variant="cta" size="lg" className="w-full sm:w-auto">
-                  <Search className="w-5 h-5" aria-hidden="true" />
-                  Axtar
-                  <ArrowRight className="w-5 h-5" aria-hidden="true" />
-                </Button>
-              </form>
-            </div>
+          <h1 className="animate-fade-in-up text-4xl leading-[1.1] font-bold tracking-tight text-white [animation-delay:100ms] md:text-5xl lg:text-6xl">
+            Sağlamlığınız
+            <span className="block text-teal-300">bizim prioritetimizdir</span>
+          </h1>
 
-            {/* Quick Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {stats.map((stat, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-3 bg-white rounded-xl p-3 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-default"
-                >
-                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center transition-transform duration-300 hover:scale-110 hover:rotate-6">
-                    <stat.icon className="w-5 h-5 text-primary" />
-                  </div>
-                  <div>
-                    <div className="text-xl font-bold text-slate-900">{stat.value}</div>
-                    <div className="text-xs text-slate-500">{stat.label}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <p className="animate-fade-in-up mt-6 max-w-xl text-lg leading-relaxed text-teal-100/90 [animation-delay:200ms]">
+            {doctors.length} həkim, {departments.length} ixtisas və müasir
+            laboratoriya. Onlayn qəbula yazılın — reqistratura sizə zəng etsin.
+          </p>
 
-          {/* Right Content - Floating Cards */}
-          <div className="relative hidden lg:block">
-            <div className="relative">
-              {/* Main Card */}
-              <div className="bg-white rounded-3xl shadow-2xl p-8 rotate-2 transition-transform duration-300 animate-fade-in-up [animation-delay:240ms] hover:rotate-0 hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.2)]">
-                <div className="w-20 h-20 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center mb-6 transition-transform duration-300 hover:scale-110 hover:rotate-6">
-                  <Calendar className="w-10 h-10 text-white" />
-                </div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-2">
-                  Online Qəbul
-                </h3>
-                <p className="text-slate-600 mb-6">
-                  Evdən çıxmadan qəbula yazılın. Həkiminiz sizə zəng edəcək.
-                </p>
-                <Button variant="cta" size="lg" className="w-full" asChild>
-                  <Link href="/qebul">
-                    Qəbula Yazıl
-                    <ArrowRight className="w-5 h-5" />
-                  </Link>
-                </Button>
+          {/* Search */}
+          <form
+            onSubmit={handleSearch}
+            role="search"
+            className="animate-fade-in-up mt-8 rounded-2xl bg-white p-3 shadow-2xl [animation-delay:300ms] sm:p-4"
+          >
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <div className="relative flex-1">
+                <label htmlFor={searchId} className="sr-only">
+                  Həkim adı və ya ixtisas
+                </label>
+                <Search
+                  className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-slate-400"
+                  aria-hidden="true"
+                />
+                <input
+                  id={searchId}
+                  type="search"
+                  name="q"
+                  placeholder="Həkim adı və ya ixtisas…"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="h-12 w-full rounded-lg border border-slate-200 pr-4 pl-10 text-base transition-colors focus-visible:border-teal-500 focus-visible:ring-2 focus-visible:ring-teal-500/30 focus-visible:outline-none"
+                />
               </div>
 
-              {/* Floating Card 1 */}
-              <div className="absolute -top-4 -right-4 bg-white rounded-2xl shadow-lg p-4 -rotate-3 transition-transform duration-300 animate-fade-in-right [animation-delay:420ms] hover:rotate-0 hover:shadow-xl hover:scale-105">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center transition-transform duration-300 hover:scale-110">
-                    <Clock className="w-6 h-6 text-green-600" />
-                  </div>
-                  <div>
-                    <div className="font-semibold text-slate-900">24/7</div>
-                    <div className="text-xs text-slate-500">Təcili Yardım</div>
-                  </div>
-                </div>
-              </div>
+              <label htmlFor={departmentId} className="sr-only">
+                İxtisas
+              </label>
+              <select
+                id={departmentId}
+                name="dept"
+                value={selectedDepartment}
+                onChange={(e) => setSelectedDepartment(e.target.value)}
+                className="h-12 rounded-lg border border-slate-200 px-4 text-base transition-colors focus-visible:border-teal-500 focus-visible:ring-2 focus-visible:ring-teal-500/30 focus-visible:outline-none"
+              >
+                <option value="">Bütün ixtisaslar</option>
+                {departments.map((dept) => (
+                  <option key={dept.id} value={dept.id}>
+                    {dept.name}
+                  </option>
+                ))}
+              </select>
 
-              {/* Floating Card 2 */}
-              <div className="absolute -bottom-4 -left-4 bg-white rounded-2xl shadow-lg p-4 rotate-3 transition-transform duration-300 animate-fade-in-left [animation-delay:560ms] hover:rotate-0 hover:shadow-xl hover:scale-105">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center transition-transform duration-300 hover:scale-110">
-                    <Star className="w-6 h-6 text-amber-600" />
-                  </div>
-                  <div>
-                    <div className="font-semibold text-slate-900">4.9/5</div>
-                    <div className="text-xs text-slate-500">Pasiyent Reytinqi</div>
-                  </div>
-                </div>
-              </div>
+              <Button type="submit" variant="cta" size="lg" className="h-12 shrink-0">
+                <Search className="h-5 w-5" aria-hidden="true" />
+                Axtar
+              </Button>
             </div>
+          </form>
+
+          <div className="animate-fade-in-up mt-6 flex flex-col gap-3 [animation-delay:400ms] sm:flex-row">
+            <Button variant="cta" size="lg" asChild>
+              <Link href="/qebul">
+                <Calendar className="h-5 w-5" aria-hidden="true" />
+                Qəbula yazıl
+                <ArrowRight className="h-5 w-5" aria-hidden="true" />
+              </Link>
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-white/30 bg-white/10 text-white backdrop-blur-sm hover:bg-white/20 hover:text-white"
+              asChild
+            >
+              <a href={telHref(contactInfo.phone)}>
+                <Phone className="h-5 w-5" aria-hidden="true" />
+                {contactInfo.phone}
+              </a>
+            </Button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Bottom CTA */}
-      <div className="fixed bottom-0 left-0 right-0 md:hidden bg-white border-t shadow-lg z-40 px-4 py-3">
-        <div className="flex gap-3">
-          <Button variant="emergency" className="flex-1" asChild>
-            <a href={telHref(contactInfo.phone)}>
-              <Phone className="w-5 h-5" />
-              Təcili Zəng
-            </a>
-          </Button>
-          <Button variant="cta" className="flex-1" asChild>
-            <Link href="/qebul">
-              <Calendar className="w-5 h-5" />
-              Qəbula Yazıl
-            </Link>
-          </Button>
+      {/* Stats strip */}
+      <div className="relative border-t border-white/10 bg-teal-950/80 backdrop-blur-sm">
+        <div className="container mx-auto grid grid-cols-2 gap-px px-4 md:grid-cols-4">
+          {stats.map((stat) => (
+            <div key={stat.label} className="flex items-center gap-3 py-6">
+              <stat.icon className="h-5 w-5 shrink-0 text-teal-400" aria-hidden="true" />
+              <div>
+                <div className="text-2xl font-bold text-white">{stat.value}</div>
+                <div className="text-sm text-teal-200/80">{stat.label}</div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
