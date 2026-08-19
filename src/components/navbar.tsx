@@ -128,7 +128,7 @@ export default function Navbar() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full transition-[background-color,box-shadow,border-color] duration-700 ease-out",
+        "site-header sticky top-0 z-50 w-full transition-[background-color,box-shadow,border-color] duration-700 ease-out",
         overHero
           ? "bg-transparent"
           : scrolled

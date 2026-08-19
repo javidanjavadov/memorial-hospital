@@ -678,6 +678,20 @@ html[data-scroll-behavior="smooth"] {
   }
 
 
+  /*
+   * The header's scroll transition is a colour cross-fade — background, border,
+   * shadow, link colour and the logo's invert filter. None of it is movement,
+   * so the blanket rule above zeroing every transition left the bar snapping
+   * between states, which reads as no transition at all. Restated here for the
+   * same reason the page transition keeps its fade.
+   */
+  .site-header,
+  .site-header a,
+  .site-header button,
+  .site-header img {
+    transition-duration: 700ms !important;
+  }
+
   .page-enter[data-transition-state="exiting"] {
     animation: none !important;
     opacity: 1 !important;
