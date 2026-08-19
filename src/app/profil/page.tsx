@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import {
   User,
+  Lock,
   Mail,
   Phone,
   Calendar,
@@ -174,6 +175,7 @@ function ProfilPageInner() {
   }
 
   const missing = missingProfileFields(user)
+  const isGoogle = source === "google"
 
   const initials = user.fullName
     .split(" ")
@@ -335,7 +337,21 @@ function ProfilPageInner() {
                       )}
                     </Field>
 
-                    <Field label="Email" required error={errors.email?.message}>
+                    {/* Locked for a Google session: the address is what Google
+                        verified and what the session is keyed on, so editing it
+                        here would either be silently ignored on the next sign-in
+                        or split the account in two. Read-only rather than
+                        disabled, so it stays focusable and readable. */}
+                    <Field
+                      label="Email"
+                      required
+                      hint={
+                        isGoogle
+                          ? "Google hesabınızdan alınır və dəyişdirilə bilmir."
+                          : undefined
+                      }
+                      error={errors.email?.message}
+                    >
                       {(field) => (
                         <div className="relative">
                           <Mail
@@ -346,9 +362,21 @@ function ProfilPageInner() {
                             {...field}
                             type="email"
                             autoComplete="email"
+                            readOnly={isGoogle}
+                            aria-readonly={isGoogle || undefined}
                             {...register("email")}
-                            className={`pl-10 ${errors.email ? "border-red-500" : ""}`}
+                            className={`pl-10 ${
+                              isGoogle
+                                ? "cursor-not-allowed bg-[var(--secondary)] text-[var(--ink-muted)]"
+                                : ""
+                            } ${errors.email ? "border-red-500" : ""}`}
                           />
+                          {isGoogle && (
+                            <Lock
+                              className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"
+                              aria-hidden="true"
+                            />
+                          )}
                         </div>
                       )}
                     </Field>

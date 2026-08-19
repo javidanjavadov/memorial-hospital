@@ -48,7 +48,17 @@ export default function DoctorCard({
             {doctor.specialty}
           </p>
           <h3 className="font-display text-base leading-snug text-[var(--ink)]">
-            {doctor.name}
+            {/*
+              Stretched link: the whole card opens the doctor's page, while the
+              booking link below stays separately clickable because it sits in
+              its own stacking context. One target rather than a small one.
+            */}
+            <Link
+              href={`/hekimler/${doctor.id}`}
+              className="after:absolute after:inset-0 after:content-[''] hover:underline"
+            >
+              {doctor.name}
+            </Link>
           </h3>
           {doctor.title && (
             <p className="mt-1.5 text-xs leading-relaxed text-[var(--ink-muted)]">
@@ -81,7 +91,7 @@ export default function DoctorCard({
           {bookable && (
             <Link
               href={`/qebul?doctor=${doctor.id}`}
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--primary)] transition-colors hover:text-[var(--ink)]"
+              className="relative z-10 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--primary)] transition-colors hover:text-[var(--ink)]"
             >
               Qəbul
               <ArrowRight
