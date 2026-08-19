@@ -148,8 +148,11 @@ export default async function CategoryPage({ params }: Props) {
                   className="flex h-full flex-col rounded-xl border border-[var(--line)] bg-[var(--paper-raised)] p-3"
                 >
                   <div className="flex items-start justify-between gap-1">
+                    {/* The 17 entries without a code are doctor consultations,
+                        which have no laboratory code — the label is skipped for
+                        them rather than printed with an empty value. */}
                     <p className="font-mono text-[0.65rem] text-[var(--ink-muted)]">
-                      {item.code}
+                      {item.code ? `Kod: ${item.code}` : ""}
                     </p>
                     <ServiceInfoButton
                       service={{

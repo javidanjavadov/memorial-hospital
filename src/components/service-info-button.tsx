@@ -56,7 +56,7 @@ export default function ServiceInfoButton({ service }: { service: ServiceInfo })
             <div className="min-w-0">
               {service.code && (
                 <p className="font-mono text-xs text-[var(--ink-muted)]">
-                  {service.code}
+                  Kod: {service.code}
                 </p>
               )}
               <h2 className="font-display mt-1 text-step-1 text-[var(--ink)]">
