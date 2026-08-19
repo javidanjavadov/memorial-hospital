@@ -40,8 +40,7 @@ export default function Navbar() {
   const router = useRouter()
 
   // Covers both login methods — Google session or local email/password account.
-  const { user, isLoading } = useCurrentUser()
-  const hasHydrated = !isLoading
+  const { user } = useCurrentUser()
   const localLogout = useAuthStore((s) => s.logout)
 
   const handleLogout = useCallback(() => {
@@ -167,11 +166,17 @@ export default function Navbar() {
               </Link>
             </Button>
 
-            {/* Rendered only after the persisted store has loaded, so the
-                server markup and the first client render always agree. */}
-            {!hasHydrated ? (
-              <div className="w-[88px] h-9" aria-hidden="true" />
-            ) : user ? (
+            {/*
+              "Daxil Ol" is the default, not a loading placeholder.
+
+              `useSession()` stays in `status: "loading"` until /api/auth/session
+              answers, which on a cold serverless function can take seconds —
+              and this used to render an empty box for that whole window, so the
+              button appeared to be missing. Logged out is both the far more
+              common case and what the server rendered, so show it immediately
+              and swap to the account menu only once a user is actually known.
+            */}
+            {user ? (
               <div className="relative" ref={userMenuRef}>
                 <button
                   type="button"
@@ -284,7 +289,7 @@ export default function Navbar() {
               </button>
             ))}
             <div className="flex flex-col gap-2 mt-4 pt-4 border-t">
-              {hasHydrated && user ? (
+              {user ? (
                 <>
                   <Link
                     href="/profil"
@@ -311,7 +316,7 @@ export default function Navbar() {
                     Çıxış
                   </button>
                 </>
-              ) : hasHydrated ? (
+              ) : (
                 <>
                   <Button variant="outline" className="w-full" asChild>
                     <Link href="/giris" onClick={() => setIsOpen(false)}>
@@ -325,7 +330,7 @@ export default function Navbar() {
                     </Link>
                   </Button>
                 </>
-              ) : null}
+              )}
               <Button variant="emergency" size="sm" className="w-full" asChild>
                 <a href={telHref(contactInfo.phone)}>
                   <Phone className="w-4 h-4" aria-hidden="true" />
