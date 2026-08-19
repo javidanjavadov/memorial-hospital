@@ -74,6 +74,28 @@ export const requiredFinCode = z
   .min(1, "FIN kod daxil edin")
   .regex(/^[A-Za-z0-9]{7}$/, "FIN kod 7 hərf və ya rəqəmdən ibarət olmalıdır")
 
+/**
+ * Date of birth, as an ISO `yyyy-mm-dd` string from a native date input.
+ *
+ * Mandatory: it is one of the three things the results lookup checks, and a
+ * reference range is meaningless without an age — the same haemoglobin figure
+ * is normal in an adult and low in a newborn.
+ *
+ * Bounded at both ends because a date input accepts anything typed into it: a
+ * future date is impossible, and beyond 120 years is a typo rather than a
+ * patient, most often a mistyped year that would then follow the record around.
+ */
+export const birthDate = z
+  .string()
+  .min(1, "Doğum tarixini seçin")
+  .refine((value) => {
+    const date = new Date(value)
+    if (Number.isNaN(date.valueOf())) return false
+    const oldest = new Date()
+    oldest.setFullYear(oldest.getFullYear() - 120)
+    return date <= new Date() && date >= oldest
+  }, "Doğum tarixi düzgün deyil")
+
 export const fullName = z
   .string()
   .min(3, "Ad minimum 3 simvol olmalıdır")

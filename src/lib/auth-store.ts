@@ -20,6 +20,8 @@ export interface User {
   phone: string
   /** Mandatory: the lab identifies patients by FIN. */
   finCode: string
+  /** ISO `yyyy-mm-dd`. Mandatory — reference ranges are age-dependent. */
+  birthDate: string
   createdAt: string
 }
 

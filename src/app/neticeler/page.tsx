@@ -156,7 +156,6 @@ export default function NeticelerPage() {
                     <Input
                       {...field}
                       type="date"
-                      max={new Date().toISOString().split("T")[0]}
                       {...register("birthDate")}
                       className={errors.birthDate ? "border-red-500" : ""}
                     />

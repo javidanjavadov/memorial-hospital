@@ -36,6 +36,7 @@ import {
   phoneNumber,
   requiredEmail,
   requiredFinCode,
+  birthDate,
 } from "@/lib/validation"
 
 const profileSchema = z.object({
@@ -43,6 +44,7 @@ const profileSchema = z.object({
   lastName,
   fatherName,
   gender,
+  birthDate,
   email: requiredEmail,
   phone: phoneNumber,
   finCode: requiredFinCode,
@@ -99,6 +101,7 @@ export default function ProfilPage() {
       lastName: user?.lastName ?? "",
       fatherName: user?.fatherName ?? "",
       gender: user?.gender ?? "FEMALE",
+      birthDate: user?.birthDate ?? "",
       email: user?.email ?? "",
       phone: user?.phone ?? "",
       finCode: user?.finCode ?? "",
@@ -305,6 +308,22 @@ export default function ProfilPage() {
                             className={`pl-10 ${errors.phone ? "border-red-500" : ""}`}
                           />
                         </div>
+                      )}
+                    </Field>
+
+                    <Field
+                      label="Doğum tarixi"
+                      required
+                      error={errors.birthDate?.message}
+                    >
+                      {(field) => (
+                        <Input
+                          {...field}
+                          type="date"
+                          autoComplete="bday"
+                          {...register("birthDate")}
+                          className={errors.birthDate ? "border-red-500" : ""}
+                        />
                       )}
                     </Field>
 

@@ -22,6 +22,7 @@ import {
   Loader2,
 } from "lucide-react"
 import {
+  birthDate,
   fatherName,
   firstName,
   gender,
@@ -42,6 +43,9 @@ const schema = z
     lastName,
     fatherName,
     gender,
+    // Mandatory: the results lookup checks it, and a reference range cannot be
+    // read without an age.
+    birthDate,
     email: requiredEmail,
     phone: phoneNumber,
     // Mandatory — the lab identifies patients by FIN.
@@ -79,6 +83,7 @@ export default function QeydiyyatPage({ googleEnabled }: { googleEnabled: boolea
       firstName: "",
       lastName: "",
       fatherName: "",
+      birthDate: "",
       email: "",
       phone: "",
       finCode: "",
@@ -94,6 +99,7 @@ export default function QeydiyyatPage({ googleEnabled }: { googleEnabled: boolea
       lastName: data.lastName,
       fatherName: data.fatherName,
       gender: data.gender,
+      birthDate: data.birthDate,
       email: data.email,
       phone: data.phone,
       finCode: data.finCode,
@@ -190,6 +196,27 @@ export default function QeydiyyatPage({ googleEnabled }: { googleEnabled: boolea
                     <option value="FEMALE">Qadın</option>
                     <option value="MALE">Kişi</option>
                   </select>
+                )}
+              </Field>
+
+              {/* No `max` attribute: this page is prerendered, so a date
+                  computed here would freeze at the build date and start
+                  refusing valid dates months later. The schema does the check,
+                  at submit time, against the real current date. */}
+              <Field
+                label="Doğum tarixi"
+                required
+                hint="Nəticə hesabatındakı normal göstəricilər yaşa görə hesablanır."
+                error={errors.birthDate?.message}
+              >
+                {(field) => (
+                  <Input
+                    {...field}
+                    type="date"
+                    autoComplete="bday"
+                    {...register("birthDate")}
+                    className={errors.birthDate ? "border-red-500" : ""}
+                  />
                 )}
               </Field>
 

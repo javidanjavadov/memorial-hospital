@@ -58,6 +58,7 @@ export function useCurrentUser(): {
         email: session.user.email,
         phone: linked?.phone ?? "",
         finCode: linked?.finCode ?? "",
+        birthDate: linked?.birthDate ?? "",
         createdAt: linked?.createdAt ?? new Date(0).toISOString(),
         image: session.user.image,
         source: "google",
