@@ -15,11 +15,18 @@ export interface BasketLine {
 /** Home sample collection, matching the fee the hospital charges. */
 export const HOME_COLLECTION_FEE = 5
 
+/**
+ * How the patient intends to settle. Payment itself happens at the branch —
+ * the site takes none — so this records intent for the cash desk, nothing more.
+ */
+export type PaymentMethod = "CASH" | "CARD"
+
 export interface PastOrder {
   id: string
   createdAt: string
   branch: BranchKey
   homeCollection: boolean
+  paymentMethod: PaymentMethod
   total: number
   lines: BasketLine[]
 }
@@ -30,6 +37,7 @@ interface BasketState {
   orders: PastOrder[]
   branch: BranchKey
   homeCollection: boolean
+  paymentMethod: PaymentMethod
   hasHydrated: boolean
   setHasHydrated: () => void
   add: (line: BasketLine) => void
@@ -40,6 +48,7 @@ interface BasketState {
   reorder: (id: string) => void
   setBranch: (branch: BranchKey) => void
   setHomeCollection: (enabled: boolean) => void
+  setPaymentMethod: (method: PaymentMethod) => void
   has: (slug: string) => boolean
 }
 
@@ -60,6 +69,7 @@ export const useBasketStore = create<BasketState>()(
       orders: [],
       branch: DEFAULT_BRANCH,
       homeCollection: false,
+      paymentMethod: "CASH",
       hasHydrated: false,
 
       setHasHydrated: () => set({ hasHydrated: true }),
@@ -79,7 +89,7 @@ export const useBasketStore = create<BasketState>()(
       clear: () => set({ lines: [], homeCollection: false }),
 
       submit: () => {
-        const { lines, branch, homeCollection } = get()
+        const { lines, branch, homeCollection, paymentMethod } = get()
         if (lines.length === 0) return null
 
         const order: PastOrder = {
@@ -90,6 +100,7 @@ export const useBasketStore = create<BasketState>()(
           createdAt: new Date().toISOString(),
           branch,
           homeCollection,
+          paymentMethod,
           total:
             basketSubtotal(lines) + (homeCollection ? HOME_COLLECTION_FEE : 0),
           lines,
@@ -119,6 +130,7 @@ export const useBasketStore = create<BasketState>()(
 
       setBranch: (branch) => set({ branch }),
       setHomeCollection: (homeCollection) => set({ homeCollection }),
+      setPaymentMethod: (paymentMethod) => set({ paymentMethod }),
 
       has: (slug) => get().lines.some((l) => l.slug === slug),
     }),
@@ -130,6 +142,7 @@ export const useBasketStore = create<BasketState>()(
         orders: state.orders,
         branch: state.branch,
         homeCollection: state.homeCollection,
+        paymentMethod: state.paymentMethod,
       }),
       onRehydrateStorage: () => (state) => {
         state?.setHasHydrated()

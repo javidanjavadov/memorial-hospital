@@ -1,3 +1,4 @@
+import { Suspense } from "react"
 import GirisForm from "./giris-form"
 import { googleConfigured } from "@/lib/auth-flags"
 
@@ -11,5 +12,14 @@ import { googleConfigured } from "@/lib/auth-flags"
  * answer straight into the HTML.
  */
 export default function GirisPage() {
-  return <GirisForm googleEnabled={googleConfigured} />
+  /*
+   * The form reads ?next= to return the visitor where they came from, and
+   * useSearchParams needs a boundary or the whole route falls out of static
+   * rendering.
+   */
+  return (
+    <Suspense fallback={null}>
+      <GirisForm googleEnabled={googleConfigured} />
+    </Suspense>
+  )
 }

@@ -5,8 +5,11 @@ import Link from "next/link"
 import {
   AlertCircle,
   ArrowRight,
+  Banknote,
   CheckCircle,
+  CreditCard,
   Home,
+  LogIn,
   Phone,
   ShoppingCart,
   Trash2,
@@ -19,6 +22,8 @@ import {
   useBasketStore,
 } from "@/lib/basket-store"
 import type { BranchKey } from "@/lib/catalog"
+import type { PaymentMethod } from "@/lib/basket-store"
+import { useCurrentUser } from "@/lib/use-current-user"
 import { controlClass } from "@/components/ui/field"
 
 const formatAzn = (value: number) =>
@@ -34,6 +39,12 @@ export default function SebetPage() {
   const submitOrder = useBasketStore((s) => s.submit)
   const setBranch = useBasketStore((s) => s.setBranch)
   const setHomeCollection = useBasketStore((s) => s.setHomeCollection)
+  const paymentMethod = useBasketStore((s) => s.paymentMethod)
+  const setPaymentMethod = useBasketStore((s) => s.setPaymentMethod)
+
+  // An order has to be attached to a patient — the lab needs to know whose
+  // sample it is, and the results have to reach someone.
+  const { user, isLoading } = useCurrentUser()
 
   const [sent, setSent] = useState(false)
 
@@ -42,7 +53,7 @@ export default function SebetPage() {
   const branchName =
     branches.find((b) => b.id === branch)?.name ?? branches[0].name
 
-  if (!hasHydrated) {
+  if (!hasHydrated || isLoading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center" role="status">
         <span className="text-[var(--ink-muted)]">Yüklənir...</span>
@@ -204,6 +215,44 @@ export default function SebetPage() {
                 </span>
               </label>
 
+              <fieldset className="mt-5">
+                <legend className="text-sm font-medium text-[var(--ink)]">
+                  Ödəniş üsulu
+                </legend>
+                <div className="mt-2 grid grid-cols-2 gap-2">
+                  {(
+                    [
+                      { id: "CASH", label: "Nağd", icon: Banknote },
+                      { id: "CARD", label: "Kart", icon: CreditCard },
+                    ] as const
+                  ).map((option) => (
+                    <label
+                      key={option.id}
+                      className={`flex cursor-pointer items-center justify-center gap-2 rounded-lg border px-3 py-2 text-sm transition-colors ${
+                        paymentMethod === option.id
+                          ? "border-primary bg-primary/5 text-primary"
+                          : "border-[var(--line)] text-[var(--ink-muted)] hover:border-primary/40"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="payment"
+                        value={option.id}
+                        checked={paymentMethod === option.id}
+                        onChange={() => setPaymentMethod(option.id as PaymentMethod)}
+                        className="sr-only"
+                      />
+                      <option.icon className="h-4 w-4" aria-hidden="true" />
+                      {option.label}
+                    </label>
+                  ))}
+                </div>
+                <p className="mt-2 text-xs text-[var(--ink-muted)]">
+                  Ödəniş filialda həyata keçirilir — kart üçün POS-terminal
+                  mövcuddur.
+                </p>
+              </fieldset>
+
               <dl className="mt-5 space-y-2 border-t border-[var(--line)] pt-4 text-sm">
                 <div className="flex justify-between">
                   <dt className="text-[var(--ink-muted)]">Xidmətlər</dt>
@@ -225,20 +274,47 @@ export default function SebetPage() {
                 </div>
               </dl>
 
-              <Button
-                variant="cta"
-                size="lg"
-                className="mt-5 w-full"
-                onClick={() => {
-                  // Moves the basket into order history rather than discarding
-                  // it, so "Keçmiş sifarişlər" has something to show.
-                  submitOrder()
-                  setSent(true)
-                }}
-              >
-                Sifarişi göndər
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </Button>
+              {user ? (
+                <Button
+                  variant="cta"
+                  size="lg"
+                  className="mt-5 w-full"
+                  onClick={() => {
+                    // Moves the basket into order history rather than discarding
+                    // it, so "Keçmiş sifarişlər" has something to show.
+                    submitOrder()
+                    setSent(true)
+                  }}
+                >
+                  Sifarişi göndər
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Button>
+              ) : (
+                /*
+                  Signed out, the basket is kept and the order is blocked rather
+                  than the page being closed off: the visitor can still price
+                  everything up, and the basket persists through the round trip
+                  to /giris and back.
+                */
+                <div className="mt-5 rounded-lg border border-[var(--line)] bg-[var(--secondary)] p-4">
+                  <p className="text-sm text-[var(--ink)]">
+                    Sifariş vermək üçün hesabınıza daxil olun.
+                  </p>
+                  <p className="mt-1 text-xs text-[var(--ink-muted)]">
+                    Analiz nəticələri hesabınıza bağlanır, ona görə sifariş
+                    şəxsiyyəti təsdiqlənmiş istifadəçi adından verilir.
+                  </p>
+                  <Button variant="cta" size="lg" className="mt-3 w-full" asChild>
+                    <Link href="/giris?next=/sebet">
+                      <LogIn className="h-4 w-4" aria-hidden="true" />
+                      Daxil ol
+                    </Link>
+                  </Button>
+                  <Button variant="outline" className="mt-2 w-full" asChild>
+                    <Link href="/qeydiyyat">Qeydiyyatdan keç</Link>
+                  </Button>
+                </div>
+              )}
 
               {/*
                 Stated plainly rather than buried. The site cannot take payment —

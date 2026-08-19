@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -29,14 +29,24 @@ export default function GirisPage({ googleEnabled }: { googleEnabled: boolean })
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState("")
   const router = useRouter()
+  /*
+   * Where to land after signing in. Only same-site paths are honoured — taking
+   * an arbitrary URL here would turn the login form into an open redirect that
+   * could bounce a patient to a look-alike site straight after authenticating.
+   */
+  const nextParam = useSearchParams().get("next")
+  const next =
+    nextParam && nextParam.startsWith("/") && !nextParam.startsWith("//")
+      ? nextParam
+      : "/profil"
   const login = useAuthStore((s) => s.login)
   const user = useAuthStore((s) => s.user)
   const hasHydrated = useAuthStore((s) => s.hasHydrated)
 
   // Already signed in — no reason to show the form again.
   useEffect(() => {
-    if (hasHydrated && user) router.replace("/profil")
-  }, [hasHydrated, user, router])
+    if (hasHydrated && user) router.replace(next)
+  }, [hasHydrated, user, router, next])
 
   const {
     register,
@@ -51,7 +61,7 @@ export default function GirisPage({ googleEnabled }: { googleEnabled: boolean })
     setError("")
     const result = await login(data.email, data.password)
     if (result.ok) {
-      router.push("/profil")
+      router.push(next)
     } else {
       setError(result.error)
     }

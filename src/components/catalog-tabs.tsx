@@ -107,6 +107,7 @@ export default function CatalogTabs({ children }: { children: ReactNode }) {
                         <p className="mt-0.5 text-xs text-[var(--ink-muted)]">
                           {branchName} · {order.lines.length} xidmət
                           {order.homeCollection && " · evdə qanalma"}
+                          {order.paymentMethod === "CARD" ? " · kart" : " · nağd"}
                         </p>
                       </div>
                       <div className="flex items-center gap-3">
