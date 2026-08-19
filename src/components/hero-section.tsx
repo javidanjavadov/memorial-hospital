@@ -3,7 +3,6 @@ import Link from "next/link"
 import {
   ArrowRight,
   Clock,
-  Phone,
   ShieldCheck,
   Star,
   Stethoscope,
@@ -12,21 +11,21 @@ import { Button } from "@/components/ui/button"
 import { CountUp } from "@/components/animations"
 import {
   branches,
-  contactInfo,
   departments,
   doctors,
-  telHref,
   YEARS_OF_EXPERIENCE,
 } from "@/data"
 
 /**
  * Full-bleed hero: the photograph is the background and the content sits on it.
  *
- * Height is exactly one viewport — `svh` rather than `vh`, because on mobile
- * `vh` measures the viewport with the browser chrome hidden, so a `vh` hero
- * runs taller than the screen and its bottom row is clipped until the visitor
- * scrolls. The min-height keeps it usable on short landscape screens where one
- * viewport cannot hold the content.
+ * Height is a fraction of the viewport rather than all of it, so the section
+ * below is visible at the fold and the page reads as having more to it.
+ *
+ * `svh` rather than `vh`: on mobile `vh` measures the viewport with the browser
+ * chrome hidden, so a `vh` hero runs taller than the screen. The min-height
+ * keeps the content from being clipped on short landscape screens, and the
+ * max-height stops it ballooning on very tall monitors.
  *
  * Every figure comes from the roster rather than being typed in.
  */
@@ -39,9 +38,9 @@ const badges = [
 
 export default function HeroSection() {
   return (
-    <section className="relative flex h-svh min-h-[680px] w-full items-center overflow-hidden">
+    <section className="relative flex h-[78svh] max-h-[760px] min-h-[560px] w-full items-center overflow-hidden">
       <Image
-        src="/hero/hero-fullscreen.webp"
+        src="/hero/hero-lab.webp"
         alt=""
         fill
         priority
@@ -80,13 +79,13 @@ export default function HeroSection() {
             <span className="text-[var(--accent)]">peşəkar qayğı</span>
           </h1>
 
-          <p className="mt-5 max-w-xl text-step-0 text-white/80">
+          <p className="mt-4 max-w-xl text-step-0 text-white/80">
             {doctors.length} həkim, {departments.length} ixtisas və{" "}
             {branches.length} filial. Laboratoriya analizindən kompleks check-up
             müayinəyə qədər — hamısı bir yerdə.
           </p>
 
-          <dl className="mt-8 grid max-w-lg grid-cols-3 gap-4">
+          <dl className="mt-7 grid max-w-lg grid-cols-3 gap-4">
             {[
               { value: doctors.length, suffix: "", label: "Həkim" },
               { value: departments.length, suffix: "", label: "İxtisas" },
@@ -101,7 +100,7 @@ export default function HeroSection() {
             ))}
           </dl>
 
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-7 flex flex-wrap gap-3">
             <Button variant="cta" size="lg" asChild>
               <Link href="/qebul">
                 Onlayn qəbula yazıl
@@ -120,22 +119,6 @@ export default function HeroSection() {
               </Link>
             </Button>
           </div>
-
-          <a
-            href={telHref(contactInfo.phone)}
-            className="mt-8 inline-flex items-center gap-4 rounded-xl border border-white/25 bg-white/10 p-4 backdrop-blur-sm transition-colors hover:bg-white/20"
-          >
-            <span
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/15"
-              aria-hidden="true"
-            >
-              <Phone className="h-5 w-5" />
-            </span>
-            <span>
-              <span className="block text-xs text-white/70">Çağrı mərkəzi</span>
-              <span className="block font-semibold">{contactInfo.phone}</span>
-            </span>
-          </a>
         </div>
       </div>
     </section>
