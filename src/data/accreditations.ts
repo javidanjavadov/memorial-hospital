@@ -2,9 +2,14 @@ import { Award, BadgeCheck, Globe2, type LucideIcon } from "lucide-react"
 
 export interface Accreditation {
   icon: LucideIcon
-  /** Wordmark, set large. */
+  /** Wordmark, kept as the accessible name for the logo. */
   mark: string
   markNote: string
+  /** Official logo. Dark artwork, so it needs a light chip behind it. */
+  logo: string
+  /** Intrinsic size at the exported height of 120px, for next/image. */
+  logoWidth: number
+  logoHeight: number
   label: string
   title: string
   body: string
@@ -24,6 +29,9 @@ export const accreditations: Accreditation[] = [
   {
     icon: BadgeCheck,
     mark: "IAS",
+    logo: "/accreditations/ias.png",
+    logoWidth: 248,
+    logoHeight: 120,
     markNote: "Akkreditasiya",
     label: "IAS Akkreditasiyası",
     title: "Beynəlxalq akkreditasiya",
@@ -32,6 +40,9 @@ export const accreditations: Accreditation[] = [
   {
     icon: Globe2,
     mark: "RIQAS",
+    logo: "/accreditations/riqas.png",
+    logoWidth: 509,
+    logoHeight: 120,
     markNote: "Participant",
     label: "RIQAS Participant",
     title: "Xarici keyfiyyətə nəzarət",
@@ -40,6 +51,9 @@ export const accreditations: Accreditation[] = [
   {
     icon: Award,
     mark: "QCMD",
+    logo: "/accreditations/qcmd.png",
+    logoWidth: 451,
+    logoHeight: 120,
     markNote: "Participant",
     label: "QCMD Participant",
     title: "Molekulyar diaqnostika",

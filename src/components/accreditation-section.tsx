@@ -1,3 +1,4 @@
+import Image from "next/image"
 import { AnimateOnScroll } from "@/components/animations"
 import { accreditations } from "@/data/accreditations"
 
@@ -36,15 +37,19 @@ export default function AccreditationSection() {
             laboratory's strongest credentials and they read as a wordmark
             first, explanation second — the card text below carries the detail.
           */}
-          <ul className="mb-14 flex flex-wrap items-center justify-center gap-x-10 gap-y-6 border-y border-white/15 py-8 md:gap-x-16">
+          <ul className="mb-14 flex flex-wrap items-center justify-center gap-4 border-y border-white/15 py-8 sm:gap-6">
             {accreditations.map((item) => (
-              <li key={`mark-${item.label}`} className="text-center">
-                <span className="font-display block text-step-3 leading-none tracking-tight">
-                  {item.mark}
-                </span>
-                <span className="mt-2 block text-xs tracking-[0.16em] text-white/60 uppercase">
-                  {item.markNote}
-                </span>
+              <li
+                key={`mark-${item.label}`}
+                className="flex h-20 items-center rounded-xl bg-white px-6"
+              >
+                <Image
+                  src={item.logo}
+                  alt={`${item.mark} — ${item.markNote}`}
+                  width={item.logoWidth}
+                  height={item.logoHeight}
+                  className="h-10 w-auto object-contain sm:h-12"
+                />
               </li>
             ))}
           </ul>

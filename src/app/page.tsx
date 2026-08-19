@@ -23,7 +23,7 @@ export default function Home() {
     <>
       <div id="hero"><HeroSection /></div>
       <AccreditationBar />
-      <FindDoctorSection />
+      <ServicesSection />
       <div id="haqqimizda">
         <section className="py-16 md:py-24 bg-[var(--paper)]">
           <div className="container mx-auto px-4">
@@ -108,8 +108,8 @@ export default function Home() {
         </section>
       </div>
       <div id="xidmetler"><DepartmentsSection /></div>
-      <ServicesSection />
       <AccreditationSection />
+      <FindDoctorSection />
       <div id="hekimler"><DoctorsSection /></div>
       <div id="filiallar"><BranchesSection /></div>
       <TrustSection />
