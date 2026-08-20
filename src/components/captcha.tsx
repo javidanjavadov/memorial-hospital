@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef } from "react"
 import { RefreshCw } from "lucide-react"
+import { useT } from "@/i18n/client"
 
 /**
  * Distorted-text challenge, matching the one on the hospital's results page.
@@ -40,6 +41,7 @@ export default function Captcha({
   onReady?: (handle: CaptchaHandle) => void
   className?: string
 }) {
+  const t = useT()
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const codeRef = useRef("")
 
@@ -120,7 +122,7 @@ export default function Captcha({
           // it is unreadable to a screen reader. The audio-free fallback is the
           // call centre, surfaced next to the field.
           role="img"
-          aria-label="Təhlükəsizlik kodu şəkli"
+          aria-label={t.ui.captchaImageAlt}
           className="rounded-lg border border-[var(--line)] bg-white"
         />
         <button

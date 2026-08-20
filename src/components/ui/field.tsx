@@ -2,6 +2,7 @@
 
 import { useId, type ReactNode } from "react"
 import { cn } from "@/lib/utils"
+import { useT } from "@/i18n/client"
 
 /** Props a `Field` hands to its control so label, error and input stay wired. */
 export interface FieldControlProps {
@@ -36,6 +37,7 @@ export function Field({
   className,
   children,
 }: FieldProps) {
+  const t = useT()
   const id = useId()
   const errorId = `${id}-error`
   const hintId = `${id}-hint`
@@ -54,7 +56,7 @@ export function Field({
             <span aria-hidden="true" className="text-red-500">
               *
             </span>
-            <span className="sr-only">(mütləq)</span>
+            <span className="sr-only">{t.ui.requiredMark}</span>
           </>
         )}
       </label>

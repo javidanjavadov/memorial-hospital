@@ -3,6 +3,7 @@
 import { useRef } from "react"
 import { Clock, Info, Phone, X } from "lucide-react"
 import { branches, contactInfo, telHref } from "@/data"
+import { useT } from "@/i18n/client"
 
 export interface ServiceInfo {
   name: string
@@ -28,6 +29,7 @@ const formatAzn = (value: number) =>
  * to see that the same test costs something different in Ganja.
  */
 export default function ServiceInfoButton({ service }: { service: ServiceInfo }) {
+  const t = useT()
   const dialogRef = useRef<HTMLDialogElement>(null)
 
   return (
@@ -71,7 +73,7 @@ export default function ServiceInfoButton({ service }: { service: ServiceInfo })
             <button
               type="button"
               onClick={() => dialogRef.current?.close()}
-              aria-label="Bağla"
+              aria-label={t.common.close}
               className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[var(--ink-muted)] transition-colors hover:bg-[var(--secondary)]"
             >
               <X className="h-4 w-4" aria-hidden="true" />
@@ -94,7 +96,7 @@ export default function ServiceInfoButton({ service }: { service: ServiceInfo })
           {service.prices && (
             <div className="mt-5">
               <h3 className="text-xs tracking-[0.14em] text-[var(--ink-muted)] uppercase">
-                Filiallar üzrə qiymət
+                {t.catalog.pricesByBranch}
               </h3>
               <ul className="mt-2 divide-y divide-[var(--line)] border-y border-[var(--line)]">
                 {branches.map((branch) => {
@@ -127,7 +129,7 @@ export default function ServiceInfoButton({ service }: { service: ServiceInfo })
                 })}
               </ul>
               <p className="mt-2 text-xs text-[var(--ink-muted)]">
-                Endirimli qiymət onlayn sifariş üçün keçərlidir.
+                {t.catalog.promoNote}
               </p>
             </div>
           )}

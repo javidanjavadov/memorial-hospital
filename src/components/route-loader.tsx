@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
+import { useT } from "@/i18n/client"
 
 /**
  * Top-of-viewport progress bar shown while a client-side navigation is pending.
@@ -13,6 +14,7 @@ import { useEffect, useState } from "react"
  * disappears on its own — no state update needed, so there is no render loop.
  */
 export default function RouteLoader() {
+  const t = useT()
   const pathname = usePathname()
   const [leavingFrom, setLeavingFrom] = useState<string | null>(null)
 
@@ -73,7 +75,7 @@ export default function RouteLoader() {
     <div
       className="route-loader pointer-events-none fixed inset-x-0 top-0 z-[100] h-0.5 overflow-hidden"
       role="progressbar"
-      aria-label="Səhifə yüklənir"
+      aria-label={t.ui.pageLoading}
       aria-busy="true"
     >
       <div className="route-loader__bar h-full w-full bg-gradient-to-r from-teal-700 via-teal-500 to-teal-300 shadow-[0_0_10px_rgba(93,170,160,0.7)]" />

@@ -8,6 +8,7 @@ import {
   type ProfileField,
 } from "@/lib/profile-complete"
 import { cn } from "@/lib/utils"
+import { useT } from "@/i18n/client"
 
 /**
  * How far the profile is from usable.
@@ -35,13 +36,14 @@ export default function ProfileCompletionCard({
   compact?: boolean
   className?: string
 }) {
+  const t = useT()
   const total = REQUIRED_PROFILE_FIELDS.length
   const done = total - missing.length
   const missingKeys = new Set(missing.map((field) => field.key))
 
   return (
     <section
-      aria-label="Profilin tamamlanması"
+      aria-label="{t.ui.profileCompletionEyebrow}"
       className={cn(
         "overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--paper-raised)]",
         className
@@ -72,7 +74,7 @@ export default function ProfileCompletionCard({
                   compact ? "text-base" : "text-step-1"
                 )}
               >
-                Profilinizi tamamlayın
+                {t.ui.profileCompletionTitle}
               </h2>
               <span className="rounded-full bg-[var(--secondary)] px-2.5 py-0.5 text-xs font-medium text-[var(--ink-muted)]">
                 {done}/{total}
@@ -81,7 +83,7 @@ export default function ProfileCompletionCard({
 
             <p className="mt-1.5 text-sm leading-relaxed text-[var(--ink-muted)]">
               {reason ??
-                "Laboratoriya nümunəni bu məlumatlarla sizin adınıza qeyd edir. Sifariş və qəbul üçün tələb olunur."}
+                "{t.ui.profileCompletionBody}"}
             </p>
 
             {/*
@@ -121,7 +123,7 @@ export default function ProfileCompletionCard({
             {next && (
               <Button variant="cta" className="mt-5 w-full sm:w-auto" asChild>
                 <Link href={`/profil?next=${encodeURIComponent(next)}`}>
-                  Məlumatları doldur
+                  {t.ui.fillDetails}
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
               </Button>

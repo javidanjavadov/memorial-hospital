@@ -26,6 +26,9 @@ export interface DataTranslations {
   categories: Record<string, string>
   faq: { question: string; answer: string }[]
   contact: { workingHours?: string; address?: string }
+  /** Doctor specialties and honorifics, keyed by their Azerbaijani text. */
+  specialties: Record<string, string>
+  doctorTitles: Record<string, string>
   accreditations: Record<
     string,
     { label?: string; title?: string; markNote?: string }

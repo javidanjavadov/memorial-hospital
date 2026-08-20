@@ -8,6 +8,7 @@ import { ordersFor, useBasketStore } from "@/lib/basket-store"
 import { shortServiceName } from "@/lib/service-name"
 import { useCurrentUser } from "@/lib/use-current-user"
 import { cn } from "@/lib/utils"
+import { useT } from "@/i18n/client"
 
 /**
  * dd.MM.yyyy, written out rather than left to toLocaleDateString("az-AZ").
@@ -36,6 +37,7 @@ const formatAzn = (value: number) =>
  * strip above them.
  */
 export default function CatalogTabs({ children }: { children: ReactNode }) {
+  const t = useT()
   const [tab, setTab] = useState<"services" | "orders">("services")
   const allOrders = useBasketStore((s) => s.orders)
   const { user } = useCurrentUser()
@@ -49,13 +51,13 @@ export default function CatalogTabs({ children }: { children: ReactNode }) {
     <div>
       <div
         role="tablist"
-        aria-label="Kataloq görünüşü"
+        aria-label={t.catalog.categoryView}
         className="mb-6 flex gap-6 border-b border-[var(--line)]"
       >
         {(
           [
-            { id: "services", label: "Xidmət seçimi", icon: ListPlus },
-            { id: "orders", label: "Keçmiş sifarişlər", icon: History },
+            { id: "services", label: t.catalog.serviceSelection, icon: ListPlus },
+            { id: "orders", label: t.catalog.pastOrders, icon: History },
           ] as const
         ).map((item) => (
           <button
@@ -93,10 +95,10 @@ export default function CatalogTabs({ children }: { children: ReactNode }) {
                 aria-hidden="true"
               />
               <p className="text-sm font-medium text-[var(--ink)]">
-                Hələ sifarişiniz yoxdur
+                {t.catalog.noOrdersYet}
               </p>
               <p className="mt-1 text-xs text-[var(--ink-muted)]">
-                Göndərdiyiniz sifarişlər burada saxlanılır.
+                {t.catalog.ordersStoredHere}
               </p>
             </div>
           ) : (
@@ -117,8 +119,8 @@ export default function CatalogTabs({ children }: { children: ReactNode }) {
                         </p>
                         <p className="mt-0.5 text-xs text-[var(--ink-muted)]">
                           {branchName} · {order.lines.length} xidmət
-                          {order.homeCollection && " · evdə qanalma"}
-                          {order.paymentMethod === "CARD" ? " · kart" : " · nağd"}
+                          {order.homeCollection && ` · ${t.profile.homeCollectionShort}`}
+                          {` · ${order.paymentMethod === "CARD" ? t.basket.card : t.basket.cash}`}
                         </p>
                       </div>
                       <div className="flex items-center gap-3">
@@ -134,7 +136,7 @@ export default function CatalogTabs({ children }: { children: ReactNode }) {
                           }}
                         >
                           <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
-                          Təkrarla
+                          {t.catalog.reorder}
                         </Button>
                       </div>
                     </div>
@@ -156,8 +158,7 @@ export default function CatalogTabs({ children }: { children: ReactNode }) {
           )}
 
           <p className="mt-4 text-xs text-[var(--ink-muted)]">
-            Sifariş tarixçəsi yalnız bu brauzerdə saxlanılır. Tam siyahı üçün
-            profilinizin “Sifarişlərim” bölməsinə baxın.
+{t.ui.localHistoryFull}
           </p>
         </div>
       )}

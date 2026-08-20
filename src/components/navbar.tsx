@@ -158,7 +158,7 @@ export default function Navbar() {
             />
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-1" aria-label="Əsas menyu">
+          <nav className="hidden lg:flex items-center gap-1" aria-label={t.ui.mainMenu}>
             {navItems.map((item) => (
               <button
                 key={item.href}
@@ -241,7 +241,7 @@ export default function Navbar() {
                     {profileIncomplete && (
                       <span
                         role="status"
-                        aria-label="Profil məlumatları tamamlanmayıb"
+                        aria-label={t.ui.profileIncompleteBadge}
                         className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 ring-2 ring-white"
                       >
                         <AlertCircle className="h-3 w-3 text-white" aria-hidden="true" />
@@ -279,7 +279,7 @@ export default function Navbar() {
                     </Link>
                     {profileIncomplete && (
                       <p className="border-t bg-amber-50 px-4 py-2 text-[0.7rem] leading-snug text-amber-900">
-                        Sifariş və qəbul üçün profil məlumatları tamamlanmalıdır.
+                        {t.ui.profileIncompleteMenuNote}
                       </p>
                     )}
                     <hr className="border-slate-100" />
@@ -326,7 +326,7 @@ export default function Navbar() {
             onClick={() => setIsOpen((open) => !open)}
             aria-expanded={isOpen}
             aria-controls="mobile-menu"
-            aria-label={isOpen ? "Menyunu bağla" : "Menyunu aç"}
+            aria-label={isOpen ? t.ui.closeMenu : t.ui.openMenu}
           >
             <span className="relative w-6 h-6 block" aria-hidden="true">
               <Menu
@@ -414,7 +414,7 @@ export default function Navbar() {
                   </Button>
                   <Button variant="cta" className="w-full" asChild>
                     <Link href="/qeydiyyat" onClick={() => setIsOpen(false)}>
-                      Qeydiyyatdan Keç
+                      {t.ui.signUp}
                     </Link>
                   </Button>
                 </>

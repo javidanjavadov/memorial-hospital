@@ -59,6 +59,27 @@ export function localizeServiceCategory<
   }
 }
 
+/**
+ * A doctor's specialty and honorific.
+ *
+ * Keyed by the Azerbaijani text rather than by an id: these are free-text
+ * fields on the roster, shared by many doctors ("Terapevt" appears three
+ * times), and there is no id to key on. A specialty the dictionary has not
+ * caught up with shows the Azerbaijani, which is the doctor's real title
+ * rather than a blank.
+ */
+export function localizeDoctor<
+  T extends { specialty: string; title: string | null },
+>(doctor: T, data: DataDictionary): T {
+  return {
+    ...doctor,
+    specialty: data?.specialties?.[doctor.specialty] ?? doctor.specialty,
+    title: doctor.title
+      ? (data?.doctorTitles?.[doctor.title] ?? doctor.title)
+      : doctor.title,
+  }
+}
+
 /** Catalogue group name and blurb, keyed by the group's slug. */
 export function localizeGroup(
   group: { slug: string; name: string; blurb: string },
