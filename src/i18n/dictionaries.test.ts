@@ -103,12 +103,20 @@ describe("dictionaries", () => {
   })
 
   /* A translation identical to the source usually means it was skipped. */
+  /*
+   * Strings that are legitimately the same in every language: a printed field
+   * format is not prose, and "translating" it would make the hint disagree with
+   * what the form actually accepts.
+   */
+  const IDENTICAL_BY_DESIGN = new Set(["booking.cardNoFormat"])
+
   it.each(["ru", "en"])("%s is actually translated, not copied", (locale) => {
     const translated = flatten(dictionaries[locale])
     const identical = Object.entries(source).filter(
       ([key, value]) =>
         typeof value === "string" &&
         value.length > 12 &&
+        !IDENTICAL_BY_DESIGN.has(key) &&
         translated[key] === value
     )
     expect(identical.map(([key]) => key)).toEqual([])

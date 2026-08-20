@@ -3,93 +3,78 @@ import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { pageMetadata } from "@/lib/site"
+import { getDictionary } from "@/i18n"
 
-export const metadata: Metadata = pageMetadata({
-  title: "İstifadə Şərtləri",
-  description: "Memorial Hospital saytının istifadə şərtləri.",
+/* generateMetadata, not a constant: the title and description are what a
+ * search engine and a shared link show, and they follow the visitor's
+ * language like the page does. */
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getDictionary()
+  return pageMetadata({
+  title: t.legal.terms[0],
+  description: t.legal.terms[1],
   path: "/sertler",
 })
+}
 
-export default function TermsPage() {
+export default async function TermsPage() {
+  const t = await getDictionary()
+
   return (
     <div className="min-h-screen bg-[var(--paper)] py-16 md:py-24">
       <div className="container mx-auto px-4 max-w-4xl">
         <Button variant="ghost" size="sm" asChild className="mb-8">
           <Link href="/">
-            <ArrowLeft className="w-4 h-4" />
-            Ana Səhifə
-          </Link>
+            <ArrowLeft className="w-4 h-4" />{t.legal.terms[2]}</Link>
         </Button>
 
-        <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-8">
-          İstifadə Şərtləri
-        </h1>
+        <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-8">{t.legal.terms[0]}</h1>
 
         <div className="prose prose-slate max-w-none space-y-8">
-          <p className="text-slate-600">
-            Son yenilənmə: 1 Yanvar 2026
-          </p>
+          <p className="text-slate-600">{t.legal.terms[3]}</p>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold text-slate-900">1. Ümumi Şərtlər</h2>
-            <p className="text-slate-600 leading-relaxed">
-              Bu İstifadə Şərtləri Memorial Hospital-ın rəsmi vebsaytından və online xidmətlərindən 
-              istifadə qaydalarını müəyyən edir. Saytdan istifadə etməklə siz bu şərtləri qəbul etmiş olursunuz.
-            </p>
+            <h2 className="text-2xl font-semibold text-slate-900">{t.legal.terms[4]}</h2>
+            <p className="text-slate-600 leading-relaxed">{t.legal.terms[5]}</p>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold text-slate-900">2. Xidmətlər</h2>
-            <p className="text-slate-600 leading-relaxed">
-              Memorial Hospital online qəbul sistemi, tibbi məlumatlar və digər rəqəmsal xidmətlər təqdim edir. 
-              Online qəbul yalnız məlumatlandırma məqsədlidir və təcili hallarda birbaşa əlaqə saxlamağınız tövsiyə olunur.
-            </p>
+            <h2 className="text-2xl font-semibold text-slate-900">{t.legal.terms[6]}</h2>
+            <p className="text-slate-600 leading-relaxed">{t.legal.terms[7]}</p>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold text-slate-900">3. İstifadəçi Öhdəlikləri</h2>
+            <h2 className="text-2xl font-semibold text-slate-900">{t.legal.terms[8]}</h2>
             <ul className="list-disc list-inside text-slate-600 space-y-2 ml-4">
-              <li>Doğru və tam məlumat təqdim etmək</li>
-              <li>Hesab məlumatlarının məxfiliyini qorumaq</li>
-              <li>Qanunsuz məqsədlərlə xidmətdən istifadə etməmək</li>
-              <li>Başqa istifadəçilərin hüquqlarına hörmət etmək</li>
+              <li>{t.legal.terms[9]}</li>
+              <li>{t.legal.terms[10]}</li>
+              <li>{t.legal.terms[11]}</li>
+              <li>{t.legal.terms[12]}</li>
             </ul>
           </section>
 
           <section className="space-y-4">
             <h2 className="text-2xl font-semibold text-slate-900">4. Cavabdehlik</h2>
-            <p className="text-slate-600 leading-relaxed">
-              Memorial Hospital vebsaytında verilən tibbi məlumatlar yalnız məlumatlandırma məqsədlidir 
-              və həkim məsləhəti əvəzini tutmur. Hər hansı tibbi qərar qəbul etməzdən əvvəl həkiminizlə 
-              məsləhətləşməyinizi tövsiyə edirik.
-            </p>
+            <p className="text-slate-600 leading-relaxed">{t.legal.terms[13]}</p>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold text-slate-900">5. Intellektual Mülkiyyət</h2>
-            <p className="text-slate-600 leading-relaxed">
-              Saytdakı bütün məzmun, dizayn, loqo və digər materiallar Memorial Hospital-ın intellektual 
-              mülkiyyətidir və qanunla qorunur.
-            </p>
+            <h2 className="text-2xl font-semibold text-slate-900">{t.legal.terms[14]}</h2>
+            <p className="text-slate-600 leading-relaxed">{t.legal.terms[15]}</p>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold text-slate-900">6. Şərtlərə Dəyişiklik</h2>
-            <p className="text-slate-600 leading-relaxed">
-              Memorial Hospital bu şərtləri istənilən vaxt dəyişdirmək hüququna malikdir. Dəyişikliklər 
-              saytda dərc olunduqdan sonra qüvvəyə minir.
-            </p>
+            <h2 className="text-2xl font-semibold text-slate-900">{t.legal.terms[16]}</h2>
+            <p className="text-slate-600 leading-relaxed">{t.legal.terms[17]}</p>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold text-slate-900">7. Əlaqə</h2>
-            <p className="text-slate-600 leading-relaxed">
-              İstifadə şərtləri ilə bağlı suallarınız üçün bizimlə əlaqə saxlaya bilərsiniz:
-            </p>
+            <h2 className="text-2xl font-semibold text-slate-900">{t.legal.terms[18]}</h2>
+            <p className="text-slate-600 leading-relaxed">{t.legal.terms[19]}</p>
             <div className="bg-slate-50 rounded-xl p-6 space-y-2">
               <p className="text-slate-700"><strong>Email:</strong> info@memorialhospital.az</p>
               <p className="text-slate-700"><strong>Telefon:</strong> +994 55 710 10 50</p>
-              <p className="text-slate-700"><strong>Ünvan:</strong> Bakı ş., Nərimanov r., Ü.Hacıbəyli küç. 42</p>
+              <p className="text-slate-700"><strong>{t.legal.terms[20]}</strong>{t.legal.terms[21]}</p>
             </div>
           </section>
         </div>

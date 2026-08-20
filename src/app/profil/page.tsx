@@ -46,6 +46,7 @@ import {
 } from "@/data"
 import { createValidators } from "@/lib/validation"
 import { useT } from "@/i18n/client"
+import type azDict from "@/i18n/dictionaries/az.json"
 
 const buildProfileSchema = (t: ReturnType<typeof useT>) => {
   const v = createValidators(t.validation)
@@ -87,11 +88,13 @@ const statusColors: Record<string, string> = {
   cancelled: "bg-red-100 text-red-800",
 }
 
-const statusLabels: Record<string, string> = {
-  pending: "Gözləmədə",
-  confirmed: "Təsdiqlənib",
-  completed: "Tamamlanıb",
-  cancelled: "Ləğv edilib",
+/* Dictionary keys, resolved at render: a module constant cannot know the
+   locale. */
+const statusLabels: Record<string, keyof (typeof azDict)["profile"]> = {
+  pending: "statusPending",
+  confirmed: "statusConfirmed",
+  completed: "statusCompleted",
+  cancelled: "statusCancelled",
 }
 
 function ProfilPageInner() {
@@ -111,7 +114,7 @@ function ProfilPageInner() {
   const [activeTab, setActiveTab] = useState<
     "profile" | "appointments" | "orders" | "results"
   >(() => {
-    // Deep link, so "Nəticələrimə bax" in the header can open this section
+    // Deep link, so "{t.profile.myResults}ə bax" in the header can open this section
     // directly instead of dropping the visitor on the profile form.
     const tab = searchParams.get("tab")
     return tab === "results" || tab === "orders" || tab === "appointments"
@@ -211,14 +214,14 @@ function ProfilPageInner() {
       // The server drops anything that fails validation, so an unchanged
       // profile means it was rejected — never report success on that.
       if (!updated?.user?.profile) {
-        setSaveError("Məlumatlar yadda saxlanılmadı. Sahələri yoxlayın.")
+        setSaveError(t.profile.saveFailedFields)
         return
       }
 
       reset(data)
       setSaved(true)
     } catch {
-      setSaveError("Şəbəkə xətası. Yenidən cəhd edin.")
+      setSaveError(t.common.networkError)
     }
   }
 
@@ -261,7 +264,7 @@ function ProfilPageInner() {
         {missing.length > 0 && <ProfileCompletionCard missing={missing} className="mb-6" />}
 
         {/* Tabs */}
-        <div className="flex flex-wrap gap-2 mb-6" role="tablist" aria-label="Profil bölmələri">
+        <div className="flex flex-wrap gap-2 mb-6" role="tablist" aria-label={t.profile.profileSections}>
           <Button
             role="tab"
             id="tab-profile"
@@ -304,7 +307,7 @@ function ProfilPageInner() {
             onClick={() => setActiveTab("results")}
           >
             <FileText className="w-4 h-4" aria-hidden="true" />
-            Nəticələrim
+            {t.profile.myResults}
           </Button>
         </div>
 
@@ -312,7 +315,7 @@ function ProfilPageInner() {
           <div role="tabpanel" id="panel-profile" aria-labelledby="tab-profile">
             <Card className="border-0 shadow-lg">
               <CardHeader>
-                <CardTitle>Şəxsi Məlumatlar</CardTitle>
+                <CardTitle>{t.profile.personalDetails}</CardTitle>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
@@ -322,7 +325,7 @@ function ProfilPageInner() {
                       className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm"
                     >
                       <CheckCircle className="w-4 h-4" aria-hidden="true" />
-                      Məlumatlar uğurla yeniləndi!
+                      {t.profile.saved}
                     </div>
                   )}
                   {/* Only offered once nothing is missing — sending someone
@@ -372,7 +375,7 @@ function ProfilPageInner() {
                       )}
                     </Field>
 
-                    <Field label="Ata adı" required error={errors.fatherName?.message}>
+                    <Field label={t.profile.fatherName} required error={errors.fatherName?.message}>
                       {(field) => (
                         <Input
                           {...field}
@@ -386,8 +389,8 @@ function ProfilPageInner() {
                     <Field label="Cins" required error={errors.gender?.message}>
                       {(field) => (
                         <select {...field} {...register("gender")} className={controlClass}>
-                          <option value="FEMALE">Qadın</option>
-                          <option value="MALE">Kişi</option>
+                          <option value="FEMALE">{t.profile.female}</option>
+                          <option value="MALE">{t.profile.male}</option>
                         </select>
                       )}
                     </Field>
@@ -402,7 +405,7 @@ function ProfilPageInner() {
                       required
                       hint={
                         isGoogle
-                          ? "Google hesabınızdan alınır və dəyişdirilə bilmir."
+                          ? t.profile.emailFromGoogle
                           : undefined
                       }
                       error={errors.email?.message}
@@ -455,7 +458,7 @@ function ProfilPageInner() {
                     </Field>
 
                     <Field
-                      label="Doğum tarixi"
+                      label={t.profile.birthDate}
                       required
                       error={errors.birthDate?.message}
                     >
@@ -473,7 +476,7 @@ function ProfilPageInner() {
                     <Field
                       label="FIN Kod"
                       required
-                      hint="7 simvol — analiz nəticələri bu kodla tapılır. Kod filialda şəxsiyyət vəsiqəsi ilə üzləşdirilir."
+                      hint={t.profile.finHint}
                       error={errors.finCode?.message}
                     >
                       {(field) => (
@@ -542,13 +545,13 @@ function ProfilPageInner() {
                     aria-hidden="true"
                   />
                   <h2 className="text-lg font-semibold text-slate-700 mb-2">
-                    Hələ qəbulunuz yoxdur
+                    {t.profile.noAppointments}
                   </h2>
-                  <p className="text-slate-500 mb-6">İlk qəbulunuzu yaradın</p>
+                  <p className="text-slate-500 mb-6">{t.pages.bookAppointment}</p>
                   <Button variant="cta" asChild>
                     <Link href="/qebul">
                       <Stethoscope className="w-4 h-4" aria-hidden="true" />
-                      Qəbula Yazıl
+                      {t.pages.bookAppointment}
                     </Link>
                   </Button>
                 </CardContent>
@@ -564,7 +567,7 @@ function ProfilPageInner() {
                             {getDepartmentName(apt.department)}
                           </h2>
                           <Badge className={statusColors[apt.status]}>
-                            {statusLabels[apt.status]}
+                            {t.profile[statusLabels[apt.status]] ?? apt.status}
                           </Badge>
                         </div>
                         <div className="flex flex-wrap gap-4 text-sm text-slate-600">
@@ -610,7 +613,7 @@ function ProfilPageInner() {
                           className="text-red-600 border-red-200 hover:bg-red-50"
                         >
                           <XCircle className="w-4 h-4" aria-hidden="true" />
-                          Ləğv Et
+                          {t.profile.cancelAppointment}
                         </Button>
                       )}
                     </div>
@@ -631,13 +634,13 @@ function ProfilPageInner() {
                     aria-hidden="true"
                   />
                   <h2 className="text-lg font-semibold text-slate-700 mb-2">
-                    Hələ sifarişiniz yoxdur
+                    {t.profile.noOrders}
                   </h2>
                   <p className="text-slate-500 mb-6">
-                    Laboratoriya xidmətlərini seçib sifariş verə bilərsiniz
+                    {t.catalog.ordersStoredHere}
                   </p>
                   <Button variant="cta" asChild>
-                    <Link href="/xidmetler">Xidmətlərə bax</Link>
+                    <Link href="/xidmetler">{t.profile.browseServices}</Link>
                   </Button>
                 </CardContent>
               </Card>
@@ -654,9 +657,9 @@ function ProfilPageInner() {
                           <p className="mt-0.5 text-sm text-slate-500">
                             {getBranchName(order.branch)} · {order.lines.length}{" "}
                             xidmət
-                            {order.homeCollection && " · evdə qanalma"}
+                            {order.homeCollection && ` · ${t.profile.homeCollectionShort}`}
                             {" · "}
-                            {order.paymentMethod === "CARD" ? "kart" : "nağd"}
+                            {order.paymentMethod === "CARD" ? t.basket.card : t.basket.cash}
                           </p>
                         </div>
                         <div className="flex items-center gap-3">
@@ -669,7 +672,7 @@ function ProfilPageInner() {
                             onClick={() => reorder(order.id)}
                           >
                             <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
-                            Təkrarla
+                            {t.catalog.reorder}
                           </Button>
                         </div>
                       </div>
@@ -718,7 +721,7 @@ function ProfilPageInner() {
           <div role="tabpanel" id="panel-results" aria-labelledby="tab-results">
             <Card className="border-0 shadow-lg">
               <CardHeader>
-                <CardTitle>Nəticələrim</CardTitle>
+                <CardTitle>{t.profile.myResults}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 {/*

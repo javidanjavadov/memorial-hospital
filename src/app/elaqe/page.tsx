@@ -78,7 +78,7 @@ export default function ElaqePage() {
       <div className="container mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
-            Əlaqə
+            {t.booking.contactTitle}
           </h1>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
             {t.booking.contactSubtitle}

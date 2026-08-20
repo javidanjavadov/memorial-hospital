@@ -3,153 +3,121 @@ import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { pageMetadata } from "@/lib/site"
+import { getDictionary } from "@/i18n"
 
-export const metadata: Metadata = pageMetadata({
-  title: "Məxfilik Siyasəti",
-  description: "Memorial Hospital-ın məxfilik siyasəti və məlumatların qorunması.",
+/* generateMetadata, not a constant: the title and description are what a
+ * search engine and a shared link show, and they follow the visitor's
+ * language like the page does. */
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getDictionary()
+  return pageMetadata({
+  title: t.legal.privacy[0],
+  description: t.legal.privacy[1],
   path: "/siyaset",
 })
+}
 
-export default function PrivacyPolicyPage() {
+export default async function PrivacyPolicyPage() {
+  const t = await getDictionary()
+
   return (
     <div className="min-h-screen bg-[var(--paper)] py-16 md:py-24">
       <div className="container mx-auto px-4 max-w-4xl">
         <Button variant="ghost" size="sm" asChild className="mb-8">
           <Link href="/">
-            <ArrowLeft className="w-4 h-4" />
-            Ana Səhifə
-          </Link>
+            <ArrowLeft className="w-4 h-4" />{t.legal.privacy[2]}</Link>
         </Button>
 
-        <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-8">
-          Məxfilik Siyasəti
-        </h1>
+        <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-8">{t.legal.privacy[0]}</h1>
 
         <div className="prose prose-slate max-w-none space-y-8">
-          <p className="text-slate-600">
-            Son yenilənmə: 1 Yanvar 2026
-          </p>
+          <p className="text-slate-600">{t.legal.privacy[3]}</p>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold text-slate-900">1. Ümumi Məlumat</h2>
-            <p className="text-slate-600 leading-relaxed">
-              Memorial Hospital olaraq şəxsi məlumatlarınızın qorunmasını prioritet hesab edirik. Bu Məxfilik Siyasəti, 
-              bizim xidmətlərimizdən istifadə etdiyiniz zaman şəxsi məlumatlarınızın necə toplandığını, istifadə olunduğunu 
-              və qorunduğunu açıqlayır.
-            </p>
+            <h2 className="text-2xl font-semibold text-slate-900">{t.legal.privacy[4]}</h2>
+            <p className="text-slate-600 leading-relaxed">{t.legal.privacy[5]}</p>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold text-slate-900">2. Toplanan Məlumatlar</h2>
-            <p className="text-slate-600 leading-relaxed">Biz aşağıdakı məlumatları toplaya bilərik:</p>
+            <h2 className="text-2xl font-semibold text-slate-900">{t.legal.privacy[6]}</h2>
+            <p className="text-slate-600 leading-relaxed">{t.legal.privacy[7]}</p>
             <ul className="list-disc list-inside text-slate-600 space-y-2 ml-4">
-              <li>Ad, soyad, doğum tarixi</li>
-              <li>Əlaqə məlumatları (telefon, email, ünvan)</li>
+              <li>{t.legal.privacy[8]}</li>
+              <li>{t.legal.privacy[9]}</li>
               <li>FIN kodu</li>
-              <li>Sağlamlıq məlumatları (tibbi tarixçə, diaqnozlar, müalicələr)</li>
-              <li>Sığorta məlumatları</li>
-              <li>Online qəbul zamanı daxil etdiyiniz məlumatlar</li>
+              <li>{t.legal.privacy[10]}</li>
+              <li>{t.legal.privacy[11]}</li>
+              <li>{t.legal.privacy[12]}</li>
             </ul>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold text-slate-900">3. Məlumatların İstifadəsi</h2>
-            <p className="text-slate-600 leading-relaxed">Toplanan məlumatlar aşağıdakı məqsədlərlə istifadə olunur:</p>
+            <h2 className="text-2xl font-semibold text-slate-900">{t.legal.privacy[13]}</h2>
+            <p className="text-slate-600 leading-relaxed">{t.legal.privacy[14]}</p>
             <ul className="list-disc list-inside text-slate-600 space-y-2 ml-4">
-              <li>Tibbi xidmətlərin göstərilməsi</li>
-              <li>Qəbul idarəsi və xatırlatma</li>
-              <li>Faktura və ödəniş emalı</li>
-              <li>Sizinlə əlaqə saxlanması</li>
-              <li>Xidmət keyfiyyətinin yaxşılaşdırılması</li>
-              <li>Qanuni tələblərə əməl edilməsi</li>
+              <li>{t.legal.privacy[15]}</li>
+              <li>{t.legal.privacy[16]}</li>
+              <li>{t.legal.privacy[17]}</li>
+              <li>{t.legal.privacy[18]}</li>
+              <li>{t.legal.privacy[19]}</li>
+              <li>{t.legal.privacy[20]}</li>
             </ul>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold text-slate-900">4. Məlumatların Qorunması</h2>
-            <p className="text-slate-600 leading-relaxed">
-              Şəxsi məlumatlarınız şifrələnmiş serverlərdə saxlanılır və lazım olan təhlükəsizlik tədbirləri görülür.
-              Məlumatlarınız yalnız səlahiyyətli personal tərəfindən giriş üçün açıqdır.
-            </p>
+            <h2 className="text-2xl font-semibold text-slate-900">{t.legal.privacy[21]}</h2>
+            <p className="text-slate-600 leading-relaxed">{t.legal.privacy[22]}</p>
             <div className="bg-amber-50 border border-amber-200 rounded-xl p-5 space-y-2">
-              <h3 className="font-semibold text-amber-900">
-                Bu saytın hazırkı versiyası barədə vacib qeyd
-              </h3>
-              <p className="text-amber-800 text-sm leading-relaxed">
-                Saytın bu versiyasında qeydiyyat və qəbul məlumatları <strong>serverə
-                göndərilmir</strong> — onlar yalnız sizin brauzerinizin yaddaşında
-                (localStorage) saxlanılır. Bu o deməkdir ki, məlumatlar həmin cihazda
-                qalır və həmin cihaza girişi olan digər şəxslər tərəfindən görünə bilər.
-                Ortaq və ya ictimai kompüterdən istifadə edirsinizsə, işiniz bitdikdən
-                sonra hesabdan çıxın və brauzer məlumatlarını təmizləyin.
-              </p>
-              <p className="text-amber-800 text-sm leading-relaxed">
-                Şifrələr açıq mətnlə deyil, PBKDF2 alqoritmi ilə heşlənmiş formada
-                saxlanılır. Buna baxmayaraq, həssas sağlamlıq məlumatlarını bu formda
-                daxil etməməyinizi tövsiyə edirik.
-              </p>
+              <h3 className="font-semibold text-amber-900">{t.legal.privacy[23]}</h3>
+              <p className="text-amber-800 text-sm leading-relaxed">{t.legal.privacy[24]}<strong>{t.legal.privacy[25]}</strong>{t.legal.privacy[26]}</p>
+              <p className="text-amber-800 text-sm leading-relaxed">{t.legal.privacy[27]}</p>
             </div>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold text-slate-900">
-              4.1. Brauzer Yaddaşı (Cookie və localStorage)
-            </h2>
-            <p className="text-slate-600 leading-relaxed">
-              Sayt reklam və ya analitika məqsədilə üçüncü tərəf cookie-lərindən istifadə
-              etmir. Yalnız aşağıdakı texniki yaddaş elementləri istifadə olunur:
-            </p>
+            <h2 className="text-2xl font-semibold text-slate-900">{t.legal.privacy[28]}</h2>
+            <p className="text-slate-600 leading-relaxed">{t.legal.privacy[29]}</p>
             <ul className="list-disc list-inside text-slate-600 space-y-2 ml-4">
               <li>
-                <code>memorial-auth</code> — aktiv sessiya (adınız, əlaqə məlumatlarınız,
-                qəbullarınız)
-              </li>
+                <code>memorial-auth</code>{t.legal.privacy[30]}</li>
               <li>
-                <code>memorial-users</code> — hesab məlumatları və heşlənmiş şifrə
-              </li>
+                <code>memorial-users</code>{t.legal.privacy[31]}</li>
               <li>
-                <code>memorial-appointments</code> — yaradılmış qəbul sorğuları
-              </li>
+                <code>memorial-appointments</code>{t.legal.privacy[32]}</li>
             </ul>
-            <p className="text-slate-600 leading-relaxed">
-              Bu məlumatları brauzerinizin parametrlərindən istənilən vaxt silə bilərsiniz.
-            </p>
+            <p className="text-slate-600 leading-relaxed">{t.legal.privacy[33]}</p>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold text-slate-900">5. Üçüncü Tərəflərlə Paylaşma</h2>
-            <p className="text-slate-600 leading-relaxed">
-              Şəxsi məlumatlarınız yalnız aşağıdakı hallarda üçüncü tərəflərlə paylaşılır:
-            </p>
+            <h2 className="text-2xl font-semibold text-slate-900">{t.legal.privacy[34]}</h2>
+            <p className="text-slate-600 leading-relaxed">{t.legal.privacy[35]}</p>
             <ul className="list-disc list-inside text-slate-600 space-y-2 ml-4">
-              <li>Sizin açıq razılığınızla</li>
-              <li>Qanuni tələblərə əməl etmək üçün</li>
-              <li>Tibbi zərurət (digər tibb müəssisələri ilə konsultasiya)</li>
-              <li>Sığorta şirkətləri ilə (sığorta hallarında)</li>
+              <li>{t.legal.privacy[36]}</li>
+              <li>{t.legal.privacy[37]}</li>
+              <li>{t.legal.privacy[38]}</li>
+              <li>{t.legal.privacy[39]}</li>
             </ul>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold text-slate-900">6. Hüquqlarınız</h2>
-            <p className="text-slate-600 leading-relaxed">Siz aşağıdakı hüquqlara maliksiniz:</p>
+            <h2 className="text-2xl font-semibold text-slate-900">{t.legal.privacy[40]}</h2>
+            <p className="text-slate-600 leading-relaxed">{t.legal.privacy[41]}</p>
             <ul className="list-disc list-inside text-slate-600 space-y-2 ml-4">
-              <li>Şəxsi məlumatlarınıza giriş</li>
-              <li>Şəxsi məlumatlarınızın düzəldilməsi</li>
-              <li>Şəxsi məlumatlarınızın silinməsi</li>
-              <li>Məlumatların daşınması</li>
-              <li>Emala etiraz etmək</li>
+              <li>{t.legal.privacy[42]}</li>
+              <li>{t.legal.privacy[43]}</li>
+              <li>{t.legal.privacy[44]}</li>
+              <li>{t.legal.privacy[45]}</li>
+              <li>{t.legal.privacy[46]}</li>
             </ul>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold text-slate-900">7. Əlaqə</h2>
-            <p className="text-slate-600 leading-relaxed">
-              Məxfilik siyasətimizlə bağlı suallarınız üçün bizimlə əlaqə saxlaya bilərsiniz:
-            </p>
+            <h2 className="text-2xl font-semibold text-slate-900">{t.legal.privacy[47]}</h2>
+            <p className="text-slate-600 leading-relaxed">{t.legal.privacy[48]}</p>
             <div className="bg-slate-50 rounded-xl p-6 space-y-2">
               <p className="text-slate-700"><strong>Email:</strong> info@memorialhospital.az</p>
               <p className="text-slate-700"><strong>Telefon:</strong> +994 55 710 10 50</p>
-              <p className="text-slate-700"><strong>Ünvan:</strong> Bakı ş., Nərimanov r., Ü.Hacıbəyli küç. 42</p>
+              <p className="text-slate-700"><strong>{t.legal.privacy[49]}</strong>{t.legal.privacy[50]}</p>
             </div>
           </section>
         </div>
