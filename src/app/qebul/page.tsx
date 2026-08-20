@@ -38,6 +38,11 @@ import ProfileCompletionCard from "@/components/profile-completion-card"
 import { useAuthStore } from "@/lib/auth-store"
 import Link from "next/link"
 import { useT } from "@/i18n/client"
+import {
+  localizeBranch,
+  localizeDepartment,
+  localizeDoctor,
+} from "@/i18n/data"
 
 /* Built from the dictionary: a zod message is text a patient reads, and zod
    bakes it into the schema at construction, so the schema cannot be a module
@@ -451,11 +456,14 @@ function QebulContent() {
                           className={controlClass}
                         >
                           <option value="">{t.booking.selectDepartment}</option>
-                          {departments.map((dept) => (
-                            <option key={dept.id} value={dept.id}>
-                              {dept.name}
-                            </option>
-                          ))}
+                          {departments.map((raw) => {
+                            const dept = localizeDepartment(raw, t.data)
+                            return (
+                              <option key={dept.id} value={dept.id}>
+                                {dept.name}
+                              </option>
+                            )
+                          })}
                         </select>
                       )}
                     </Field>
@@ -468,11 +476,14 @@ function QebulContent() {
                           className={controlClass}
                         >
                           <option value="">{t.booking.selectBranch}</option>
-                          {branches.map((branch) => (
-                            <option key={branch.id} value={branch.id}>
-                              {branch.name}
-                            </option>
-                          ))}
+                          {branches.map((raw) => {
+                            const b = localizeBranch(raw, t.data)
+                            return (
+                              <option key={b.id} value={b.id}>
+                                {b.name}
+                              </option>
+                            )
+                          })}
                         </select>
                       )}
                     </Field>
@@ -504,7 +515,7 @@ function QebulContent() {
                                 />
                                 <span>
                                   <span className="block font-medium text-slate-900">
-                                    {doctor.name}
+                                    {localizeDoctor(doctor, t.data).name}
                                   </span>
                                   <span className="block text-sm text-slate-500">
                                     {doctor.specialty}
@@ -619,7 +630,10 @@ function QebulContent() {
                     <SummaryRow
                       icon={Stethoscope}
                       label={t.booking.department}
-                      value={getDepartmentName(selectedDepartment)}
+                      value={
+                        t.data.departments?.[selectedDepartment]?.name ??
+                        getDepartmentName(selectedDepartment)
+                      }
                     />
                     {/* The selected doctor was missing from this summary entirely. */}
                     <SummaryRow
@@ -627,14 +641,19 @@ function QebulContent() {
                       label={t.booking.doctor}
                       value={
                         selectedDoctor
-                          ? getDoctorName(selectedDoctor)
+                          ? (t.data.doctorNames?.[
+                              getDoctorName(selectedDoctor)
+                            ] ?? getDoctorName(selectedDoctor))
                           : "{t.booking.assignedByReception}"
                       }
                     />
                     <SummaryRow
                       icon={MapPin}
                       label="Filial"
-                      value={getBranchName(selectedBranch)}
+                      value={
+                        t.data.branches?.[selectedBranch]?.name ??
+                        getBranchName(selectedBranch)
+                      }
                     />
                     <SummaryRow icon={Calendar} label="Tarix" value={values.date} />
                     <SummaryRow icon={Clock} label="Vaxt" value={values.time} />
