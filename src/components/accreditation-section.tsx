@@ -4,6 +4,7 @@ import Image from "next/image"
 import { AnimateOnScroll } from "@/components/animations"
 import { accreditations } from "@/data/accreditations"
 import { useT } from "@/i18n/client"
+import { localizeAccreditation } from "@/i18n/data"
 
 /**
  * Laboratory accreditation and external quality assessment.
@@ -42,7 +43,9 @@ export default function AccreditationSection() {
             first, explanation second — the card text below carries the detail.
           */}
           <ul className="mb-14 flex flex-wrap items-center justify-center gap-4 border-y border-white/15 py-8 sm:gap-6">
-            {accreditations.map((item) => (
+            {accreditations.map((raw) => {
+            const item = localizeAccreditation(raw, t.data)
+            return (
               <li
                 key={`mark-${item.label}`}
                 className="flex h-20 items-center rounded-xl bg-white px-6"
@@ -55,12 +58,15 @@ export default function AccreditationSection() {
                   className="h-10 w-auto object-contain sm:h-12"
                 />
               </li>
-            ))}
+              )
+            })}
           </ul>
         </AnimateOnScroll>
 
         <ul className="grid gap-4 md:grid-cols-3">
-          {accreditations.map((item, i) => (
+          {accreditations.map((raw, i) => {
+            const item = localizeAccreditation(raw, t.data)
+            return (
             <li key={item.label} className="h-full">
               <AnimateOnScroll delay={i * 100} className="h-full">
                 <div className="flex h-full flex-col rounded-xl border border-white/15 bg-white/5 p-6">
@@ -80,7 +86,8 @@ export default function AccreditationSection() {
                 </div>
               </AnimateOnScroll>
             </li>
-          ))}
+            )
+          })}
         </ul>
       </div>
     </section>

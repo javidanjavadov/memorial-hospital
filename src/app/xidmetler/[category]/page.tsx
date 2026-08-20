@@ -16,6 +16,8 @@ import {
   promotedPriceOf,
 } from "@/lib/catalog"
 import { pageMetadata } from "@/lib/site"
+import { getDictionary } from "@/i18n"
+import { localizeGroup } from "@/i18n/data"
 import ServiceInfoButton from "@/components/service-info-button"
 import AddToBasketButton from "@/components/add-to-basket-button"
 import { shortServiceName } from "@/lib/service-name"
@@ -52,6 +54,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function CategoryPage({ params }: Props) {
+  const t = await getDictionary()
   const { category: slug } = await params
   const category = getCategory(slug)
   if (!category) notFound()
@@ -80,10 +83,10 @@ export default async function CategoryPage({ params }: Props) {
             className="inline-flex items-center gap-2 text-sm text-[var(--ink-muted)] transition-colors hover:text-primary"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            Bütün xidmətlər
+            {t.catalog.allServices}
           </Link>
           <p className="mt-4 text-sm uppercase tracking-[0.14em] text-[var(--ink-muted)]">
-            {group?.name ?? "Xidmətlər"}
+            {localizeGroup(group ?? { slug: "", name: t.nav.services, blurb: "" }, t.data).name}
           </p>
           <h1 className="font-display text-step-3 mt-2 text-[var(--ink)]">
             {category.name}
@@ -100,7 +103,7 @@ export default async function CategoryPage({ params }: Props) {
         {/* Sibling categories — the sidebar from the hospital's own catalogue */}
         <aside className="lg:sticky lg:top-24 lg:self-start">
           <h2 className="mb-3 text-sm font-semibold text-[var(--ink)]">
-            {group?.name ?? "Kateqoriyalar"}
+            {localizeGroup(group ?? { slug: "", name: t.nav.services, blurb: "" }, t.data).name}
           </h2>
           <nav aria-label="Kateqoriyalar">
             <ul className="space-y-1">
@@ -232,8 +235,7 @@ export default async function CategoryPage({ params }: Props) {
 
           <div className="mt-8 rounded-xl border border-[var(--line)] bg-[var(--paper-raised)] p-6">
             <p className="text-[var(--ink-muted)]">
-              Qiymətlər filiala görə dəyişə bilər. Analizə hazırlıq qaydaları və
-              dəqiq qiymət üçün çağrı mərkəzimizlə əlaqə saxlayın.
+{t.ui.priceVaryNote}
             </p>
             <Button variant="cta" className="mt-4" asChild>
               <a href={telHref(contactInfo.phone)}>

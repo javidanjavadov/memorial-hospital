@@ -3,6 +3,8 @@
 import { Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { AlertCircle } from "lucide-react"
+import type azDict from "@/i18n/dictionaries/az.json"
+import { useT } from "@/i18n/client"
 
 /**
  * Auth.js reports a failed sign-in by redirecting to `pages.signIn` with an
@@ -11,21 +13,21 @@ import { AlertCircle } from "lucide-react"
  *
  * Codes: https://authjs.dev/reference/core/errors
  */
-const MESSAGES: Record<string, string> = {
-  Configuration:
-    "Giriş konfiqurasiyasında problem var. Zəhmət olmasa administratora müraciət edin.",
-  AccessDenied:
-    "Giriş icazəsi verilmədi. Tətbiq hazırda sınaq rejimindədir — hesabınız test istifadəçiləri siyahısına əlavə olunmalıdır.",
-  Verification: "Bu giriş linkinin vaxtı bitib və ya artıq istifadə olunub.",
-  OAuthSignin: "Google-a yönləndirmə alınmadı. Yenidən cəhd edin.",
-  OAuthCallback: "Google-dan qayıdarkən xəta baş verdi. Yenidən cəhd edin.",
-  OAuthAccountNotLinked:
-    "Bu email artıq başqa üsulla qeydiyyatdan keçib. Əvvəlki üsulla daxil olun.",
-  Callback: "Giriş tamamlanmadı. Yenidən cəhd edin.",
-  default: "Giriş zamanı gözlənilməz xəta baş verdi. Yenidən cəhd edin.",
+/* Auth.js error code → dictionary key, resolved where the notice renders: a
+   module constant is evaluated at import, before any locale is known. */
+const MESSAGE_KEYS: Record<string, keyof (typeof azDict)["ui"]> = {
+  Configuration: "authConfigError",
+  AccessDenied: "authAccessDenied",
+  Verification: "authLinkExpired",
+  OAuthSignin: "authRedirectFailed",
+  OAuthCallback: "authCallbackError",
+  OAuthAccountNotLinked: "authEmailTaken",
+  Callback: "authIncomplete",
+  default: "authUnexpected",
 }
 
 function Notice() {
+  const t = useT()
   const error = useSearchParams().get("error")
   if (!error) return null
 
@@ -35,7 +37,7 @@ function Notice() {
       className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm"
     >
       <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true" />
-      <span>{MESSAGES[error] ?? MESSAGES.default}</span>
+      <span>{t.ui[MESSAGE_KEYS[error] ?? MESSAGE_KEYS.default]}</span>
     </div>
   )
 }

@@ -141,7 +141,8 @@
     "cancelAppointment": "Cancel",
     "homeCollectionShort": "home collection",
     "saveFailedFields": "Details could not be saved. Please check the fields.",
-    "profileSections": "Profile sections"
+    "profileSections": "Profile sections",
+    "phone": "Phone"
   },
   "doctors": {
     "allDoctors": "All doctors",
@@ -511,15 +512,18 @@
       "IAS": {
         "label": "IAS Accreditation",
         "title": "International accreditation",
-        "markNote": "Accreditation"
+        "markNote": "Accreditation",
+        "body": "Our laboratory is accredited by the International Accreditation Service (IAS) — our testing methods and result quality are verified against international standards."
       },
       "RIQAS": {
-        "title": "International quality programme",
-        "markNote": "Participant"
+        "title": "External quality control",
+        "markNote": "Participant",
+        "body": "The Randox International Quality Assessment Scheme (RIQAS) is the world's largest external quality assessment programme. Our results are regularly benchmarked against international data."
       },
       "QCMD": {
         "title": "Molecular diagnostics",
-        "markNote": "Participant"
+        "markNote": "Participant",
+        "body": "The Quality Control for Molecular Diagnostics (QCMD) programme independently verifies the accuracy of our molecular and PCR testing."
       }
     },
     "specialties": {

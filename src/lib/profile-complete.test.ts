@@ -1,3 +1,4 @@
+import az from "@/i18n/dictionaries/az.json"
 import { describe, expect, it } from "vitest"
 import {
   isProfileComplete,
@@ -32,6 +33,9 @@ describe("missingProfileFields", () => {
   it("names the field that is missing, for the prompt", () => {
     const missing = missingProfileFields({ ...complete, birthDate: "" })
     expect(missing.map((f) => f.key)).toEqual(["birthDate"])
-    expect(missing[0].label).toBe("Doğum tarixi")
+    /* The label is a dictionary key now, resolved where it is shown, so the
+       prompt can name the field in the visitor's language. */
+    expect(missing[0].label).toBe("birthDate")
+    expect(az.profile[missing[0].label]).toBe("Doğum tarixi")
   })
 })

@@ -4,6 +4,7 @@ import Link from "next/link"
 import { ArrowRight, ShieldCheck } from "lucide-react"
 import { accreditations } from "@/data/accreditations"
 import { useT } from "@/i18n/client"
+import { localizeAccreditation } from "@/i18n/data"
 
 /**
  * Accreditation marks directly under the hero.
@@ -44,7 +45,9 @@ export default function AccreditationBar() {
             treatment.
           */}
           <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 sm:gap-x-12">
-            {accreditations.map((item) => (
+            {accreditations.map((raw) => {
+            const item = localizeAccreditation(raw, t.data)
+            return (
               <li key={item.mark} className="text-center">
                 <span className="font-display block text-2xl leading-none tracking-tight md:text-3xl">
                   {item.mark}
@@ -53,7 +56,8 @@ export default function AccreditationBar() {
                   {item.markNote}
                 </span>
               </li>
-            ))}
+              )
+            })}
           </ul>
 
           <Link

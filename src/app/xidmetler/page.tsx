@@ -6,15 +6,19 @@ import { contactInfo, telHref } from "@/data"
 import { catalogTotals, pickerGroups } from "@/lib/catalog"
 import { pageMetadata } from "@/lib/site"
 import ServicePicker from "@/components/service-picker"
+import { getDictionary } from "@/i18n"
 
-export const metadata: Metadata = pageMetadata({
-  title: "Xidmətlər və qiymətlər",
-  description:
-    "Memorial Hospital xidmətləri və qiymətləri — laboratoriya analizləri, USM, rentgen, tomoqrafiya və həkim qəbulu.",
-  path: "/xidmetler",
-})
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getDictionary()
+  return pageMetadata({
+    title: t.ui.servicesPageTitle,
+    description: t.ui.servicesPageDescription,
+    path: "/xidmetler",
+  })
+}
 
-export default function XidmetlerPage() {
+export default async function XidmetlerPage() {
+  const t = await getDictionary()
   // Built on the server from the same catalogue the JSON files come from, so
   // the strip renders with the page instead of after a round trip.
   const groups = pickerGroups()
@@ -24,10 +28,10 @@ export default function XidmetlerPage() {
       <div className="border-b border-[var(--line)] bg-[var(--paper-raised)]">
         <div className="container mx-auto px-4 py-14 md:py-20">
           <p className="mb-3 text-sm uppercase tracking-[0.14em] text-[var(--ink-muted)]">
-            Xidmətlər
+            {t.nav.services}
           </p>
           <h1 className="font-display text-step-4 max-w-3xl text-[var(--ink)]">
-            Xidmətlər və qiymətlər
+            {t.catalog.title}
           </h1>
           <p className="mt-4 max-w-2xl text-step-0 text-[var(--ink-muted)]">
             {catalogTotals.items} analiz və müayinə, kateqoriyalar üzrə. Hər
@@ -52,11 +56,10 @@ export default function XidmetlerPage() {
           <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
             <div>
               <h2 className="font-display text-step-1 text-[var(--ink)]">
-                Axtardığınızı tapmadınız?
+                {t.ui.notFoundWhatYouNeed}
               </h2>
               <p className="mt-2 text-[var(--ink-muted)]">
-                Çağrı mərkəzimiz analizin qiyməti və hazırlıq qaydaları barədə
-                məlumat verir.
+{t.ui.callCentreInfo}
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
@@ -69,7 +72,7 @@ export default function XidmetlerPage() {
               <Button variant="outline" asChild>
                 <Link href="/hekimler">
                   <Search className="h-4 w-4" aria-hidden="true" />
-                  Həkim axtar
+                  {t.ui.findDoctor}
                 </Link>
               </Button>
             </div>

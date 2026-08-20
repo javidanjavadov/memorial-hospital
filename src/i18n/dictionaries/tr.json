@@ -132,7 +132,8 @@
     "cancelAppointment": "İptal Et",
     "homeCollectionShort": "evde numune alma",
     "saveFailedFields": "Bilgiler kaydedilemedi. Lütfen alanları kontrol edin.",
-    "profileSections": "Profil bölümleri"
+    "profileSections": "Profil bölümleri",
+    "phone": "Telefon"
   },
   "doctors": {
     "allDoctors": "Tüm doktorlar",
@@ -499,15 +500,18 @@
       "IAS": {
         "label": "IAS Akreditasyonu",
         "title": "Uluslararası akreditasyon",
-        "markNote": "Akreditasyon"
+        "markNote": "Akreditasyon",
+        "body": "Laboratuvarımız International Accreditation Service (IAS) tarafından akredite edilmiştir — test yöntemlerimiz ve sonuç kalitemiz uluslararası standartlara uygun olarak denetlenmektedir."
       },
       "RIQAS": {
-        "title": "Uluslararası kalite programı",
-        "markNote": "Katılımcı"
+        "title": "Dış kalite kontrolü",
+        "markNote": "Katılımcı",
+        "body": "Randox International Quality Assessment Scheme (RIQAS), dünyanın en büyük dış kalite değerlendirme programıdır. Sonuçlarımız düzenli olarak uluslararası verilerle karşılaştırılmaktadır."
       },
       "QCMD": {
         "title": "Moleküler tanı",
-        "markNote": "Katılımcı"
+        "markNote": "Katılımcı",
+        "body": "Quality Control for Molecular Diagnostics (QCMD) programı, moleküler ve PCR testlerimizin doğruluğunu bağımsız olarak denetlemektedir."
       }
     },
     "specialties": {

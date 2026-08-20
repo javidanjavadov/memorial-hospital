@@ -80,6 +80,26 @@ export function localizeDoctor<
   }
 }
 
+/**
+ * Accreditation copy, keyed by the mark (IAS / RIQAS / QCMD).
+ *
+ * The marks, logos and dimensions are not translated — they are the awarding
+ * bodies' own names and assets.
+ */
+export function localizeAccreditation<
+  T extends { mark: string; label: string; title: string; body: string; markNote: string },
+>(entry: T, data: DataDictionary): T {
+  const translated = data?.accreditations?.[entry.mark]
+  if (!translated) return entry
+  return {
+    ...entry,
+    label: translated.label || entry.label,
+    title: translated.title || entry.title,
+    body: translated.body || entry.body,
+    markNote: translated.markNote || entry.markNote,
+  }
+}
+
 /** Catalogue group name and blurb, keyed by the group's slug. */
 export function localizeGroup(
   group: { slug: string; name: string; blurb: string },

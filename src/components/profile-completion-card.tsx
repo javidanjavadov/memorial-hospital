@@ -111,7 +111,7 @@ export default function ProfileCompletionCard({
                     ) : (
                       <Check className="h-3 w-3" aria-hidden="true" />
                     )}
-                    {field.label}
+                    {t.profile[field.label]}
                     <span className="sr-only">
                       {pending ? " — doldurulmayıb" : " — tamamlanıb"}
                     </span>

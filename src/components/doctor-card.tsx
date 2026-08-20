@@ -1,8 +1,12 @@
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight, MapPin } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { Doctor } from "@/data"
+import { useT } from "@/i18n/client"
+import { localizeDoctor } from "@/i18n/data"
 
 /**
  * Single doctor card, shared by the homepage strip and the /hekimler grid so
@@ -13,7 +17,7 @@ import type { Doctor } from "@/data"
  * initials in a gradient circle because no photos existed.
  */
 export default function DoctorCard({
-  doctor,
+  doctor: raw,
   priority = false,
   className,
 }: {
@@ -22,6 +26,8 @@ export default function DoctorCard({
   priority?: boolean
   className?: string
 }) {
+  const t = useT()
+  const doctor = localizeDoctor(raw, t.data)
   const bookable = doctor.available && doctor.price !== null
 
   return (

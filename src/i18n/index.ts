@@ -31,7 +31,7 @@ export interface DataTranslations {
   doctorTitles: Record<string, string>
   accreditations: Record<
     string,
-    { label?: string; title?: string; markNote?: string }
+    { label?: string; title?: string; markNote?: string; body?: string }
   >
 }
 

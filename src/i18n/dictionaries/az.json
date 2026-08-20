@@ -132,7 +132,8 @@
     "cancelAppointment": "Ləğv Et",
     "homeCollectionShort": "evdə qanalma",
     "saveFailedFields": "Məlumatlar yadda saxlanılmadı. Sahələri yoxlayın.",
-    "profileSections": "Profil bölmələri"
+    "profileSections": "Profil bölmələri",
+    "phone": "Telefon"
   },
   "doctors": {
     "allDoctors": "Bütün həkimlər",

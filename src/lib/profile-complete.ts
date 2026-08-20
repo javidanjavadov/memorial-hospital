@@ -1,4 +1,5 @@
 import type { User } from "@/lib/auth-store"
+import type azDict from "@/i18n/dictionaries/az.json"
 
 /**
  * The fields an order or an appointment cannot be accepted without.
@@ -10,13 +11,17 @@ import type { User } from "@/lib/auth-store"
  * produces a sample nobody can match to a person.
  */
 export const REQUIRED_PROFILE_FIELDS = [
-  { key: "lastName", label: "Soyad" },
-  { key: "firstName", label: "Ad" },
-  { key: "fatherName", label: "Ata adı" },
-  { key: "birthDate", label: "Doğum tarixi" },
-  { key: "finCode", label: "FIN kod" },
-  { key: "phone", label: "Telefon" },
-] as const satisfies ReadonlyArray<{ key: keyof User; label: string }>
+  { key: "lastName", label: "lastName" },
+  { key: "firstName", label: "firstName" },
+  { key: "fatherName", label: "fatherName" },
+  { key: "birthDate", label: "birthDate" },
+  { key: "finCode", label: "finCode" },
+  { key: "phone", label: "phone" },
+] as const satisfies ReadonlyArray<{
+  key: keyof User
+  /** A key in the dictionary's `profile` namespace, resolved where it is shown. */
+  label: keyof (typeof azDict)["profile"]
+}>
 
 export type ProfileField = (typeof REQUIRED_PROFILE_FIELDS)[number]
 

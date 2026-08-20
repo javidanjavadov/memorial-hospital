@@ -39,44 +39,51 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
-  title: {
-    default: "Memorial Hospital | Bakıdakı Müasir Klinik Xidmətlər Mərkəzi",
-    template: `%s | ${siteName}`,
-  },
-  description:
-    "Memorial Hospital — Bakıdakı müasir klinik xidmətlər mərkəzi. Kardiologiya, nevrologiya, pediatriya, ortopediya və digər şöbələrdə peşəkar tibbi xidmət.",
-  applicationName: siteName,
-  keywords: [
-    "xəstəxana",
-    "həkim",
-    "qəbul",
-    "kardioloq",
-    "pediatr",
-    "terapevt",
-    "laboratoriya",
-    "tibbi müayinə",
-    "check-up",
-    "bakı",
-  ],
-  alternates: { canonical: "/" },
-  openGraph: {
-    title: "Memorial Hospital | Bakıdakı Müasir Klinik Xidmətlər Mərkəzi",
-    description:
-      "Memorial Hospital — Bakıdakı müasir klinik xidmətlər mərkəzi.",
-    url: siteUrl,
-    siteName,
-    locale: "az_AZ",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Memorial Hospital | Bakıdakı Müasir Klinik Xidmətlər Mərkəzi",
-    description:
-      "Memorial Hospital — Bakıdakı müasir klinik xidmətlər mərkəzi.",
-  },
-};
+/*
+ * generateMetadata, not a constant: the title, description and keywords are
+ * what a search engine and a shared link show, and they follow the visitor's
+ * language like the page does. The og:locale has to move with it too, or a
+ * link shared into a Russian feed announces itself as Azerbaijani.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale()
+  const t = await getDictionary(locale)
+
+  return {
+    metadataBase: new URL(siteUrl),
+    title: {
+      default: t.ui.siteTitle,
+      template: `%s | ${siteName}`,
+    },
+    description: t.ui.siteDescription,
+    applicationName: siteName,
+    keywords: [
+      t.ui.keywordHospital,
+      t.ui.keywordDoctor,
+      t.ui.keywordAppointment,
+      t.ui.keywordCheckup,
+      "check-up",
+      t.ui.keywordBaku,
+    ],
+    alternates: { canonical: "/" },
+    openGraph: {
+      title: t.ui.siteTitle,
+      description: t.ui.siteShortDescription,
+      url: siteUrl,
+      siteName,
+      locale: OG_LOCALES[locale],
+      type: "website",
+    },
+  }
+}
+
+/** og:locale wants a full tag, not the two-letter code the switcher uses. */
+const OG_LOCALES: Record<string, string> = {
+  az: "az_AZ",
+  ru: "ru_RU",
+  en: "en_US",
+  tr: "tr_TR",
+}
 
 export default async function RootLayout({
   children,

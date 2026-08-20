@@ -147,7 +147,8 @@
     "cancelAppointment": "Отменить",
     "homeCollectionShort": "забор на дому",
     "saveFailedFields": "Не удалось сохранить данные. Проверьте поля.",
-    "profileSections": "Разделы профиля"
+    "profileSections": "Разделы профиля",
+    "phone": "Телефон"
   },
   "doctors": {
     "allDoctors": "Все врачи",
@@ -519,15 +520,18 @@
       "IAS": {
         "label": "Аккредитация IAS",
         "title": "Международная аккредитация",
-        "markNote": "Аккредитация"
+        "markNote": "Аккредитация",
+        "body": "Наша лаборатория аккредитована International Accreditation Service (IAS) — методы исследований и качество результатов проверяются на соответствие международным стандартам."
       },
       "RIQAS": {
-        "title": "Международная программа качества",
-        "markNote": "Участник"
+        "title": "Внешний контроль качества",
+        "markNote": "Участник",
+        "body": "Randox International Quality Assessment Scheme (RIQAS) — крупнейшая в мире программа внешней оценки качества. Наши результаты регулярно сравниваются с международными показателями."
       },
       "QCMD": {
         "title": "Молекулярная диагностика",
-        "markNote": "Участник"
+        "markNote": "Участник",
+        "body": "Программа Quality Control for Molecular Diagnostics (QCMD) независимо проверяет точность наших молекулярных и PCR-тестов."
       }
     },
     "specialties": {

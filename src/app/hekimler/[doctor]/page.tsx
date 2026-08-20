@@ -25,6 +25,7 @@ import {
 import { pageMetadata, siteUrl } from "@/lib/site"
 import { cn } from "@/lib/utils"
 import { getDictionary } from "@/i18n"
+import { localizeDoctor } from "@/i18n/data"
 
 type Props = { params: Promise<{ doctor: string }> }
 
@@ -65,9 +66,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function DoctorPage({ params }: Props) {
   const t = await getDictionary()
   const { doctor: id } = await params
-  const doctor = doctors.find((d) => d.id === id)
-  if (!doctor) notFound()
+  const found = doctors.find((d) => d.id === id)
+  if (!found) notFound()
 
+  const doctor = localizeDoctor(found, t.data)
   const branch = getBranch(doctor.branchId)
   const department = getDepartment(doctor.department)
   const bookable = doctor.available && doctor.price !== null
