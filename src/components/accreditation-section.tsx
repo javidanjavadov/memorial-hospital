@@ -32,8 +32,7 @@ export default function AccreditationSection() {
               {t.home.accreditationTitle}
             </h2>
             <p className="mt-5 text-step-1 text-white/70">
-              Nəticələrimizin dəqiqliyi müstəqil beynəlxalq proqramlar
-              tərəfindən müntəzəm yoxlanılır.
+{t.home.accreditationSubtitle}
             </p>
           </div>
 

@@ -73,7 +73,7 @@ export default function DepartmentsSection() {
               {t.home.departmentsTitle}
             </h2>
             <p className="mt-4 text-step-1 text-[var(--ink-muted)]">
-              {departments.length} ixtisas üzrə diaqnostika və müalicə.
+              {t.f(t.ui.departmentsSubtitle, { count: departments.length })}
             </p>
           </div>
         </AnimateOnScroll>
@@ -152,7 +152,7 @@ export default function DepartmentsSection() {
               aria-expanded={expanded}
               aria-controls="departments-grid"
             >
-              {expanded ? t.home.showLess : `Daha çox göstər (${remaining})`}
+              {expanded ? t.home.showLess : t.f(t.ui.showMoreCount, { count: remaining })}
               <ChevronDown
                 className={`h-4 w-4 transition-transform duration-300 ${
                   expanded ? "rotate-180" : ""

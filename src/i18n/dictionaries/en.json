@@ -104,7 +104,8 @@
     "pricesByBranch": "Prices by branch",
     "preparationTime": "Turnaround time",
     "promoNote": "The discounted price applies to online orders",
-    "preparationRules": "For preparation guidelines"
+    "preparationRules": "For preparation guidelines",
+    "pageIntro": "{count} tests and examinations, by category. Each service shows its code, turnaround time and price."
   },
   "profile": {
     "title": "My profile",
@@ -282,7 +283,11 @@
     "specialty": "Specialty",
     "findDoctorNote": "Consultation hours and prices are shown on each doctor page.",
     "aboutBody1": "Operating since {year}, Memorial Hospital is one of the leading medical centres in Baku. With modern technology and an experienced medical team, we provide our patients with high-quality care.",
-    "aboutBody2": "Our mission is to protect the health of every patient and give them the best care we can. We are at your service with {branches} branches, {doctors} doctors and more than {years} years of experience."
+    "aboutBody2": "Our mission is to protect the health of every patient and give them the best care we can. We are at your service with {branches} branches, {doctors} doctors and more than {years} years of experience.",
+    "inNumbers": "Memorial in numbers",
+    "moreAboutUs": "More about us",
+    "faqCallLine": "call our contact centre on this number, or",
+    "doctorsHeading": "{doctors} doctors, {departments} specialties"
   },
   "booking": {
     "bookTitle": "Book an Appointment",
@@ -585,7 +590,9 @@
     "notFoundTitle": "Page Not Found",
     "notFoundBody": "The page you are looking for does not exist or has been moved.",
     "goHome": "Go Home",
-    "bookAppointment": "Book Appointment"
+    "bookAppointment": "Book Appointment",
+    "aboutIntro": "Memorial Hospital has provided quality medical care in Baku since {year}. With more than {years} years of experience, over 50 experienced doctors and {branches} branches, we are at your service.",
+    "stepLabel": "Step"
   },
   "validation": {
     "nameMin": "{label} must be at least {min} characters",
@@ -765,7 +772,26 @@
     "continueWithGoogle": "Continue with Google",
     "redirecting": "Redirecting...",
     "lookupOffline": "The results lookup is not available online yet. Please contact our call centre.",
-    "basketEmptyError": "The basket is empty"
+    "basketEmptyError": "The basket is empty",
+    "qualityStandards": "International quality standards",
+    "more": "Learn more",
+    "showMoreCount": "Show more ({count})",
+    "departmentsSubtitle": "Diagnosis and treatment across {count} specialties.",
+    "doctorsFound": "{count} doctors found",
+    "yearsShort": "years of experience",
+    "doctorsIntro": "{doctors} doctors across {departments} specialties in {branches} branches. Search, filter and book directly.",
+    "signInWithGoogleSub": "Sign in to your account with Google",
+    "passwordLoginStopped": "Email and password sign-in has been stopped",
+    "passwordLoginReason": "The previous sign-in method relied on data kept in the browser and was not secure enough. For test results and personal details, only server-verified sign-in is used.",
+    "byContinuing": "By continuing you agree to the",
+    "termsOfUse": "Terms of Use",
+    "and": "and",
+    "privacyPolicy": "Privacy Policy",
+    "youAgree": ".",
+    "signInUnavailable": "Sign-in is currently unavailable. Please contact our call centre.",
+    "accountQuestion": "A question about your account?",
+    "haveAccount": "Already have an account?",
+    "needHelp": "Need help?"
   },
   "meta": {
     "contact": {

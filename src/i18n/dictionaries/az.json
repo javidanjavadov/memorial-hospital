@@ -95,7 +95,8 @@
     "pricesByBranch": "Filiallar üzrə qiymət",
     "preparationTime": "Hazırlanma müddəti",
     "promoNote": "Endirimli qiymət onlayn sifariş üçün keçərlidir",
-    "preparationRules": "Hazırlıq qaydaları üçün"
+    "preparationRules": "Hazırlıq qaydaları üçün",
+    "pageIntro": "{count} analiz və müayinə, kateqoriyalar üzrə. Hər xidmətin kodu, hazırlanma müddəti və qiyməti göstərilib."
   },
   "profile": {
     "title": "Profilim",
@@ -270,7 +271,11 @@
     "specialty": "İxtisas",
     "findDoctorNote": "Qəbul saatları və qiymətlər həkim səhifəsində göstərilir.",
     "aboutBody1": "{year}-cu ildən fəaliyyət göstərən Memorial Hospital, Bakının aparıcı tibbi mərkəzlərindən biridir. Müasir texnologiyalar və təcrübəli həkim heyəti ilə pasiyentlərimizə yüksək keyfiyyətli tibbi xidmət göstəririk.",
-    "aboutBody2": "Missiyamız — hər bir pasiyentin sağlamlığını qorumaq və onlara ən yaxşı tibbi xidməti təqdim etməkdir. {branches} filialımız, {doctors} həkimimiz və {years} ildən artıq təcrübəmizlə sizin xidmətinizdəyik."
+    "aboutBody2": "Missiyamız — hər bir pasiyentin sağlamlığını qorumaq və onlara ən yaxşı tibbi xidməti təqdim etməkdir. {branches} filialımız, {doctors} həkimimiz və {years} ildən artıq təcrübəmizlə sizin xidmətinizdəyik.",
+    "inNumbers": "Rəqəmlərlə Memorial",
+    "moreAboutUs": "Haqqımızda daha ətraflı",
+    "faqCallLine": "nömrəsi ilə çağrı mərkəzimizə zəng edin və ya",
+    "doctorsHeading": "{doctors} həkim, {departments} ixtisas"
   },
   "booking": {
     "bookTitle": "Qəbula Yazıl",
@@ -422,7 +427,9 @@
     "notFoundTitle": "Səhifə Tapılmadı",
     "notFoundBody": "Axtardığınız səhifə mövcud deyil və ya köçürülüb.",
     "goHome": "Ana Səhifə",
-    "bookAppointment": "Qəbula Yazıl"
+    "bookAppointment": "Qəbula Yazıl",
+    "aboutIntro": "Memorial Hospital {year}-cu ildən Bakıda keyfiyyətli tibbi xidmət göstərir. {years} ildən artıq təcrübəmiz, 50-dən çox təcrübəli həkimimiz və {branches} filialımız ilə sizlərin xidmətindəyik.",
+    "stepLabel": "Mərhələ"
   },
   "validation": {
     "nameMin": "{label} minimum {min} simvol olmalıdır",
@@ -602,7 +609,26 @@
     "continueWithGoogle": "Google ilə davam et",
     "redirecting": "Yönləndirilir...",
     "lookupOffline": "Nəticə sorğusu hazırda onlayn işləmir. Zəhmət olmasa çağrı mərkəzimizlə əlaqə saxlayın.",
-    "basketEmptyError": "Səbət boşdur"
+    "basketEmptyError": "Səbət boşdur",
+    "qualityStandards": "Beynəlxalq keyfiyyət standartları",
+    "more": "Ətraflı",
+    "showMoreCount": "Daha çox göstər ({count})",
+    "departmentsSubtitle": "{count} ixtisas üzrə diaqnostika və müalicə.",
+    "doctorsFound": "{count} həkim tapıldı",
+    "yearsShort": "il təcrübə",
+    "doctorsIntro": "{doctors} həkim, {departments} ixtisas üzrə, {branches} filialda. Axtarın, filtrləyin və birbaşa qəbula yazılın.",
+    "signInWithGoogleSub": "Hesabınıza Google ilə daxil olun",
+    "passwordLoginStopped": "Email və şifrə ilə giriş dayandırılıb",
+    "passwordLoginReason": "Əvvəlki giriş üsulu brauzerdə saxlanılan məlumatlara əsaslanırdı və kifayət qədər təhlükəsiz deyildi. Analiz nəticələri və şəxsi məlumatlar üçün yalnız server tərəfindən yoxlanılan giriş istifadə olunur.",
+    "byContinuing": "Davam etməklə",
+    "termsOfUse": "İstifadə Şərtləri",
+    "and": "və",
+    "privacyPolicy": "Məxfilik Siyasəti",
+    "youAgree": "ilə razılaşırsınız.",
+    "signInUnavailable": "Giriş hazırda əlçatan deyil. Zəhmət olmasa çağrı mərkəzimizlə əlaqə saxlayın.",
+    "accountQuestion": "Hesabınızla bağlı sualınız var?",
+    "haveAccount": "Artıq hesabınız var?",
+    "needHelp": "Kömək lazımdır?"
   },
   "meta": {
     "contact": {

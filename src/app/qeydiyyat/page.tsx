@@ -66,14 +66,14 @@ export default async function QeydiyyatPage() {
           <GoogleAuthSection enabled={googleConfigured} callbackUrl="/profil" />
 
           <p className="text-center text-sm text-slate-500">
-            Artıq hesabınız var?{" "}
+            {t.ui.haveAccount}{" "}
             <Link href="/giris" className="font-medium text-primary hover:underline">
-              Daxil olun
+              {t.meta.signIn.title}
             </Link>
           </p>
 
           <p className="text-center text-sm text-slate-500">
-            Kömək lazımdır?{" "}
+            {t.ui.needHelp}{" "}
             <a
               href={telHref(contactInfo.phone)}
               className="font-medium text-primary hover:underline"

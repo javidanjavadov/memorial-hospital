@@ -95,7 +95,8 @@
     "pricesByBranch": "Şubelere göre fiyat",
     "preparationTime": "Sonuç verilme süresi",
     "promoNote": "İndirimli fiyat online siparişler için geçerlidir",
-    "preparationRules": "Hazırlık kuralları için"
+    "preparationRules": "Hazırlık kuralları için",
+    "pageIntro": "{count} tahlil ve muayene, kategorilere göre. Her hizmetin kodu, hazırlık süresi ve fiyatı belirtilmiştir."
   },
   "profile": {
     "title": "Profilim",
@@ -270,7 +271,11 @@
     "specialty": "Branş",
     "findDoctorNote": "Randevu saatleri ve ücretler doktor sayfasında belirtilir.",
     "aboutBody1": "{year} yılından bu yana hizmet veren Memorial Hospital, Bakü’nün önde gelen tıp merkezlerinden biridir. Modern teknoloji ve deneyimli hekim kadromuzla hastalarımıza yüksek kaliteli sağlık hizmeti sunuyoruz.",
-    "aboutBody2": "Misyonumuz, her hastanın sağlığını korumak ve ona en iyi sağlık hizmetini sunmaktır. {branches} şubemiz, {doctors} doktorumuz ve {years} yılı aşkın deneyimimizle hizmetinizdeyiz."
+    "aboutBody2": "Misyonumuz, her hastanın sağlığını korumak ve ona en iyi sağlık hizmetini sunmaktır. {branches} şubemiz, {doctors} doktorumuz ve {years} yılı aşkın deneyimimizle hizmetinizdeyiz.",
+    "inNumbers": "Rakamlarla Memorial",
+    "moreAboutUs": "Hakkımızda daha fazlası",
+    "faqCallLine": "numaralı çağrı merkezimizi arayın veya",
+    "doctorsHeading": "{doctors} doktor, {departments} branş"
   },
   "booking": {
     "bookTitle": "Randevu Alın",
@@ -573,7 +578,9 @@
     "notFoundTitle": "Sayfa Bulunamadı",
     "notFoundBody": "Aradığınız sayfa mevcut değil veya taşınmış olabilir.",
     "goHome": "Ana Sayfa",
-    "bookAppointment": "Randevu Al"
+    "bookAppointment": "Randevu Al",
+    "aboutIntro": "Memorial Hospital, {year} yılından bu yana Bakü şehrinde kaliteli sağlık hizmeti sunmaktadır. {years} yılı aşkın deneyimimiz, 50’den fazla deneyimli hekimimiz ve {branches} şubemizle hizmetinizdeyiz.",
+    "stepLabel": "Adım"
   },
   "validation": {
     "nameMin": "{label} en az {min} karakter olmalıdır",
@@ -753,7 +760,26 @@
     "continueWithGoogle": "Google ile devam et",
     "redirecting": "Yönlendiriliyor...",
     "lookupOffline": "Sonuç sorgulama şu anda online çalışmıyor. Lütfen çağrı merkezimizle iletişime geçin.",
-    "basketEmptyError": "Sepet boş"
+    "basketEmptyError": "Sepet boş",
+    "qualityStandards": "Uluslararası kalite standartları",
+    "more": "Ayrıntılar",
+    "showMoreCount": "Daha fazla göster ({count})",
+    "departmentsSubtitle": "{count} branşta tanı ve tedavi.",
+    "doctorsFound": "{count} doktor bulundu",
+    "yearsShort": "yıllık deneyim",
+    "doctorsIntro": "{branches} şubede, {departments} branşta {doctors} doktor. Arayın, filtreleyin ve doğrudan randevu alın.",
+    "signInWithGoogleSub": "Hesabınıza Google ile giriş yapın",
+    "passwordLoginStopped": "E-posta ve şifre ile giriş durduruldu",
+    "passwordLoginReason": "Önceki giriş yöntemi tarayıcıda saklanan verilere dayanıyordu ve yeterince güvenli değildi. Tahlil sonuçları ve kişisel bilgiler için yalnızca sunucu tarafından doğrulanan giriş kullanılır.",
+    "byContinuing": "Devam ederek",
+    "termsOfUse": "Kullanım Şartları",
+    "and": "ve",
+    "privacyPolicy": "Gizlilik Politikası",
+    "youAgree": "'nı kabul etmiş olursunuz.",
+    "signInUnavailable": "Giriş şu anda kullanılamıyor. Lütfen çağrı merkezimizle iletişime geçin.",
+    "accountQuestion": "Hesabınızla ilgili sorunuz mu var?",
+    "haveAccount": "Zaten hesabınız var mı?",
+    "needHelp": "Yardıma mı ihtiyacınız var?"
   },
   "meta": {
     "contact": {

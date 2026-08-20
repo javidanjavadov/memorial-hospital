@@ -334,8 +334,8 @@ function QebulContent() {
                     {s.label}
                   </span>
                   <span className="sr-only">
-                    Mərhələ {s.num}: {s.label}
-                    {step > s.num ? " {t.booking.stepCompleted}" : ""}
+                    {t.pages.stepLabel} {s.num}: {s.label}
+                    {step > s.num ? ` ${t.booking.stepCompleted}` : ""}
                   </span>
                 </div>
                 {i < 2 && (

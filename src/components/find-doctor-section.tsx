@@ -52,8 +52,7 @@ export default function FindDoctorSection() {
             {t.home.findDoctorTitle}
           </h2>
           <p className="mt-3 text-[var(--ink-muted)]">
-            Ad, ixtisas və ya filiala görə axtarın — nəticələr birbaşa qəbul
-            səhifəsinə bağlanır.
+{t.home.findDoctorSubtitle}
           </p>
         </div>
 
@@ -65,7 +64,7 @@ export default function FindDoctorSection() {
           <div className="grid gap-3 md:grid-cols-[1.4fr_1fr_1fr_auto]">
             <div className="relative">
               <label htmlFor={queryId} className="sr-only">
-                Həkim adı və ya ixtisas
+                {t.home.searchDoctorPlaceholder}
               </label>
               <User
                 className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-[var(--ink-muted)]"

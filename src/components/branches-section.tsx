@@ -56,8 +56,7 @@ export default function BranchesSection() {
             {t.home.branchesTitle}
           </h2>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Sizinə ən yaxın filialı seçin və keyfiyyətli tibbi xidmətdən
-            yararlanın
+{t.home.branchesSubtitle}
           </p>
         </div>
         </AnimateOnScroll>

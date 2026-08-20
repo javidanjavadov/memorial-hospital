@@ -26,8 +26,7 @@ export default function ServicesSection() {
               {t.home.servicesTitle}
             </h2>
             <p className="mt-4 text-step-1 text-[var(--ink-muted)]">
-              Laboratoriya analizindən kompleks check-up müayinəyə qədər bütün
-              xidmətlər bir yerdə.
+{t.home.servicesSubtitle}
             </p>
           </div>
         </AnimateOnScroll>

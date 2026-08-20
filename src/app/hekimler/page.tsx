@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import DoctorCard from "@/components/doctor-card"
 import { branches, departments, doctors } from "@/data"
 import { useT } from "@/i18n/client"
+import { localizeBranch, localizeDepartment } from "@/i18n/data"
 
 export default function HekimlerPage() {
   return (
@@ -67,9 +68,11 @@ function HekimlerContent() {
             {t.pages.doctorsTitle}
           </h1>
           <p className="mt-4 max-w-2xl text-lg text-slate-600">
-            {doctors.length} həkim, {departments.length} ixtisas üzrə{" "}
-            {branches.length} filialda. Axtarın, filtrləyin və birbaşa qəbula
-            yazılın.
+            {t.f(t.ui.doctorsIntro, {
+              doctors: doctors.length,
+              departments: departments.length,
+              branches: branches.length,
+            })}
           </p>
         </div>
       </div>
@@ -110,11 +113,14 @@ function HekimlerContent() {
               className={`${selectClass} flex-1 sm:flex-none`}
             >
               <option value="">{t.pages.allSpecialties}</option>
-              {departments.map((d) => (
-                <option key={d.id} value={d.id}>
-                  {d.name}
-                </option>
-              ))}
+              {departments.map((raw) => {
+                const d = localizeDepartment(raw, t.data)
+                return (
+                  <option key={d.id} value={d.id}>
+                    {d.name}
+                  </option>
+                )
+              })}
             </select>
 
             <label htmlFor={branchId} className="sr-only">
@@ -127,11 +133,14 @@ function HekimlerContent() {
               className={`${selectClass} flex-1 sm:flex-none`}
             >
               <option value="">{t.pages.allBranches}</option>
-              {branches.map((b) => (
-                <option key={b.id} value={b.id}>
-                  {b.name}
-                </option>
-              ))}
+              {branches.map((raw) => {
+                const b = localizeBranch(raw, t.data)
+                return (
+                  <option key={b.id} value={b.id}>
+                    {b.name}
+                  </option>
+                )
+              })}
             </select>
           </div>
         </div>
@@ -139,7 +148,7 @@ function HekimlerContent() {
 
       <div className="container mx-auto px-4 py-10">
         <p className="mb-6 text-sm text-slate-500" role="status">
-          {filtered.length} həkim tapıldı
+          {t.f(t.ui.doctorsFound, { count: filtered.length })}
         </p>
 
         {filtered.length > 0 ? (

@@ -77,10 +77,10 @@ export default function TrustSection() {
         <AnimateOnScroll>
           <div className="max-w-2xl">
             <p className="mb-3 text-sm font-semibold tracking-wide text-teal-400 uppercase">
-              Niyə Memorial Hospital?
+              {t.home.whyTitle}
             </p>
             <h2 className="font-display text-step-3 text-white">
-              Rəqəmlərlə Memorial
+              {t.home.inNumbers}
             </h2>
           </div>
         </AnimateOnScroll>
@@ -117,7 +117,7 @@ export default function TrustSection() {
             href="/haqqimizda"
             className="inline-flex items-center gap-2 text-sm font-semibold text-teal-300 transition-colors hover:text-teal-200"
           >
-            Haqqımızda daha ətraflı
+            {t.home.moreAboutUs}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         </div>

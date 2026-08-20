@@ -81,7 +81,9 @@ export default function DoctorCard({
           </div>
           <div>
             <dt className="sr-only">{t.doctors.experience}</dt>
-            <dd>{doctor.experience} il təcrübə</dd>
+            <dd>
+              {doctor.experience} {t.ui.yearsShort}
+            </dd>
           </div>
         </dl>
 

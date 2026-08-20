@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import GoogleAuthSection from "@/components/google-auth-section"
 import AuthErrorNotice from "@/components/auth-error-notice"
 import { contactInfo, telHref } from "@/data"
+import { useT } from "@/i18n/client"
 
 /**
  * Sign-in, Google only.
@@ -24,6 +25,7 @@ import { contactInfo, telHref } from "@/data"
  * option here.
  */
 export default function GirisForm({ googleEnabled }: { googleEnabled: boolean }) {
+  const t = useT()
   /*
    * Where to land after signing in. Only same-site paths are honoured — taking
    * an arbitrary URL here would turn the login into an open redirect that could
@@ -45,9 +47,9 @@ export default function GirisForm({ googleEnabled }: { googleEnabled: boolean })
           >
             <LogIn className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-slate-900">Daxil Ol</h1>
+          <h1 className="text-2xl font-bold text-slate-900">{t.meta.signIn.title}</h1>
           <p className="text-sm text-slate-500 mt-1">
-            Hesabınıza Google ilə daxil olun
+            {t.ui.signInWithGoogleSub}
           </p>
         </CardHeader>
 
@@ -62,15 +64,14 @@ export default function GirisForm({ googleEnabled }: { googleEnabled: boolean })
               className="flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900"
             >
               <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-              Giriş hazırda əlçatan deyil. Zəhmət olmasa çağrı mərkəzimizlə
-              əlaqə saxlayın.
+{t.ui.signInUnavailable}
             </div>
           )}
 
           <div className="rounded-lg border border-[var(--line)] bg-[var(--secondary)] p-4">
             <p className="flex items-center gap-2 text-sm font-medium text-[var(--ink)]">
               <ShieldCheck className="h-4 w-4 text-primary" aria-hidden="true" />
-              Email və şifrə ilə giriş dayandırılıb
+              {t.ui.passwordLoginStopped}
             </p>
             {/*
               Said plainly rather than quietly dropped. Someone who had an
@@ -78,15 +79,12 @@ export default function GirisForm({ googleEnabled }: { googleEnabled: boolean })
               answer is that it never protected anything.
             */}
             <p className="mt-1 text-xs leading-relaxed text-[var(--ink-muted)]">
-              Əvvəlki giriş üsulu brauzerdə saxlanılan məlumatlara əsaslanırdı və
-              kifayət qədər təhlükəsiz deyildi. Analiz nəticələri və şəxsi
-              məlumatlar üçün yalnız server tərəfindən yoxlanılan giriş istifadə
-              olunur.
+{t.ui.passwordLoginReason}
             </p>
           </div>
 
           <p className="text-center text-sm text-slate-500">
-            Hesabınızla bağlı sualınız var?{" "}
+            {t.ui.accountQuestion}{" "}
             <a
               href={telHref(contactInfo.phone)}
               className="font-medium text-primary hover:underline"
@@ -96,15 +94,15 @@ export default function GirisForm({ googleEnabled }: { googleEnabled: boolean })
           </p>
 
           <p className="text-center text-xs text-slate-400">
-            Davam etməklə{" "}
+            {t.ui.byContinuing}{" "}
             <Link href="/sertler" className="underline hover:text-primary">
-              İstifadə Şərtləri
+              {t.ui.termsOfUse}
             </Link>{" "}
-            və{" "}
+            {t.ui.and}{" "}
             <Link href="/siyaset" className="underline hover:text-primary">
-              Məxfilik Siyasəti
+              {t.ui.privacyPolicy}
             </Link>{" "}
-            ilə razılaşırsınız.
+            {t.ui.youAgree}
           </p>
         </CardContent>
       </Card>

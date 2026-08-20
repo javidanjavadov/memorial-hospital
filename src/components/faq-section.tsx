@@ -67,7 +67,7 @@ export default function FaqSection() {
               >
                 {contactInfo.phone}
               </a>{" "}
-              nömrəsi ilə çağrı mərkəzimizə zəng edin və ya{" "}
+              {t.home.faqCallLine}{" "}
               <Link
                 href="/elaqe"
                 className="font-semibold text-primary hover:underline"

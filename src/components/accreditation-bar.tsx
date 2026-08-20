@@ -34,7 +34,7 @@ export default function AccreditationBar() {
         <div className="flex flex-col items-center gap-6 py-5 md:flex-row md:justify-between">
           <p className="hidden items-center gap-2 text-sm font-medium text-white/80 md:flex">
             <ShieldCheck className="h-5 w-5" aria-hidden="true" />
-            Beynəlxalq keyfiyyət standartları
+            {t.ui.qualityStandards}
           </p>
 
           {/*
@@ -64,7 +64,7 @@ export default function AccreditationBar() {
             href="#akkreditasiya"
             className="hidden items-center gap-1.5 text-sm font-medium text-white/80 underline-offset-4 transition-colors hover:text-white hover:underline md:inline-flex"
           >
-            Ətraflı
+            {t.ui.more}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         </div>

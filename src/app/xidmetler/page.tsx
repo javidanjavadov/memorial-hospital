@@ -7,6 +7,7 @@ import { catalogTotals, pickerGroups } from "@/lib/catalog"
 import { pageMetadata } from "@/lib/site"
 import ServicePicker from "@/components/service-picker"
 import { getDictionary } from "@/i18n"
+import { fill } from "@/i18n/format"
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getDictionary()
@@ -34,8 +35,7 @@ export default async function XidmetlerPage() {
             {t.catalog.title}
           </h1>
           <p className="mt-4 max-w-2xl text-step-0 text-[var(--ink-muted)]">
-            {catalogTotals.items} analiz və müayinə, kateqoriyalar üzrə. Hər
-            xidmətin kodu, hazırlanma müddəti və qiyməti göstərilib.
+{fill(t.catalog.pageIntro, { count: catalogTotals.items })}
           </p>
         </div>
       </div>

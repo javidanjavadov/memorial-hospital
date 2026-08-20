@@ -4,6 +4,7 @@ import { Shield, Award, Heart, Target } from "lucide-react"
 import { FOUNDED_YEAR, YEARS_OF_EXPERIENCE } from "@/data"
 import { pageMetadata } from "@/lib/site"
 import { getDictionary } from "@/i18n"
+import { fill } from "@/i18n/format"
 
 /*
  * generateMetadata rather than a static object: the title and description are
@@ -58,9 +59,11 @@ export default async function HaqqimizdaPage() {
               {t.pages.aboutTitle}
             </h1>
             <p className="text-lg text-slate-600 leading-relaxed">
-              Memorial Hospital {FOUNDED_YEAR}-cu ildən Bakıda keyfiyyətli tibbi
-              xidmət göstərir. {YEARS_OF_EXPERIENCE} ildən artıq təcrübəmiz, 50-dən çox təcrübəli
-              həkimimiz və 3 filialımız ilə sizlərin xidmətindəyik.
+{fill(t.pages.aboutIntro, {
+                year: FOUNDED_YEAR,
+                years: YEARS_OF_EXPERIENCE,
+                branches: 3,
+              })}
             </p>
           </div>
         </div>

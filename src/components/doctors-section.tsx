@@ -29,11 +29,10 @@ export default function DoctorsSection() {
                 {t.home.doctorsEyebrow}
               </p>
               <h2 className="font-display text-step-3 text-[var(--ink)]">
-                {doctors.length} həkim, {departments.length} ixtisas
+                {t.f(t.home.doctorsHeading, { doctors: doctors.length, departments: departments.length })}
               </h2>
               <p className="mt-4 text-step-1 text-[var(--ink-muted)]">
-                Üç filialımızda çalışan həkimlərimizlə birbaşa onlayn qəbula
-                yazıla bilərsiniz.
+{t.home.doctorsSubtitle}
               </p>
             </div>
 
