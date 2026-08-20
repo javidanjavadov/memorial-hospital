@@ -30,6 +30,7 @@ import {
   Loader2,
 } from "lucide-react"
 import { missingProfileFields } from "@/lib/profile-complete"
+import ResultsPanel from "@/components/results-panel"
 import ProfileCompletionCard from "@/components/profile-completion-card"
 import { useAuthStore } from "@/lib/auth-store"
 import { ordersFor, useBasketStore } from "@/lib/basket-store"
@@ -720,19 +721,15 @@ function ProfilPageInner() {
               <CardHeader>
                 <CardTitle>Nəticələrim</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-6">
                 {/*
-                  Signed in, the card number, date of birth and security code
-                  are pointless: they exist to prove identity, and the account
-                  has already done that. The lookup form stays for visitors who
-                  are not signed in.
+                  Signed in, the card number and the security code are pointless:
+                  they exist to prove identity, and the account has already done
+                  that. The public lookup form keeps them for visitors with no
+                  account. Shown here only so the patient can check that the
+                  laboratory is matching them on the right details.
                 */}
-                <p className="text-sm text-[var(--ink-muted)]">
-                  Nəticələr aşağıdakı məlumatlarla hesabınıza bağlanır. Kart
-                  nömrəsi və təhlükəsizlik kodu tələb olunmur.
-                </p>
-
-                <dl className="mt-4 grid gap-3 sm:grid-cols-2">
+                <dl className="grid gap-3 sm:grid-cols-2">
                   <div className="rounded-lg border border-[var(--line)] p-3">
                     <dt className="text-xs text-[var(--ink-muted)]">FIN kod</dt>
                     <dd className="font-mono text-sm text-[var(--ink)]">
@@ -749,32 +746,7 @@ function ProfilPageInner() {
                   </div>
                 </dl>
 
-                {/*
-                  An empty list would read as "you have no results", which to
-                  someone waiting on a biopsy is a different and much worse
-                  statement than "these cannot be shown here yet". Results live
-                  in the laboratory system and nothing here can reach it.
-                */}
-                <div className="mt-6 rounded-xl border border-[var(--line)] bg-[var(--secondary)] p-6 text-center">
-                  <FileText
-                    className="mx-auto mb-3 h-10 w-10 text-slate-400"
-                    aria-hidden="true"
-                  />
-                  <p className="font-medium text-[var(--ink)]">
-                    Nəticələr hələ bu səhifəyə gətirilmir
-                  </p>
-                  <p className="mx-auto mt-1 max-w-md text-sm text-[var(--ink-muted)]">
-                    Analiz cavabları laboratoriya sistemində saxlanılır. Hazır
-                    olduqda filialdan və ya çağrı mərkəzindən əldə edə
-                    bilərsiniz.
-                  </p>
-                  <Button variant="outline" className="mt-4" asChild>
-                    <a href={telHref(contactInfo.phone)}>
-                      <Phone className="w-4 h-4" aria-hidden="true" />
-                      {contactInfo.phone}
-                    </a>
-                  </Button>
-                </div>
+                <ResultsPanel patientName={user.fullName} />
               </CardContent>
             </Card>
           </div>

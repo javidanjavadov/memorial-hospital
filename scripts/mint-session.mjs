@@ -13,13 +13,16 @@ const secret = env.match(/^AUTH_SECRET=(.*)$/m)?.[1]?.trim()
 if (!secret) throw new Error("AUTH_SECRET not found in .env.local")
 
 const complete = process.argv[2] === "complete"
+// Optional third argument: the email to mint the session for, so the
+// results allowlist can be exercised without a real Google round trip.
+const email = process.argv[3] ?? "test@example.com"
 
 const token = await encode({
   token: {
     sub: "test-user",
     googleId: "test-user",
     name: "Test İstifadəçi",
-    email: "test@example.com",
+    email,
     ...(complete
       ? {
           profile: {

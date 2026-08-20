@@ -168,5 +168,22 @@
     "ctaTitle": "Sağlamlığınız bizim prioritetimizdir",
     "ctaBody": "İndi qəbula yazılın, peşəkar həkimlərimiz sizə kömək etsin",
     "callUs": "Zəng Edin"
+  },
+  "results": {
+    "cardNo": "STRIX / KART NO",
+    "openPdf": "PDF-i aç",
+    "collected": "Nümunə tarixi",
+    "branch": "Filial",
+    "doctor": "Həkim",
+    "test": "Analiz",
+    "value": "Nəticə",
+    "unit": "Vahid",
+    "reference": "Referens",
+    "high": "yüksək",
+    "low": "aşağı",
+    "emptyTitle": "Hələ nəticəniz yoxdur",
+    "emptyBody": "Analiz cavabları hazır olduqda burada görünəcək. Sualınız varsa çağrı mərkəzimizlə əlaqə saxlayın.",
+    "loadFailed": "Nəticələr yüklənmədi. Yenidən cəhd edin.",
+    "disclaimer": "Nəticələr diaqnoz deyil. Onları həkiminizlə birlikdə dəyərləndirin."
   }
 }

@@ -47,3 +47,6 @@ next-env.d.ts
 
 # Generated at build time by scripts/gen-catalog.mjs
 /public/catalog
+
+# Private patient data: never committed. See private/results/README.md
+/private

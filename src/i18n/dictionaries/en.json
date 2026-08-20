@@ -177,5 +177,22 @@
     "ctaTitle": "Your health is our priority",
     "ctaBody": "Book an appointment and our specialists will help you",
     "callUs": "Call us"
+  },
+  "results": {
+    "cardNo": "STRIX / CARD NO",
+    "openPdf": "Open PDF",
+    "collected": "Sample date",
+    "branch": "Branch",
+    "doctor": "Doctor",
+    "test": "Test",
+    "value": "Result",
+    "unit": "Unit",
+    "reference": "Reference",
+    "high": "high",
+    "low": "low",
+    "emptyTitle": "No results yet",
+    "emptyBody": "Your test results will appear here once they are ready. Call our contact centre if you have any questions.",
+    "loadFailed": "Results could not be loaded. Please try again.",
+    "disclaimer": "Results are not a diagnosis. Review them together with your doctor."
   }
 }

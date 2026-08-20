@@ -168,5 +168,22 @@
     "ctaTitle": "Sağlığınız bizim önceliğimiz",
     "ctaBody": "Hemen randevu alın, uzman hekimlerimiz size yardımcı olsun",
     "callUs": "Bizi arayın"
+  },
+  "results": {
+    "cardNo": "STRIX / KART NO",
+    "openPdf": "PDF'i aç",
+    "collected": "Numune tarihi",
+    "branch": "Şube",
+    "doctor": "Doktor",
+    "test": "Tetkik",
+    "value": "Sonuç",
+    "unit": "Birim",
+    "reference": "Referans",
+    "high": "yüksek",
+    "low": "düşük",
+    "emptyTitle": "Henüz sonucunuz yok",
+    "emptyBody": "Tahlil sonuçlarınız hazır olduğunda burada görünecek. Sorularınız için çağrı merkezimizi arayın.",
+    "loadFailed": "Sonuçlar yüklenemedi. Lütfen tekrar deneyin.",
+    "disclaimer": "Sonuçlar tanı değildir. Doktorunuzla birlikte değerlendirin."
   }
 }
