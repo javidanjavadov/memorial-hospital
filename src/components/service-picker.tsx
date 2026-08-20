@@ -353,6 +353,12 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
         has it. Wide screens only — below xl there is no room for a column, and
         the pinned button covers it there.
       */}
+      {/*
+        The column is left to stretch (no items-start): the panel inside it is
+        small, and sticky only has room to travel as far as its container. With
+        the column shrunk to the panel, it scrolled out of view immediately —
+        it now follows the catalogue down and stops at the end of the list.
+      */}
       <aside className="hidden xl:block">
         <BasketPanel />
       </aside>
