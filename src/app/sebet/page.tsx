@@ -140,7 +140,7 @@ export default function SebetPage() {
                 return (
                   <li
                     key={line.slug}
-                    className="flex items-start justify-between gap-4 rounded-xl border border-[var(--line)] bg-[var(--paper-raised)] p-4"
+                    className="line-in flex items-start justify-between gap-4 rounded-xl border border-[var(--line)] bg-[var(--paper-raised)] p-4"
                   >
                     <div className="min-w-0">
                       {line.code && (

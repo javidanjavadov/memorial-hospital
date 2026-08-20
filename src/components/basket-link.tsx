@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { ShoppingCart } from "lucide-react"
 import { useBasketStore } from "@/lib/basket-store"
@@ -9,6 +10,23 @@ import { cn } from "@/lib/utils"
 export default function BasketLink({ overHero }: { overHero?: boolean }) {
   const lines = useBasketStore((s) => s.lines)
   const hasHydrated = useBasketStore((s) => s.hasHydrated)
+
+  /*
+   * Pulses whenever the count changes, so the eye is pulled to where the test
+   * just landed — the card is often far down a long list.
+   */
+  const [pulse, setPulse] = useState(false)
+  const previous = useRef(lines.length)
+
+  useEffect(() => {
+    if (lines.length > previous.current) {
+      setPulse(true)
+      const timer = setTimeout(() => setPulse(false), 420)
+      previous.current = lines.length
+      return () => clearTimeout(timer)
+    }
+    previous.current = lines.length
+  }, [lines.length])
 
   if (!hasHydrated || lines.length === 0) return null
 
@@ -22,7 +40,12 @@ export default function BasketLink({ overHero }: { overHero?: boolean }) {
       )}
     >
       <ShoppingCart className="h-5 w-5" aria-hidden="true" />
-      <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[0.6rem] font-bold text-white">
+      <span
+        className={cn(
+          "absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[0.6rem] font-bold text-white",
+          pulse && "badge-pop"
+        )}
+      >
         {lines.length}
       </span>
     </Link>

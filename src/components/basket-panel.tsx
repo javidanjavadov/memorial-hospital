@@ -74,7 +74,10 @@ export default function BasketPanel() {
                   ? line.promoted
                   : line.price
               return (
-                <li key={line.slug} className="flex items-start gap-2 px-4 py-3">
+                <li
+                  key={line.slug}
+                  className="line-in flex items-start gap-2 px-4 py-3"
+                >
                   <span className="min-w-0 flex-1">
                     <span
                       title={line.name}

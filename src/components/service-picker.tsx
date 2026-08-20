@@ -200,7 +200,7 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
         </div>
 
         {tab === "services" ? (
-          <>
+          <div key="services" className="panel-in">
             {/* Groups */}
             <div className="grid gap-3 sm:grid-cols-3">
               {groups.map((entry) => {
@@ -213,7 +213,7 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
                     aria-pressed={active}
                     onClick={() => selectGroup(entry.slug)}
                     className={cn(
-                      "flex items-center gap-3 rounded-xl border p-4 text-left transition-colors",
+                      "flex items-center gap-3 rounded-xl border p-4 text-left transition-all duration-200 active:scale-[0.98]",
                       active
                         ? "border-primary bg-primary/5"
                         : "border-[var(--line)] bg-[var(--paper-raised)] hover:border-primary/40"
@@ -306,17 +306,27 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
                     {visible.length} xidmət · qiymətlər{" "}
                     {branches.find((b) => b.id === DEFAULT_BRANCH)?.name} üzrə
                   </p>
-                  <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {visible.map((item) => (
-                      <ServiceCard key={item.slug} item={item} />
+                  {/*
+                    Keyed on the category so the cards replay their entrance
+                    when it changes — without it React reuses the list and the
+                    switch happens with no visible response at all.
+                  */}
+                  <ul
+                    key={categorySlug}
+                    className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                  >
+                    {visible.map((item, index) => (
+                      <ServiceCard key={item.slug} item={item} index={index} />
                     ))}
                   </ul>
                 </>
               )}
             </div>
-          </>
+          </div>
         ) : (
-          <PastOrders onReorder={() => setTab("services")} />
+          <div key="orders" className="panel-in">
+            <PastOrders onReorder={() => setTab("services")} />
+          </div>
         )}
       </div>
 
@@ -389,7 +399,7 @@ function CategoryStrip({
               aria-pressed={active}
               onClick={() => onSelect(category.slug)}
               className={cn(
-                "snap-start whitespace-nowrap rounded-full border px-4 py-2 text-sm transition-colors",
+                "snap-start whitespace-nowrap rounded-full border px-4 py-2 text-sm transition-all duration-200 active:scale-95",
                 active
                   ? "border-primary bg-primary text-white"
                   : "border-[var(--line)] bg-[var(--paper-raised)] text-[var(--ink-muted)] hover:border-primary/40 hover:text-[var(--ink)]"
@@ -426,7 +436,7 @@ function CategoryStrip({
   )
 }
 
-function ServiceCard({ item }: { item: PickerItem }) {
+function ServiceCard({ item, index }: { item: PickerItem; index: number }) {
   const price = priceOf(item)
   const promoted = promotedOf(item)
   const discounted = promoted !== null && promoted < price
@@ -440,7 +450,13 @@ function ServiceCard({ item }: { item: PickerItem }) {
   }
 
   return (
-    <li className="flex h-full flex-col rounded-xl border border-[var(--line)] bg-[var(--paper-raised)] p-3">
+    <li
+      /* Capped: a 224-item category would otherwise spend five seconds
+         arriving. Past the cap they land together, which is what a full
+         screen looks like anyway. */
+      style={{ "--card-index": Math.min(index, 24) } as React.CSSProperties}
+      className="card-in flex h-full flex-col rounded-xl border border-[var(--line)] bg-[var(--paper-raised)] p-3 transition-shadow duration-200 hover:shadow-md"
+    >
       <div className="flex items-start justify-between gap-1">
         <p className="font-mono text-[0.65rem] text-[var(--ink-muted)]">
           {item.code ? `Kod: ${item.code}` : ""}
@@ -611,7 +627,10 @@ function BasketColumn() {
           <>
             <ul className="max-h-[22rem] divide-y divide-[var(--line)] overflow-y-auto">
               {lines.map((line) => (
-                <li key={line.slug} className="flex items-start gap-2 px-4 py-3">
+                <li
+                  key={line.slug}
+                  className="line-in flex items-start gap-2 px-4 py-3"
+                >
                   <span className="min-w-0 flex-1">
                     <span
                       title={line.name}
