@@ -9,7 +9,10 @@
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "typecheck": "tsc --noEmit",
-    "check": "npm run typecheck && npm run lint && npm run build"
+    "check": "npm run typecheck && npm run lint && npm run build",
+    "gen:catalog": "node scripts/gen-catalog.mjs",
+    "prebuild": "node scripts/gen-catalog.mjs",
+    "predev": "node scripts/gen-catalog.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",

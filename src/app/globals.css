@@ -710,3 +710,14 @@ html[data-scroll-behavior="smooth"] {
     display: none !important;
   }
 }
+
+/*
+ * Category strip: scrollable without a visible bar. The arrows and the chips
+ * running to the edge are the affordance on a mouse; touch just swipes.
+ */
+.scrollbar-none {
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}

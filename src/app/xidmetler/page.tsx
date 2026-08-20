@@ -1,17 +1,11 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { ArrowRight, Phone, Search } from "lucide-react"
+import { Phone, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { contactInfo, telHref } from "@/data"
-import {
-  catalogTotals,
-  formatAzn,
-  getCategoryItems,
-  getGroupCategories,
-  GROUP_ORDER,
-  priceOf,
-} from "@/lib/catalog"
+import { catalogTotals, pickerGroups } from "@/lib/catalog"
 import { pageMetadata } from "@/lib/site"
+import ServicePicker from "@/components/service-picker"
 
 export const metadata: Metadata = pageMetadata({
   title: "Xidmətlər və qiymətlər",
@@ -20,13 +14,11 @@ export const metadata: Metadata = pageMetadata({
   path: "/xidmetler",
 })
 
-/** Cheapest item in a category, so each card can show a "from" price. */
-function fromPrice(slug: string) {
-  const items = getCategoryItems(slug)
-  return items.length ? priceOf(items[0]) : null
-}
-
 export default function XidmetlerPage() {
+  // Built on the server from the same catalogue the JSON files come from, so
+  // the strip renders with the page instead of after a round trip.
+  const groups = pickerGroups()
+
   return (
     <div className="min-h-screen bg-[var(--paper)]">
       <div className="border-b border-[var(--line)] bg-[var(--paper-raised)]">
@@ -44,72 +36,17 @@ export default function XidmetlerPage() {
         </div>
       </div>
 
-      <div className="container mx-auto space-y-16 px-4 py-14 md:py-20">
-        {GROUP_ORDER.map((group) => {
-          const categories = getGroupCategories(group.slug)
-          if (!categories.length) return null
+      <div className="container mx-auto space-y-10 px-4 py-10 md:py-14">
+        {/*
+          The catalogue as an order-entry panel — group, category strip, then the
+          services with the basket beside them. Browsing a list of category names
+          and then landing on a separate page to add one test meant leaving and
+          coming back for every item on a request form.
 
-          return (
-            <section key={group.slug} id={group.slug}>
-              <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
-                <div>
-                  <h2 className="font-display text-step-2 text-[var(--ink)]">
-                    {group.name}
-                  </h2>
-                  <p className="mt-1 text-[var(--ink-muted)]">{group.blurb}</p>
-                </div>
-                <p className="text-sm text-[var(--ink-muted)]">
-                  {categories.reduce((n, c) => n + c.count, 0)} xidmət ·{" "}
-                  {categories.length} kateqoriya
-                </p>
-              </div>
-
-              {/*
-                Five and six across on wide screens. At three columns the 80-odd
-                categories ran to a very long page for one line of text each,
-                and the cards were far wider than their content needed.
-              */}
-              <ul className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
-                {categories.map((category) => {
-                  const from = fromPrice(category.slug)
-                  return (
-                    <li key={category.slug}>
-                      <Link
-                        href={`/xidmetler/${category.slug}`}
-                        className="group flex h-full flex-col justify-between gap-2 rounded-lg border border-[var(--line)] bg-[var(--paper-raised)] p-3 transition-colors hover:border-primary/40"
-                      >
-                        <div>
-                          <h3 className="text-sm leading-snug font-medium text-[var(--ink)] group-hover:text-primary">
-                            {category.name}
-                          </h3>
-                          <p className="mt-0.5 text-xs text-[var(--ink-muted)]">
-                            {category.count} xidmət
-                          </p>
-                        </div>
-                        <div className="flex items-center justify-between gap-1">
-                          {from !== null ? (
-                            <span className="text-xs text-[var(--ink-muted)]">
-                              <span className="font-semibold text-primary">
-                                {formatAzn(from)}
-                              </span>
-                              -dən
-                            </span>
-                          ) : (
-                            <span />
-                          )}
-                          <ArrowRight
-                            className="h-3.5 w-3.5 shrink-0 text-[var(--ink-muted)] transition-transform group-hover:translate-x-0.5 group-hover:text-primary"
-                            aria-hidden="true"
-                          />
-                        </div>
-                      </Link>
-                    </li>
-                  )
-                })}
-              </ul>
-            </section>
-          )
-        })}
+          Categories still have their own statically rendered pages: they are
+          what search engines index and what a shared link opens.
+        */}
+        <ServicePicker groups={groups} />
 
         <section className="rounded-2xl border border-[var(--line)] bg-[var(--paper-raised)] p-6 md:p-8">
           <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
