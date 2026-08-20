@@ -33,7 +33,13 @@
     "currency": "AZN",
     "serviceCount": "{count} hizmet",
     "categoryCount": "{count} kategori",
-    "doctorCount": "{count} doktor"
+    "doctorCount": "{count} doktor",
+    "all": "Tümü",
+    "or": "veya",
+    "callAction": "Ara",
+    "directions": "Yol tarifi",
+    "tryAgain": "Tekrar dene",
+    "home": "Ana Sayfa"
   },
   "basket": {
     "title": "Sepetim",
@@ -135,7 +141,12 @@
     "saveFailedFields": "Bilgiler kaydedilemedi. Lütfen alanları kontrol edin.",
     "profileSections": "Profil bölümleri",
     "phone": "Telefon",
-    "confirmCancel": "{label} randevusunu iptal etmek istediğinize emin misiniz?"
+    "confirmCancel": "{label} randevusunu iptal etmek istediğinize emin misiniz?",
+    "ordersLocalNote": "Siparişler şu anda yalnızca bu tarayıcıda saklanır ve kliniğe otomatik olarak gönderilmez. Onay için lütfen arayın:",
+    "ordersLocalNoteEnd": ".",
+    "save": "Kaydet",
+    "email": "E-posta",
+    "finCodeHint": "7 karakter"
   },
   "doctors": {
     "allDoctors": "Tüm doktorlar",
@@ -197,7 +208,8 @@
     "emptyTitle": "Henüz sonucunuz yok",
     "emptyBody": "Tahlil sonuçlarınız hazır olduğunda burada görünecek. Sorularınız için çağrı merkezimizi arayın.",
     "loadFailed": "Sonuçlar yüklenemedi. Lütfen tekrar deneyin.",
-    "disclaimer": "Sonuçlar tanı değildir. Doktorunuzla birlikte değerlendirin."
+    "disclaimer": "Sonuçlar tanı değildir. Doktorunuzla birlikte değerlendirin.",
+    "privacyNote": "Sonuçlarınız tıbbi veridir. Bu bilgileri yalnızca kendiniz girin ve ortak bir bilgisayarda kullandıktan sonra tarayıcıyı kapatın."
   },
   "home": {
     "heroTitle": "profesyonel bakım",
@@ -298,7 +310,7 @@
     "selectBranch": "Şube seçin",
     "selectDate": "Tarih seçin",
     "selectTime": "Saat seçin",
-    "noFreeDoctor": "Seçilen bölüm ve şubede şu anda müsait doktor bulunmuyor. Başka bir şube seçin ya da doktor seçmeden devam edin.",
+    "noFreeDoctor": "Seçilen bölüm ve şube için şu anda müsait hekim yok. Başka bir şube seçin — ya da hekim seçmeden devam edin, kayıt birimi size uygun hekimi belirleyecek.",
     "slotsUnavailable": "Dolu ve geçmiş saatler seçilemez.",
     "pickDateFirst": "Önce tarih seçin.",
     "complaint": "Şikayet / Not",
@@ -356,7 +368,10 @@
     "cardNoRequired": "STRIX / kart numarasını girin",
     "cardNoFormat": "Biçim: 00000000-0000000000",
     "requestRegistered": "Talebiniz kaydedildi. Onay için",
-    "contactSubject": "Web sitesi başvurusu — {name}"
+    "contactSubject": "Web sitesi başvurusu — {name}",
+    "noteLabel": "Not:",
+    "manualConfirm": "Bu talep otomatik olarak onaylanmaz. Kayıt görevlisi verdiğiniz numarayı arayarak randevuyu onaylayacak.",
+    "date": "Tarih"
   },
   "data": {
     "departments": {
@@ -440,7 +455,7 @@
     "branches": {
       "nrimanov": {
         "name": "Nerimanov şubesi",
-        "address": "Zaur Nudiraliyev 79 (7 numaralı ASAN xidmət karşısı)",
+        "address": "Zaur Nudiraliyev 79 (7 numaralı ASAN merkezi karşısı)",
         "workingHours": "Pzt – Cmt: 08:30 – 18:00 · Pazar: Kapalı",
         "short": "Nerimanov"
       },
@@ -507,7 +522,7 @@
     ],
     "contact": {
       "workingHours": "Pzt – Cmt: 08:30 – 18:00",
-      "address": "Zaur Nudiraliyev 79, Nərimanov r., Bakü"
+      "address": "Zaur Nudiraliyev 79, Nerimanov r., Bakü"
     },
     "accreditations": {
       "IAS": {
@@ -667,7 +682,7 @@
       "7. İletişim",
       "Gizlilik politikamızla ilgili sorularınız için bizimle iletişime geçebilirsiniz:",
       "Adres:",
-      "Bakü, Nərimanov ilçesi, Ü. Hacıbəyli cad. 42"
+      "Bakü, Nerimanov ilçesi, Ü. Hacibeyli cad. 42"
     ],
     "terms": [
       "Kullanım Şartları",
@@ -691,7 +706,7 @@
       "7. İletişim",
       "Kullanım şartlarıyla ilgili sorularınız için bizimle iletişime geçebilirsiniz:",
       "Adres:",
-      "Bakü, Nərimanov ilçesi, Ü. Hacıbəyli cad. 42"
+      "Bakü, Nerimanov ilçesi, Ü. Hacibeyli cad. 42"
     ]
   },
   "ui": {
@@ -790,7 +805,17 @@
     "needHelp": "Yardıma mı ihtiyacınız var?",
     "language": "Dil",
     "mobileMenu": "Mobil menü",
-    "categories": "Kategoriler"
+    "categories": "Kategoriler",
+    "errorTitle": "Beklenmeyen bir hata oluştu",
+    "errorBody": "Sayfa yüklenirken bir sorun oluştu. Lütfen tekrar deneyin.",
+    "globalErrorTitle": "Site geçici olarak kullanılamıyor",
+    "mapLoading": "Harita yükleniyor...",
+    "profileGateLoading": "Profil bilgileri gerekli...",
+    "mailOpened": "Mesaj e-posta programınızda açıldı — göndermeyi orada tamamlayın.",
+    "mailFallback": "Program açılmadıysa bize doğrudan yazın:",
+    "orCall": "veya arayın",
+    "emergencyCall": "Acil durumlarda bizi arayın:",
+    "errorCode": "Hata kodu"
   },
   "meta": {
     "contact": {

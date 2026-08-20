@@ -102,18 +102,17 @@ export default function ElaqePage() {
                     {t.booking.messagePrepared}
                   </h2>
                   <p className="text-slate-500 mb-4">
-                    E-poçt proqramınızda mesaj açıldı — göndərməni orada
-                    tamamlayın.
+                    {t.ui.mailOpened}
                   </p>
                   <p className="text-sm text-slate-500">
-                    Proqram açılmadısa, bizə birbaşa yazın:{" "}
+                    {t.ui.mailFallback}{" "}
                     <a
                       href={`mailto:${contactInfo.email}`}
                       className="text-teal-700 font-semibold hover:underline"
                     >
                       {contactInfo.email}
                     </a>{" "}
-                    və ya zəng edin{" "}
+                    {t.ui.orCall}{" "}
                     <a
                       href={telHref(contactInfo.phone)}
                       className="text-teal-700 font-semibold hover:underline"

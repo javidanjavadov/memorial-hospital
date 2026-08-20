@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { MapPin, Navigation, Phone } from "lucide-react"
 import { branches, telHref } from "@/data"
+import { useT } from "@/i18n/client"
 import { cn } from "@/lib/utils"
 import "leaflet/dist/leaflet.css"
 
@@ -22,6 +23,7 @@ import "leaflet/dist/leaflet.css"
  * Loaded via next/dynamic with ssr:false — Leaflet touches `window` on import.
  */
 export default function BranchesMap() {
+  const t = useT()
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<import("leaflet").Map | null>(null)
   const markersRef = useRef<Record<string, import("leaflet").Marker>>({})
@@ -137,7 +139,7 @@ export default function BranchesMap() {
             className="absolute inset-0 flex items-center justify-center bg-[var(--secondary)] text-sm text-slate-600"
             role="status"
           >
-            Xəritə yüklənir...
+            {t.ui.mapLoading}
           </div>
         )}
       </div>
@@ -153,7 +155,7 @@ export default function BranchesMap() {
               : "border-[var(--line)] bg-white text-slate-700 hover:border-primary/40"
           )}
         >
-          Hamısı
+          {t.common.all}
         </button>
 
         {branches.map((branch) => (
@@ -192,7 +194,7 @@ export default function BranchesMap() {
             className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-[var(--line)] px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:border-primary/40"
           >
             <Phone className="h-4 w-4" aria-hidden="true" />
-            Zəng et
+            {t.common.callAction}
           </a>
           <a
             href={
@@ -203,7 +205,7 @@ export default function BranchesMap() {
             className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-[var(--line)] px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:border-primary/40"
           >
             <Navigation className="h-4 w-4" aria-hidden="true" />
-            Yol göstər
+            {t.common.directions}
           </a>
         </div>
       </div>

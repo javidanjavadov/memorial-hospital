@@ -256,9 +256,7 @@ export default function NeticelerPage() {
                     className="mt-0.5 h-4 w-4 shrink-0 text-primary"
                     aria-hidden="true"
                   />
-                  Nəticələriniz tibbi məlumatdır. Bu məlumatları yalnız özünüz
-                  daxil edin və ortaq kompüterdə istifadə etdikdən sonra
-                  brauzeri bağlayın.
+                  {t.results.privacyNote}
                 </p>
               </form>
 

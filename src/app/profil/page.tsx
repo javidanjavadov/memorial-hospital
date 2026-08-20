@@ -350,7 +350,7 @@ function ProfilPageInner() {
                   )}
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Field label="Ad" required error={errors.firstName?.message}>
+                    <Field label={t.profile.firstName} required error={errors.firstName?.message}>
                       {(field) => (
                         <div className="relative">
                           <User
@@ -367,7 +367,7 @@ function ProfilPageInner() {
                       )}
                     </Field>
 
-                    <Field label="Soyad" required error={errors.lastName?.message}>
+                    <Field label={t.profile.lastName} required error={errors.lastName?.message}>
                       {(field) => (
                         <Input
                           {...field}
@@ -389,7 +389,7 @@ function ProfilPageInner() {
                       )}
                     </Field>
 
-                    <Field label="Cins" required error={errors.gender?.message}>
+                    <Field label={t.profile.gender} required error={errors.gender?.message}>
                       {(field) => (
                         <select {...field} {...register("gender")} className={controlClass}>
                           <option value="FEMALE">{t.profile.female}</option>
@@ -404,7 +404,7 @@ function ProfilPageInner() {
                         or split the account in two. Read-only rather than
                         disabled, so it stays focusable and readable. */}
                     <Field
-                      label="Email"
+                      label={t.profile.email}
                       required
                       hint={
                         isGoogle
@@ -442,7 +442,7 @@ function ProfilPageInner() {
                       )}
                     </Field>
 
-                    <Field label="Telefon" required error={errors.phone?.message}>
+                    <Field label={t.profile.phone} required error={errors.phone?.message}>
                       {(field) => (
                         <div className="relative">
                           <Phone
@@ -477,7 +477,7 @@ function ProfilPageInner() {
                     </Field>
 
                     <Field
-                      label="FIN Kod"
+                      label={t.profile.finCode}
                       required
                       hint={t.profile.finHint}
                       error={errors.finCode?.message}
@@ -486,7 +486,7 @@ function ProfilPageInner() {
                         <Input
                           {...field}
                           maxLength={7}
-                          placeholder="7 simvol"
+                          placeholder={t.profile.finCodeHint}
                           {...register("finCode")}
                           className={errors.finCode ? "border-red-500" : ""}
                         />
@@ -501,7 +501,7 @@ function ProfilPageInner() {
                       disabled={isSubmitting || !isDirty}
                     >
                       <Save className="w-4 h-4" aria-hidden="true" />
-                      Yadda Saxla
+                      {t.profile.save}
                     </Button>
                     {isDirty && (
                       <Button
@@ -513,7 +513,7 @@ function ProfilPageInner() {
                           setSaved(false)
                         }}
                       >
-                        Ləğv et
+                        {t.common.cancel}
                       </Button>
                     )}
                   </div>
@@ -567,7 +567,8 @@ function ProfilPageInner() {
                       <div className="space-y-2">
                         <div className="flex items-center gap-3">
                           <h2 className="font-semibold text-slate-900">
-                            {getDepartmentName(apt.department)}
+                            {t.data.departments?.[apt.department]?.name ??
+                              getDepartmentName(apt.department)}
                           </h2>
                           <Badge className={statusColors[apt.status]}>
                             {t.profile[statusLabels[apt.status]] ?? apt.status}
@@ -580,12 +581,14 @@ function ProfilPageInner() {
                                 className="w-4 h-4 text-teal-600"
                                 aria-hidden="true"
                               />
-                              {getDoctorName(apt.doctor)}
+                              {t.data.doctorNames?.[getDoctorName(apt.doctor)] ??
+                                getDoctorName(apt.doctor)}
                             </div>
                           )}
                           <div className="flex items-center gap-1">
                             <MapPin className="w-4 h-4 text-teal-600" aria-hidden="true" />
-                            {getBranchName(apt.branch)}
+                            {t.data.branches?.[apt.branch]?.name ??
+                              getBranchName(apt.branch)}
                           </div>
                           <div className="flex items-center gap-1">
                             <Calendar
@@ -658,8 +661,9 @@ function ProfilPageInner() {
                             {formatDate(order.createdAt)}
                           </p>
                           <p className="mt-0.5 text-sm text-slate-500">
-                            {getBranchName(order.branch)} · {order.lines.length}{" "}
-                            xidmət
+                            {t.data.branches?.[order.branch]?.name ??
+                              getBranchName(order.branch)}{" "}
+                            · {t.n(t.common.serviceCount, order.lines.length)}
                             {order.homeCollection && ` · ${t.profile.homeCollectionShort}`}
                             {" · "}
                             {order.paymentMethod === "CARD" ? t.basket.card : t.basket.cash}
@@ -705,15 +709,14 @@ function ProfilPageInner() {
                     className="mt-0.5 w-3.5 h-3.5 shrink-0"
                     aria-hidden="true"
                   />
-                  Sifarişlər hazırda yalnız bu brauzerdə saxlanılır və klinikaya
-                  avtomatik göndərilmir. Təsdiq üçün{" "}
+                  {t.profile.ordersLocalNote}{" "}
                   <a
                     href={telHref(contactInfo.phone)}
                     className="font-medium text-primary hover:underline"
                   >
                     {contactInfo.phone}
                   </a>{" "}
-                  nömrəsi ilə əlaqə saxlayın.
+                  {t.profile.ordersLocalNoteEnd}
                 </p>
               </div>
             )}

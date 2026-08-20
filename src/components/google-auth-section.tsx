@@ -1,4 +1,7 @@
+"use client"
+
 import GoogleSignInButton from "@/components/google-sign-in-button"
+import { useT } from "@/i18n/client"
 
 /**
  * Google button plus its divider, rendered only when Google is configured.
@@ -9,8 +12,9 @@ import GoogleSignInButton from "@/components/google-sign-in-button"
  * cold serverless function it showed up seconds late — the same defect the
  * navbar's login button had.
  *
- * No "use client" here: this renders no interactivity of its own, so it stays a
- * Server Component and ships in the initial HTML.
+ * "use client" only for the divider's label: the pages that render this are
+ * client components themselves, so a server import would drag next/headers into
+ * their bundle and take the whole route down.
  */
 export default function GoogleAuthSection({
   enabled,
@@ -22,9 +26,11 @@ export default function GoogleAuthSection({
   label?: string
   /** Same-site path to return to after Google sends the visitor back. */
   callbackUrl?: string
-  /** The "və ya" rule, for pages that still have a second option below it. */
+  /** The divider rule, for pages that still have a second option below it. */
   divider?: boolean
 }) {
+  const t = useT()
+
   if (!enabled) return null
 
   return (
@@ -37,7 +43,7 @@ export default function GoogleAuthSection({
           </div>
           <div className="relative flex justify-center">
             <span className="bg-card px-3 text-xs uppercase tracking-wide text-slate-400">
-              və ya
+              {t.common.or}
             </span>
           </div>
         </div>

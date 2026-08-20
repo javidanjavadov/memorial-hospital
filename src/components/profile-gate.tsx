@@ -3,6 +3,7 @@
 import { useEffect } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import { Loader2 } from "lucide-react"
+import { useT } from "@/i18n/client"
 import { useCurrentUser } from "@/lib/use-current-user"
 import { missingProfileFields } from "@/lib/profile-complete"
 
@@ -30,6 +31,7 @@ const ALLOWED = ["/profil", "/giris", "/qeydiyyat", "/siyaset", "/sertler"]
  * behaves, and the page can be reloaded without losing the way out.
  */
 export default function ProfileGate({ children }: { children: React.ReactNode }) {
+  const t = useT()
   const { user, isLoading } = useCurrentUser()
   const pathname = usePathname()
   const router = useRouter()
@@ -52,7 +54,7 @@ export default function ProfileGate({ children }: { children: React.ReactNode })
       >
         <Loader2 className="h-6 w-6 animate-spin text-primary" aria-hidden="true" />
         <span className="text-[var(--ink-muted)]">
-          Profil məlumatları tələb olunur...
+          {t.ui.profileGateLoading}
         </span>
       </div>
     )

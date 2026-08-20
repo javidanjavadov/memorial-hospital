@@ -22,6 +22,17 @@ const ROOTS = ["src/app", "src/components"]
 const AZERBAIJANI = /[əƏ]|[ğıışşçöüĞİŞÇÖÜ]/u
 
 /*
+ * Azerbaijani words that happen to be spelled with plain ASCII.
+ *
+ * "Yadda Saxla" on the save button carried no diacritic, so the letter test
+ * above read it as Latin and let it through — it stood in Azerbaijani on the
+ * Russian profile page until a patient pointed at it. Letters alone are not
+ * enough; these words are.
+ */
+const AZERBAIJANI_ASCII =
+  /(yadda|saxla|saxlanilir|simvol|soyad|cins|xidmet|hekim|qebul|netice|sifaris|imtina|legv|daxil|cixis|gonder|axtar|redakte|melumat|butun|secin|yukle|bagla|davam|duzelis|nomre|kecid|elave|tesdiq|giris|odenis|filial|sehife)/iu
+
+/*
  * Not text a patient reads.
  *
  * Locale tags and font names are configuration; the data files hold the
@@ -31,6 +42,13 @@ const ALLOWED = [
   /az-AZ|az_AZ|ru_RU|en_US|tr_TR/,
   /Azərbaycanca|Türkçe/, // the language switcher names each language in itself
 ]
+
+/*
+ * The root-layout error boundary replaces the provider that carries the
+ * dictionary, so it is the one file that has to hold its own text — in all
+ * four languages, chosen from the locale cookie.
+ */
+const EXEMPT = ["global-error.tsx"]
 
 const files = (dir: string): string[] => {
   const entries = readdirSync(dir)
@@ -54,13 +72,14 @@ const offendersIn = (source: string) => {
     /"([^"\n]{3,})"/g,
     /'([^'\n]{3,})'/g,
     /`([^`]{3,})`/g,
-    />([^<>{}\n]{3,})</g,
+    />([^<>{}]{3,})</g,
   ]
 
   for (const pattern of patterns) {
     for (const match of code.matchAll(pattern)) {
       const text = match[1].trim()
-      if (!text || !AZERBAIJANI.test(text)) continue
+      if (!text) continue
+      if (!AZERBAIJANI.test(text) && !AZERBAIJANI_ASCII.test(text)) continue
       if (ALLOWED.some((allowed) => allowed.test(text))) continue
       found.push(text.slice(0, 70))
     }
@@ -71,7 +90,9 @@ const offendersIn = (source: string) => {
 
 describe("no hardcoded Azerbaijani in components", () => {
   const sources = ROOTS.flatMap(files).filter(
-    (path) => !path.endsWith(".test.ts")
+    (path) =>
+      !path.endsWith(".test.ts") &&
+      !EXEMPT.some((name) => path.endsWith(name))
   )
 
   it("scans every component and page", () => {

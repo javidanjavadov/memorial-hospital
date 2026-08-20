@@ -72,7 +72,7 @@ export default function PatientHeader({ className }: { className?: string }) {
           </div>
           {user.finCode && (
             <div className="flex gap-1">
-              <dt>FIN:</dt>
+              <dt>{t.profile.finCode}:</dt>
               <dd className="font-mono font-medium text-[var(--ink)]">
                 {user.finCode}
               </dd>

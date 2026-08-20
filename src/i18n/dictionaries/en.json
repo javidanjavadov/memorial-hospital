@@ -42,7 +42,13 @@
     "doctorCount": {
       "one": "{count} doctor",
       "other": "{count} doctors"
-    }
+    },
+    "all": "All",
+    "or": "or",
+    "callAction": "Call",
+    "directions": "Directions",
+    "tryAgain": "Try again",
+    "home": "Home"
   },
   "basket": {
     "title": "My basket",
@@ -144,7 +150,12 @@
     "saveFailedFields": "Details could not be saved. Please check the fields.",
     "profileSections": "Profile sections",
     "phone": "Phone",
-    "confirmCancel": "Are you sure you want to cancel the {label} appointment?"
+    "confirmCancel": "Are you sure you want to cancel the {label} appointment?",
+    "ordersLocalNote": "Orders are currently saved only in this browser and are not sent to the clinic automatically. To confirm, please call",
+    "ordersLocalNoteEnd": ".",
+    "save": "Save",
+    "email": "Email",
+    "finCodeHint": "7 characters"
   },
   "doctors": {
     "allDoctors": "All doctors",
@@ -209,7 +220,8 @@
     "emptyTitle": "No results yet",
     "emptyBody": "Your test results will appear here once they are ready. Call our contact centre if you have any questions.",
     "loadFailed": "Results could not be loaded. Please try again.",
-    "disclaimer": "Results are not a diagnosis. Review them together with your doctor."
+    "disclaimer": "Results are not a diagnosis. Review them together with your doctor.",
+    "privacyNote": "Your results are medical data. Enter them yourself only, and close the browser after using a shared computer."
   },
   "home": {
     "heroTitle": "professional care",
@@ -310,7 +322,7 @@
     "selectBranch": "Select a branch",
     "selectDate": "Select a date",
     "selectTime": "Select a time",
-    "noFreeDoctor": "There are no available doctors in the selected department and branch right now. Choose a different branch, or continue without selecting a doctor.",
+    "noFreeDoctor": "No doctor is currently free in the selected department and branch. Choose another branch — or continue without choosing a doctor, and the registry will assign a suitable one.",
     "slotsUnavailable": "Booked and past time slots cannot be selected.",
     "pickDateFirst": "Please select a date first.",
     "complaint": "Complaint / Notes",
@@ -368,7 +380,10 @@
     "cardNoRequired": "Enter your STRIX / card number",
     "cardNoFormat": "Format: 00000000-0000000000",
     "requestRegistered": "Your request has been registered. To confirm it,",
-    "contactSubject": "Website enquiry — {name}"
+    "contactSubject": "Website enquiry — {name}",
+    "noteLabel": "Note:",
+    "manualConfirm": "This request is not confirmed automatically. A registry operator will call the number you gave and confirm the appointment.",
+    "date": "Date"
   },
   "data": {
     "departments": {
@@ -519,7 +534,7 @@
     ],
     "contact": {
       "workingHours": "Mon – Sat: 08:30 – 18:00",
-      "address": "Zaur Nudiraliyev 79, Nərimanov district, Baku"
+      "address": "Zaur Nudiraliyev 79, Narimanov district, Baku"
     },
     "accreditations": {
       "IAS": {
@@ -802,7 +817,17 @@
     "needHelp": "Need help?",
     "language": "Language",
     "mobileMenu": "Mobile menu",
-    "categories": "Categories"
+    "categories": "Categories",
+    "errorTitle": "An unexpected error occurred",
+    "errorBody": "Something went wrong while loading the page. Please try again.",
+    "globalErrorTitle": "The site is temporarily unavailable",
+    "mapLoading": "Loading the map...",
+    "profileGateLoading": "Profile details required...",
+    "mailOpened": "The message opened in your email program — finish sending it there.",
+    "mailFallback": "If the program did not open, write to us directly:",
+    "orCall": "or call",
+    "emergencyCall": "In an emergency, call us:",
+    "errorCode": "Error code"
   },
   "meta": {
     "contact": {

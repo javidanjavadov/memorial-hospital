@@ -528,16 +528,13 @@ function QebulContent() {
                           /* Used to render nothing at all, which looked like the
                              page was broken. */
                           <p className="text-sm text-slate-500 bg-slate-50 border border-slate-200 rounded-lg p-3">
-                            Seçilmiş şöbə və filial üzrə hazırda sərbəst həkim
-                            yoxdur. Başqa filial seçin — və ya həkim seçmədən
-                            davam edin, reqistratura sizə uyğun həkim təyin
-                            edəcək.
+                            {t.booking.noFreeDoctor}
                           </p>
                         )}
                       </fieldset>
                     )}
 
-                    <Field label="Tarix" required error={errors.date?.message}>
+                    <Field label={t.booking.date} required error={errors.date?.message}>
                       {(field) => (
                         <Input
                           {...field}
@@ -702,9 +699,8 @@ function QebulContent() {
 
                   <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
                     <p className="text-sm text-blue-800">
-                      <strong>Qeyd:</strong> Bu sorğu avtomatik təsdiqlənmir.
-                      Reqistratura operatoru göstərdiyiniz nömrəyə zəng edərək
-                      qəbulu təsdiqləyəcək.
+                      <strong>{t.booking.noteLabel}</strong>{" "}
+                      {t.booking.manualConfirm}
                     </p>
                   </div>
                 </CardContent>
@@ -715,13 +711,13 @@ function QebulContent() {
               {step > 1 && (
                 <Button type="button" variant="outline" onClick={prevStep}>
                   <ArrowLeft className="w-4 h-4" aria-hidden="true" />
-                  Geri
+                  {t.common.back}
                 </Button>
               )}
               <div className="ml-auto">
                 {step < 3 ? (
                   <Button type="button" variant="cta" onClick={nextStep}>
-                    Davam Et
+                    {t.common.continue}
                     <ArrowRight className="w-4 h-4" aria-hidden="true" />
                   </Button>
                 ) : user && missing.length > 0 ? (

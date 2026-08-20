@@ -33,7 +33,13 @@
     "currency": "AZN",
     "serviceCount": "{count} xidmət",
     "categoryCount": "{count} kateqoriya",
-    "doctorCount": "{count} həkim"
+    "doctorCount": "{count} həkim",
+    "all": "Hamısı",
+    "or": "və ya",
+    "callAction": "Zəng et",
+    "directions": "Yol göstər",
+    "tryAgain": "Yenidən cəhd et",
+    "home": "Ana Səhifə"
   },
   "basket": {
     "title": "Səbətim",
@@ -135,7 +141,12 @@
     "saveFailedFields": "Məlumatlar yadda saxlanılmadı. Sahələri yoxlayın.",
     "profileSections": "Profil bölmələri",
     "phone": "Telefon",
-    "confirmCancel": "{label} qəbulunu ləğv etmək istədiyinizə əminsiniz?"
+    "confirmCancel": "{label} qəbulunu ləğv etmək istədiyinizə əminsiniz?",
+    "ordersLocalNote": "Sifarişlər hazırda yalnız bu brauzerdə saxlanılır və klinikaya avtomatik göndərilmir. Təsdiq üçün",
+    "ordersLocalNoteEnd": "nömrəsi ilə əlaqə saxlayın.",
+    "save": "Yadda saxla",
+    "email": "Email",
+    "finCodeHint": "7 simvol"
   },
   "doctors": {
     "allDoctors": "Bütün həkimlər",
@@ -197,7 +208,8 @@
     "emptyTitle": "Hələ nəticəniz yoxdur",
     "emptyBody": "Analiz cavabları hazır olduqda burada görünəcək. Sualınız varsa çağrı mərkəzimizlə əlaqə saxlayın.",
     "loadFailed": "Nəticələr yüklənmədi. Yenidən cəhd edin.",
-    "disclaimer": "Nəticələr diaqnoz deyil. Onları həkiminizlə birlikdə dəyərləndirin."
+    "disclaimer": "Nəticələr diaqnoz deyil. Onları həkiminizlə birlikdə dəyərləndirin.",
+    "privacyNote": "Nəticələriniz tibbi məlumatdır. Bu məlumatları yalnız özünüz daxil edin və ortaq kompüterdə istifadə etdikdən sonra brauzeri bağlayın."
   },
   "home": {
     "heroTitle": "peşəkar qayğı",
@@ -298,7 +310,7 @@
     "selectBranch": "Filial seçin",
     "selectDate": "Tarix seçin",
     "selectTime": "Vaxt seçin",
-    "noFreeDoctor": "Seçilmiş şöbə və filial üzrə hazırda sərbəst həkim yoxdur. Başqa filial seçin — və ya həkim seçmədən davam edin.",
+    "noFreeDoctor": "Seçilmiş şöbə və filial üzrə hazırda sərbəst həkim yoxdur. Başqa filial seçin — və ya həkim seçmədən davam edin, reqistratura sizə uyğun həkim təyin edəcək.",
     "slotsUnavailable": "Dolu və keçmiş vaxtlar seçilə bilməz.",
     "pickDateFirst": "Əvvəlcə tarix seçin.",
     "complaint": "Şikayət / Qeyd",
@@ -356,7 +368,10 @@
     "cardNoRequired": "STRIX / KART NO daxil edin",
     "cardNoFormat": "Format: 00000000-0000000000",
     "requestRegistered": "Sorğunuz qeydiyyata alındı. Təsdiq üçün",
-    "contactSubject": "Sayt müraciəti — {name}"
+    "contactSubject": "Sayt müraciəti — {name}",
+    "noteLabel": "Qeyd:",
+    "manualConfirm": "Bu sorğu avtomatik təsdiqlənmir. Reqistratura operatoru göstərdiyiniz nömrəyə zəng edərək qəbulu təsdiqləyəcək.",
+    "date": "Tarix"
   },
   "data": {
     "departments": {},
@@ -655,7 +670,17 @@
     "needHelp": "Kömək lazımdır?",
     "language": "Dil",
     "mobileMenu": "Mobil menyu",
-    "categories": "Kateqoriyalar"
+    "categories": "Kateqoriyalar",
+    "errorTitle": "Gözlənilməz xəta baş verdi",
+    "errorBody": "Səhifəni yükləyərkən problem yarandı. Zəhmət olmasa yenidən cəhd edin.",
+    "globalErrorTitle": "Sayt müvəqqəti əlçatmazdır",
+    "mapLoading": "Xəritə yüklənir...",
+    "profileGateLoading": "Profil məlumatları tələb olunur...",
+    "mailOpened": "E-poçt proqramınızda mesaj açıldı — göndərməni orada tamamlayın.",
+    "mailFallback": "Proqram açılmadısa, bizə birbaşa yazın:",
+    "orCall": "və ya zəng edin",
+    "emergencyCall": "Təcili hallarda bizə zəng edin:",
+    "errorCode": "Xəta kodu"
   },
   "meta": {
     "contact": {
