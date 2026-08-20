@@ -630,7 +630,10 @@
     "signInUnavailable": "Giriş hazırda əlçatan deyil. Zəhmət olmasa çağrı mərkəzimizlə əlaqə saxlayın.",
     "accountQuestion": "Hesabınızla bağlı sualınız var?",
     "haveAccount": "Artıq hesabınız var?",
-    "needHelp": "Kömək lazımdır?"
+    "needHelp": "Kömək lazımdır?",
+    "language": "Dil",
+    "mobileMenu": "Mobil menyu",
+    "categories": "Kateqoriyalar"
   },
   "meta": {
     "contact": {

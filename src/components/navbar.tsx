@@ -359,7 +359,7 @@ export default function Navbar() {
         )}
       >
         <div className="container mx-auto px-4 py-4 bg-white border-t border-teal-100">
-          <nav className="flex flex-col gap-2" aria-label="Mobil menyu">
+          <nav className="flex flex-col gap-2" aria-label={t.ui.mobileMenu}>
             {navItems.map((item, i) => (
               <button
                 key={item.href}

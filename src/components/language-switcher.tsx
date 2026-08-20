@@ -3,7 +3,7 @@
 import { useRef, useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { Check, Globe, Loader2 } from "lucide-react"
-import { useLocale } from "@/i18n/client"
+import { useLocale, useT } from "@/i18n/client"
 import {
   locales,
   localeNames,
@@ -27,6 +27,7 @@ export default function LanguageSwitcher({
   overHero?: boolean
   className?: string
 }) {
+  const t = useT()
   const current = useLocale()
   const router = useRouter()
   const [open, setOpen] = useState(false)
@@ -58,7 +59,7 @@ export default function LanguageSwitcher({
         }}
         aria-expanded={open}
         aria-haspopup="menu"
-        aria-label={`Dil: ${localeNames[current]}`}
+        aria-label={`${t.ui.language}: ${localeNames[current]}`}
         className={cn(
           "inline-flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm font-medium transition-colors",
           overHero

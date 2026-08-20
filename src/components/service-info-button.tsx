@@ -37,7 +37,7 @@ export default function ServiceInfoButton({ service }: { service: ServiceInfo })
       <button
         type="button"
         onClick={() => dialogRef.current?.showModal()}
-        aria-label={`${service.name} haqqında ətraflı`}
+        aria-label={t.f(t.catalog.detailsAbout, { name: service.name })}
         className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[var(--ink-muted)] transition-colors hover:bg-primary/10 hover:text-primary"
       >
         <Info className="h-4 w-4" aria-hidden="true" />

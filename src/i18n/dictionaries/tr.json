@@ -781,7 +781,10 @@
     "signInUnavailable": "Giriş şu anda kullanılamıyor. Lütfen çağrı merkezimizle iletişime geçin.",
     "accountQuestion": "Hesabınızla ilgili sorunuz mu var?",
     "haveAccount": "Zaten hesabınız var mı?",
-    "needHelp": "Yardıma mı ihtiyacınız var?"
+    "needHelp": "Yardıma mı ihtiyacınız var?",
+    "language": "Dil",
+    "mobileMenu": "Mobil menü",
+    "categories": "Kategoriler"
   },
   "meta": {
     "contact": {

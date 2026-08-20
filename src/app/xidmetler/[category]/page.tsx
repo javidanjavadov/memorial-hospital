@@ -118,7 +118,7 @@ export default async function CategoryPage({ params }: Props) {
           <h2 className="mb-3 text-sm font-semibold text-[var(--ink)]">
             {localizeGroup(group ?? { slug: "", name: t.nav.services, blurb: "" }, t.data).name}
           </h2>
-          <nav aria-label="Kateqoriyalar">
+          <nav aria-label={t.ui.categories}>
             <ul className="space-y-1">
               {siblings.map((sibling) => {
                 const active = sibling.slug === slug

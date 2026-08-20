@@ -29,8 +29,13 @@ const BASE = process.argv[2] ?? "http://localhost:3000"
  * quietly become a translation failure.
  */
 const roster = await readFile(new URL("../src/data/index.ts", import.meta.url), "utf8")
+/*
+ * Doctors only. Matching `id` followed by `name` also caught departments,
+ * whose ids are not routes — the scan then reported 404s as translation
+ * failures, which is a different problem wearing the same badge.
+ */
 const DOCTOR_PAGES = [
-  ...roster.matchAll(/id: "([a-z0-9-]+)",\s+name: "/g),
+  ...roster.matchAll(/id: "([a-z0-9-]+)",\s+name: "[^"]+",\s+specialty:/g),
 ].map((m) => `/hekimler/${m[1]}`)
 const NAMES = [...roster.matchAll(/name: "([^"]+)"/g)].map((m) => m[1])
 const NAME_WORDS = new Set(NAMES.flatMap((name) => name.split(/[\s,.-]+/)).filter(Boolean))
@@ -50,13 +55,35 @@ const isCode = (word) => /^[A-ZÇĞİÖŞÜ0-9/+().,-]+$/u.test(word)
 const catalogue = JSON.parse(
   await readFile(new URL("../src/data/catalog.json", import.meta.url), "utf8")
 )
+/* Split on the same separators the page check uses, hyphens included: the
+   source writes "Anti-Müllerian", the page shows "Müllerian", and the eponym
+   is the same word either way. */
 const SOURCE_TOKENS = new Set(
   catalogue.items
-    .flatMap((item) => `${item.name} ${item.description}`.split(/[\s,;:()]+/u))
+    .flatMap((item) =>
+      `${item.name} ${item.description}`.split(/[\s,;:.!?()[\]«»"'—–/-]+/u)
+    )
     .filter(Boolean)
 )
 
+/**
+ * Medical eponyms: people's surnames that are part of the test's name in every
+ * language, diacritics and all. Checked word by word rather than added to
+ * PROPER_NOUNS, which would excuse a whole paragraph for containing one.
+ */
+const EPONYMS = new Set([
+  "Müller",
+  "Müllerian",
+  "Mülleri",
+  "Sjögren",
+  "Schüller",
+  "Löwenstein",
+  "Bence",
+  "Jones",
+])
+
 const isKeptOnPurpose = (word) =>
+  EPONYMS.has(word) ||
   SOURCE_TOKENS.has(word) && /^[A-ZÇĞİÖŞÜ]/u.test(word) && !/[əƏ]/u.test(word)
 
 /*
@@ -112,11 +139,30 @@ const FOREIGN = {
   tr: [/[əƏ]/u, /[А-Яа-яЁё]/u],
 }
 
-/** Text nodes only: attributes and scripts are not what a patient reads. */
+/**
+ * Text nodes and the attributes a person actually receives.
+ *
+ * aria-label, title, placeholder and alt are read aloud by a screen reader or
+ * shown on hover, so a missed translation there is a missed translation — it
+ * is simply one only some people meet.
+ */
+const SPOKEN_ATTRIBUTES = ["aria-label", "title", "placeholder", "alt"]
+
 function visibleText(html) {
   const $ = load(html)
   $("script, style, noscript").remove()
   const out = []
+
+  $("body")
+    .find("*")
+    .addBack()
+    .each((_, element) => {
+      for (const attribute of SPOKEN_ATTRIBUTES) {
+        const value = $(element).attr(attribute)
+        if (value && value.trim()) out.push(value.trim())
+      }
+    })
+
   $("body")
     .find("*")
     .addBack()
@@ -127,7 +173,60 @@ function visibleText(html) {
         if (value) out.push(value)
       }
     })
+
   return out
+}
+
+/**
+ * The catalogue files the picker fetches after the page has loaded.
+ *
+ * They never appear in the server HTML, so a page scan alone would pass while
+ * every card on /xidmetler rendered in the wrong language.
+ */
+async function checkCatalogueFiles(locale) {
+  const failures = []
+  const index = JSON.parse(
+    await readFile(
+      new URL(`../public/catalog/${locale}/index.json`, import.meta.url),
+      "utf8"
+    )
+  )
+
+  const strings = []
+  for (const group of index) {
+    strings.push(group.name, group.blurb)
+    for (const category of group.categories) strings.push(category.name)
+  }
+
+  for (const group of index) {
+    for (const category of group.categories) {
+      const items = JSON.parse(
+        await readFile(
+          new URL(
+            `../public/catalog/${locale}/${category.slug}.json`,
+            import.meta.url
+          ),
+          "utf8"
+        )
+      )
+      for (const item of items) {
+        strings.push(item.name, item.description, item.prep, item.categoryName)
+      }
+    }
+  }
+
+  for (const text of strings) {
+    if (!text) continue
+    const foreign = foreignWordsIn(text, locale)
+    if (foreign.length > 0) {
+      failures.push({
+        path: `catalog/${locale}`,
+        text: `${foreign.join(" ")}   ‹ ${text.slice(0, 60)}`,
+      })
+    }
+  }
+
+  return failures
 }
 
 /**
@@ -177,7 +276,10 @@ async function checkLocale(locale) {
 
 let total = 0
 for (const locale of LOCALES) {
-  const failures = await checkLocale(locale)
+  const failures = [
+    ...(await checkLocale(locale)),
+    ...(await checkCatalogueFiles(locale)),
+  ]
   total += failures.length
   console.log(
     `${locale}: ${failures.length === 0 ? "clean" : `${failures.length} foreign strings`}`

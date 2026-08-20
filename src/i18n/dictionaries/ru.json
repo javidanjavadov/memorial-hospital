@@ -827,7 +827,10 @@
     "signInUnavailable": "Вход сейчас недоступен. Пожалуйста, обратитесь в наш колл-центр.",
     "accountQuestion": "Есть вопрос по вашему аккаунту?",
     "haveAccount": "Уже есть аккаунт?",
-    "needHelp": "Нужна помощь?"
+    "needHelp": "Нужна помощь?",
+    "language": "Язык",
+    "mobileMenu": "Мобильное меню",
+    "categories": "Категории"
   },
   "meta": {
     "contact": {

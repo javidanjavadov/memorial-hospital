@@ -2015,13 +2015,8 @@
    "en": "Creatine kinase (creatine phosphokinase, CPK)",
    "tr": "Kreatin Kinaz (Kreatinfosfokinaz, KFK)"
   },
-  "Kreatinikinaza-МВ": {
-   "ru": "Креатинкиназа-МВ",
-   "en": "Creatine kinase-MB",
-   "tr": "Kreatinkinaz-MB"
-  },
   "G6PD (Qlükoza-6-fosfat dehidrogenaza)  kəmiyyətcə": {
-   "ru": "G6PD (глюкозо-6-фосфатдегидрogeназа), количественно",
+   "ru": "G6PD (глюкозо-6-фосфатдегидрогеназа), количественно",
    "en": "G6PD (Glucose-6-phosphate dehydrogenase), quantitative",
    "tr": "G6PD (Glukoz-6-fosfat dehidrogenaz), kantitatif"
   },
@@ -2345,11 +2340,6 @@
    "en": "Sodium (Na+)",
    "tr": "Sodyum (Na+)"
   },
-  "Kalium (К+)": {
-   "ru": "Калий (K+)",
-   "en": "Potassium (K+)",
-   "tr": "Potasyum (K+)"
-  },
   "Xlor (Сl-)": {
    "ru": "Хлор (Cl-)",
    "en": "Chloride (Cl-)",
@@ -2440,11 +2430,6 @@
    "en": "Insulin resistance index (HOMA-IR)",
    "tr": "İnsülin direnci indeksi (HOMA-IR)"
   },
-  "С-Peptid": {
-   "ru": "С-пептид",
-   "en": "C-Peptide",
-   "tr": "C-Peptid"
-  },
   "Leptin  hormonu": {
    "ru": "Гормон лептин",
    "en": "Leptin hormone",
@@ -2509,11 +2494,6 @@
    "ru": "Прогестерон",
    "en": "Progesterone",
    "tr": "Progesteron"
-  },
-  "17-ОН progesteron": {
-   "ru": "17-ОН прогестерон",
-   "en": "17-OH progesterone",
-   "tr": "17-OH progesteron"
   },
   "Dehidroepiandrosteronsulfat (DHEA-S)": {
    "ru": "Дегидроэпиандростерон-сульфат (ДГЭА-С)",
@@ -4913,7 +4893,7 @@
   "Anti-Toxoplasma IgG avidlik indeksi": {
    "ru": "Индекс авидности Anti-Toxoplasma IgG",
    "en": "Anti-Toxoplasma IgG avidity index",
-   "tr": "Anti-Toxoplasma IgG aviditе indeksi"
+   "tr": "Anti-Toxoplasma IgG avidite indeksi"
   },
   "Anti-Rubella IgM": {
    "ru": "Anti-Rubella IgM",
@@ -4928,7 +4908,7 @@
   "Anti-Rubella IgG avidlik indeksi": {
    "ru": "Индекс авидности Anti-Rubella IgG",
    "en": "Anti-Rubella IgG avidity index",
-   "tr": "Anti-Rubella IgG aviditе indeksi"
+   "tr": "Anti-Rubella IgG avidite indeksi"
   },
   "Anti-CMV IgM": {
    "ru": "Anti-CMV IgM",
@@ -4943,7 +4923,7 @@
   "Anti-CMV IgG avidlik indeksi": {
    "ru": "Индекс авидности Anti-CMV IgG",
    "en": "Anti-CMV IgG avidity index",
-   "tr": "Anti-CMV IgG aviditе indeksi"
+   "tr": "Anti-CMV IgG avidite indeksi"
   },
   "Anti-HSV I IgM": {
    "ru": "Anti-HSV I IgM",
@@ -4968,7 +4948,7 @@
   "Anti-HSV II IgG avidlik indeksi": {
    "ru": "Индекс авидности Anti-HSV II IgG",
    "en": "Anti-HSV II IgG avidity index",
-   "tr": "Anti-HSV II IgG aviditе indeksi"
+   "tr": "Anti-HSV II IgG avidite indeksi"
   },
   "Ascaris lumbricoides IgG": {
    "ru": "Ascaris lumbricoides IgG",
@@ -5440,11 +5420,6 @@
    "en": "Folic acid, Vitamin B9, Folate",
    "tr": "Fol asidi, Vitamin B 9, Folik asit"
   },
-  "Vitamin В12 (Kobalamin)": {
-   "ru": "Витамин B12 (Кобаламин)",
-   "en": "Vitamin B12 (Cobalamin)",
-   "tr": "Vitamin B12 (Kobalamin)"
-  },
   "Metilmalon turşusu (Methylmalonic acid)": {
    "ru": "Метилмалоновая кислота (Methylmalonic acid)",
    "en": "Methylmalonic acid (MMA)",
@@ -5659,6 +5634,31 @@
    "ru": "Гомоцистеин (HCYS)",
    "en": "Homocysteine (HCYS)",
    "tr": "Homocystein (HCYS)"
+  },
+  "Kreatinikinaza-MB": {
+   "ru": "Креатинкиназа-МВ",
+   "en": "Creatine kinase-MB",
+   "tr": "Kreatinkinaz-MB"
+  },
+  "Kalium (K+)": {
+   "ru": "Калий (K+)",
+   "en": "Potassium (K+)",
+   "tr": "Potasyum (K+)"
+  },
+  "C-Peptid": {
+   "ru": "С-пептид",
+   "en": "C-Peptide",
+   "tr": "C-Peptid"
+  },
+  "17-OH progesteron": {
+   "ru": "17-ОН прогестерон",
+   "en": "17-OH progesterone",
+   "tr": "17-OH progesteron"
+  },
+  "Vitamin B12 (Kobalamin)": {
+   "ru": "Витамин B12 (Кобаламин)",
+   "en": "Vitamin B12 (Cobalamin)",
+   "tr": "Vitamin B12 (Kobalamin)"
   }
  },
  "descriptions": {
@@ -6438,7 +6438,7 @@
    "tr": "Faktör XIII, kanın pıhtılaşmasında ana rol oynayan heterotetramer proteindir. İşlevi, konjenital ve edinsel eksikliği, klinik önemi ve plazmadaki aktivitesi hakkında tam bilgi."
   },
   "Antitrombin III (ATIII) qan laxtalanmasını tənzimləyən əsas qlikoproteindir. Analiz hazırlığı, normal səviyyələr, genetik və qazanılmış çatışmazlıq, tromboz riski və nəticə dəyərləndirməsi haqqında tam məlumat.": {
-   "ru": "Антитромбин III (АТIII) — основной гликопротеин, регулирующий свертывание крови. Полная информация о подготовке к анализу, нормальных уровнях, врожденном и приобретенном дефиците, риске тромбоза и оценке результатов.",
+   "ru": "Антитромбин III (AT III) — основной гликопротеин, регулирующий свертывание крови. Полная информация о подготовке к анализу, нормальных уровнях, врожденном и приобретенном дефиците, риске тромбоза и оценке результатов.",
    "en": "Antithrombin III (ATIII) is the main glycoprotein that regulates blood clotting. Complete information on test preparation, normal levels, congenital and acquired deficiency, thrombosis risk, and result evaluation.",
    "tr": "Antitrombin III (ATIII) kan pıhtılaşmasını düzenleyen ana glikoproteindir. Analiz hazırlığı, normal düzeyler, konjenital ve edinsel eksiklik, tromboz riski ve sonuç değerlendirmesi hakkında tam bilgi."
   },
@@ -7450,7 +7450,7 @@
   "Anti-Toxoplasma IgG avidlik indeksi infeksiyanın yeni və ya köhnə olduğunu müəyyən etməyə kömək edir. Xüsusilə hamiləlik dövründə kritik diaqnostik əhəmiyyət daşıyır.": {
    "ru": "Индекс авидности Anti-Toxoplasma IgG помогает определить, является ли инфекция новой или перенесенной ранее. Имеет критическое диагностическое значение, особенно во время беременности.",
    "en": "The Anti-Toxoplasma IgG avidity index helps determine whether the infection is new or occurred in the past. It has critical diagnostic significance, especially during pregnancy.",
-   "tr": "Anti-Toxoplasma IgG aviditе indeksi enfeksiyonun yeni mi yoksa eski mi olduğunu belirlemeye yardımcı olur. Özellikle gebelik döneminde kritik tanısal önem taşır."
+   "tr": "Anti-Toxoplasma IgG avidite indeksi enfeksiyonun yeni mi yoksa eski mi olduğunu belirlemeye yardımcı olur. Özellikle gebelik döneminde kritik tanısal önem taşır."
   },
   "Anti-Rubella IgM testi qızılca virusuna (rubella) yeni yoluxmanı göstərir. Hamiləlikdə bu test döl üçün riskin qiymətləndirilməsində kritik rol oynayır.": {
    "ru": "Тест Anti-Rubella IgM показывает новое заражение вирусом краснухи (rubella). При беременности этот тест играет критическую роль в оценке риска для плода.",
@@ -7465,7 +7465,7 @@
   "Anti-Rubella IgG avidlik indeksi rubella infeksiyasının yeni və ya keçmiş olduğunu müəyyən edir. Hamiləlikdə risk qiymətləndirilməsi və TORCH skrininqində istifadə olunur.": {
    "ru": "Индекс авидности Anti-Rubella IgG определяет, является ли инфекция краснухи новой или перенесенной ранее. Используется при беременности для оценки риска и в TORCH-скрининге.",
    "en": "The Anti-Rubella IgG avidity index determines whether the rubella infection is new or occurred in the past. It is used during pregnancy for risk assessment and in TORCH screening.",
-   "tr": "Anti-Rubella IgG aviditе indeksi rubella enfeksiyonunun yeni mi yoksa eski mi olduğunu belirler. Gebelikte risk değerlendirmesi ve TORCH taramasında kullanılır."
+   "tr": "Anti-Rubella IgG avidite indeksi rubella enfeksiyonunun yeni mi yoksa eski mi olduğunu belirler. Gebelikte risk değerlendirmesi ve TORCH taramasında kullanılır."
   },
   "Anti-CMV IgM testi Sitoomeqalovirus (CMV) infeksiyasının erkən və ya aktiv mərhələdə olduğunu göstərir. Hamiləlik zamanı döl üçün risk daşıya bilər.": {
    "ru": "Тест Anti-CMV IgM показывает, находится ли инфекция цитомегаловируса (CMV) в ранней или активной стадии. Во время беременности может представлять риск для плода.",
@@ -7480,7 +7480,7 @@
   "Anti-CMV IgG avidlik indeksi sitomeqalovirus infeksiyasının yeni və ya köhnə olduğunu müəyyən edir. Hamiləlikdə riskin qiymətləndirilməsi və TORCH skrininqində mühüm testdir.": {
    "ru": "Индекс авидности Anti-CMV IgG определяет, является ли инфекция цитомегаловирусом новой или перенесенной ранее. Важный тест при оценке риска беременности и в TORCH-скрининге.",
    "en": "The Anti-CMV IgG avidity index determines whether the cytomegalovirus infection is new or occurred in the past. It is an important test for assessing pregnancy risk and in TORCH screening.",
-   "tr": "Anti-CMV IgG aviditе indeksi sitomegalovirüs enfeksiyonunun yeni mi yoksa eski mi olduğunu belirler. Gebelikte risk değerlendirmesi ve TORCH taramasında önemli bir testtir."
+   "tr": "Anti-CMV IgG avidite indeksi sitomegalovirüs enfeksiyonunun yeni mi yoksa eski mi olduğunu belirler. Gebelikte risk değerlendirmesi ve TORCH taramasında önemli bir testtir."
   },
   "Anti-HSV I IgM testi Herpes Simplex Virus Tip 1-in (ağız ətrafı herpes) yeni və ya aktiv infeksiyasını göstərir. Hamiləlikdə və immun zəiflikdə əhəmiyyətlidir.": {
    "ru": "Тест Anti-HSV I IgM показывает новую или активную инфекцию вируса простого герпеса 1-го типа (герпес вокруг рта). Важен при беременности и ослабленном иммунитете.",
@@ -7505,7 +7505,7 @@
   "Anti-HSV II IgG avidlik indeksi Herpes Simplex Virus Tip 2 infeksiyasının yeni və ya köhnə olduğunu müəyyənləşdirməyə kömək edir. Hamiləlikdə kritik əhəmiyyət daşıyır.": {
    "ru": "Индекс авидности Anti-HSV II IgG помогает определить, является ли инфекция вируса простого герпеса 2-го типа новой или перенесенной ранее. Имеет критическое значение при беременности.",
    "en": "The Anti-HSV II IgG avidity index helps determine whether the Herpes Simplex Virus type 2 infection is new or occurred in the past. It has critical significance during pregnancy.",
-   "tr": "Anti-HSV II IgG aviditе indeksi Herpes Simplex Virüs Tip 2 enfeksiyonunun yeni mi yoksa eski mi olduğunu belirlemeye yardımcı olur. Gebelikte kritik önem taşır."
+   "tr": "Anti-HSV II IgG avidite indeksi Herpes Simplex Virüs Tip 2 enfeksiyonunun yeni mi yoksa eski mi olduğunu belirlemeye yardımcı olur. Gebelikte kritik önem taşır."
   },
   "Ascaris lumbricoides IgG testi askaridoz infeksiyasına qarşı yaranmış immun cavabı göstərir. Parazitar infeksiyaların diaqnostikasında istifadə olunur.": {
    "ru": "Тест Ascaris lumbricoides IgG отражает иммунный ответ, сформировавшийся против аскаридоза. Используется в диагностике паразитарных инфекций.",

@@ -29,3 +29,12 @@ jobs:
       - run: npm run test
 
       - run: npm run build
+
+      # Starts the built site and loads every page in every language, failing
+      # on any word carrying a letter that language does not have. A missed
+      # translation is invisible to typecheck, lint and tests alike.
+      - name: Check every page renders in the selected language
+        run: |
+          npm run start &
+          npx wait-on http://localhost:3000 -t 60000
+          npm run check:locales

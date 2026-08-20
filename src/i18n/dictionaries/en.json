@@ -793,7 +793,10 @@
     "signInUnavailable": "Sign-in is currently unavailable. Please contact our call centre.",
     "accountQuestion": "A question about your account?",
     "haveAccount": "Already have an account?",
-    "needHelp": "Need help?"
+    "needHelp": "Need help?",
+    "language": "Language",
+    "mobileMenu": "Mobile menu",
+    "categories": "Categories"
   },
   "meta": {
     "contact": {
