@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { ArrowRight, ShoppingCart, Trash2, X } from "lucide-react"
+import { ArrowRight, ListPlus, ShoppingCart, Trash2, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { basketSubtotal, useBasketStore } from "@/lib/basket-store"
 import { shortServiceName } from "@/lib/service-name"
@@ -39,6 +39,33 @@ export default function FloatingBasket() {
   const [openedOn, setOpenedOn] = useState<string | null>(null)
   const open = openedOn === pathname
   const setOpen = (next: boolean) => setOpenedOn(next ? pathname : null)
+  /*
+   * The homepage hero is the same teal as the button, so over it the button
+   * disappeared into the photograph. Inverted while it is there, and switched
+   * on the same 90px threshold and 700ms easing as the header, so the two
+   * change together rather than one lagging the other.
+   */
+  const [overHero, setOverHero] = useState(pathname === "/")
+
+  useEffect(() => {
+    const onScroll = () => setOverHero(pathname === "/" && window.scrollY < 90)
+
+    /*
+     * The first reading is deferred a tick rather than taken inline: a reload
+     * partway down the page restores the scroll position, so the state has to
+     * be corrected once — but doing it synchronously in the effect body is the
+     * cascading-render pattern React warns about. A timer, not rAF, which is
+     * paused while the document is hidden.
+     */
+    const timer = setTimeout(onScroll)
+    window.addEventListener("scroll", onScroll, { passive: true })
+
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener("scroll", onScroll)
+    }
+  }, [pathname])
+
   const [pulse, setPulse] = useState(false)
   const previous = useRef(lines.length)
   const panelRef = useRef<HTMLDivElement>(null)
@@ -162,6 +189,17 @@ export default function FloatingBasket() {
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </Button>
+            {/*
+              The way back to the catalogue. Opened from a doctor page or the
+              homepage, the panel was a dead end: every route out of it led to
+              checkout, so adding a second test meant finding the menu again.
+            */}
+            <Button variant="outline" className="mt-2 w-full" asChild>
+              <Link href="/xidmetler#laboratory-catalog">
+                <ListPlus className="h-4 w-4" aria-hidden="true" />
+                Xidmət əlavə et
+              </Link>
+            </Button>
           </div>
         </div>
       )}
@@ -171,12 +209,18 @@ export default function FloatingBasket() {
         onClick={() => setOpen(!open)}
         aria-expanded={open}
         aria-label={`Səbətim — ${lines.length} xidmət, ${formatAzn(total)}`}
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-lg transition-transform duration-200 hover:scale-105 active:scale-95"
+        className={cn(
+          "flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-[background-color,color,transform] duration-700 ease-out hover:scale-105 active:scale-95",
+          overHero
+            ? "bg-white text-primary ring-1 ring-black/5"
+            : "bg-primary text-white"
+        )}
       >
         <ShoppingCart className="h-6 w-6" aria-hidden="true" />
         <span
           className={cn(
-            "absolute -right-0.5 -top-0.5 flex h-6 min-w-6 items-center justify-center rounded-full bg-[var(--ink)] px-1.5 text-xs font-bold text-white",
+            "absolute -right-0.5 -top-0.5 flex h-6 min-w-6 items-center justify-center rounded-full px-1.5 text-xs font-bold transition-colors duration-700 ease-out",
+            overHero ? "bg-primary text-white" : "bg-[var(--ink)] text-white",
             pulse && "badge-pop"
           )}
         >

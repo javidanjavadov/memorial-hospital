@@ -27,13 +27,22 @@ export default function Home() {
         RIQAS and QCMD are visible without scrolling on any monitor rather than
         at a height that happened to suit one.
 
-        `svh` not `vh` — on mobile `vh` measures the viewport with the browser
-        chrome hidden, so the block would run taller than the screen.
+        `dvh`, with `vh` behind a @supports for anything too old for it.
+
+        `svh` was wrong here: it is the viewport with the browser chrome
+        *shown*, so on a phone that had scrolled the bar away the block came up
+        short of the screen and the next section showed under it. `vh` alone is
+        the opposite mistake — it measures with the chrome hidden, so the bar
+        sat below the fold whenever the address bar was visible. `dvh` tracks
+        whichever is currently true.
 
         `min-h`, not a fixed height: on a short screen it grows instead of
         crushing the hero or clipping the bar.
       */}
-      <div id="hero" className="-mt-16 flex min-h-[100svh] flex-col md:-mt-20">
+      <div
+        id="hero"
+        className="-mt-16 flex min-h-[100vh] flex-col [@supports(min-height:100dvh)]:min-h-[100dvh] md:-mt-20"
+      >
         <HeroSection />
         <AccreditationBar />
       </div>

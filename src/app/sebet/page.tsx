@@ -9,6 +9,7 @@ import {
   CheckCircle,
   CreditCard,
   Home,
+  ListPlus,
   LogIn,
   Phone,
   ShoppingCart,
@@ -176,7 +177,13 @@ export default function SebetPage() {
                 )
               })}
 
-              <li>
+              <li className="flex flex-wrap items-center justify-between gap-3">
+                <Button variant="outline" size="sm" asChild>
+                  <Link href="/xidmetler#laboratory-catalog">
+                    <ListPlus className="h-4 w-4" aria-hidden="true" />
+                    Xidmət əlavə et
+                  </Link>
+                </Button>
                 <button
                   type="button"
                   onClick={clear}
