@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { Check, Plus } from "lucide-react"
 import { useBasketStore, type BasketLine } from "@/lib/basket-store"
 import { cn } from "@/lib/utils"
+import { useT } from "@/i18n/client"
 
 /**
  * Adds one test to the basket.
@@ -23,6 +24,7 @@ export default function AddToBasketButton({
   variant?: "label" | "icon"
 }) {
   const lines = useBasketStore((s) => s.lines)
+  const t = useT()
   const hasHydrated = useBasketStore((s) => s.hasHydrated)
   const add = useBasketStore((s) => s.add)
   const remove = useBasketStore((s) => s.remove)
@@ -59,9 +61,9 @@ export default function AddToBasketButton({
         }
       }}
       aria-pressed={added}
-      aria-label={
-        added ? `${line.name} səbətdən çıxar` : `${line.name} səbətə əlavə et`
-      }
+      aria-label={t.f(added ? t.basket.removeFrom : t.basket.addTo, {
+        name: line.name,
+      })}
       className={cn(
         "inline-flex shrink-0 items-center justify-center gap-1 border font-medium transition-colors duration-200 active:scale-95",
         variant === "icon"
@@ -83,12 +85,12 @@ export default function AddToBasketButton({
       ) : added ? (
         <>
           <Check className="h-3 w-3" aria-hidden="true" />
-          Səbətdə
+          {t.basket.inBasket}
         </>
       ) : (
         <>
           <Plus className="h-3 w-3" aria-hidden="true" />
-          Səbətə
+          {t.basket.addToBasket}
         </>
       )}
     </button>

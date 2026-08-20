@@ -3,6 +3,7 @@ import { cookies } from "next/headers"
 import az from "./dictionaries/az.json"
 import type { Phrase } from "./format"
 import { defaultLocale, isLocale, LOCALE_COOKIE, type Locale } from "./config"
+import { mergeWithFallback } from "./merge"
 
 type Source = typeof az
 
@@ -59,26 +60,4 @@ export async function getDictionary(locale?: Locale): Promise<Dictionary> {
   } catch {
     return az
   }
-}
-
-function mergeWithFallback(
-  fallback: Record<string, unknown>,
-  translated: Record<string, unknown>
-): Record<string, unknown> {
-  const out: Record<string, unknown> = {}
-
-  for (const [key, value] of Object.entries(fallback)) {
-    const other = translated?.[key]
-    out[key] =
-      value && typeof value === "object" && !Array.isArray(value)
-        ? mergeWithFallback(
-            value as Record<string, unknown>,
-            (other as Record<string, unknown>) ?? {}
-          )
-        : typeof other === "string" && other.trim()
-          ? other
-          : value
-  }
-
-  return out
 }

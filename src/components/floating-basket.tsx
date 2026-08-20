@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { basketSubtotal, useBasketStore } from "@/lib/basket-store"
 import { shortServiceName } from "@/lib/service-name"
 import { cn } from "@/lib/utils"
+import { useT } from "@/i18n/client"
 
 const formatAzn = (value: number) =>
   `${Number.isInteger(value) ? value : value.toFixed(2)} AZN`
@@ -24,6 +25,7 @@ const formatAzn = (value: number) =>
  * clutter, and there is nothing to look at inside it.
  */
 export default function FloatingBasket() {
+  const t = useT()
   const lines = useBasketStore((s) => s.lines)
   const hasHydrated = useBasketStore((s) => s.hasHydrated)
   const remove = useBasketStore((s) => s.remove)
@@ -120,23 +122,23 @@ export default function FloatingBasket() {
       {open && (
         <div
           role="dialog"
-          aria-label="Səbətim"
+          aria-label={t.basket.title}
           className="panel-in absolute bottom-16 right-0 w-[min(20rem,calc(100vw-2rem))] overflow-hidden rounded-xl border border-[var(--line)] bg-[var(--paper-raised)] shadow-2xl"
         >
           <div className="flex items-center justify-between border-b border-[var(--line)] px-4 py-3">
-            <h2 className="font-display text-[var(--ink)]">Səbətim</h2>
+            <h2 className="font-display text-[var(--ink)]">{t.basket.title}</h2>
             <div className="flex items-center gap-3">
               <button
                 type="button"
                 onClick={clear}
                 className="text-xs text-[var(--ink-muted)] underline-offset-4 hover:text-red-600 hover:underline"
               >
-                Təmizlə
+                {t.basket.clear}
               </button>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                aria-label="Bağla"
+                aria-label={t.common.close}
                 className="flex h-7 w-7 items-center justify-center rounded-md text-[var(--ink-muted)] hover:bg-[var(--secondary)]"
               >
                 <X className="h-4 w-4" aria-hidden="true" />
@@ -165,7 +167,7 @@ export default function FloatingBasket() {
                 <button
                   type="button"
                   onClick={() => remove(line.slug)}
-                  aria-label={`${line.name} səbətdən çıxar`}
+                  aria-label={t.f(t.basket.removeFrom, { name: line.name })}
                   className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-[var(--ink-muted)] transition-colors hover:bg-red-50 hover:text-red-600"
                 >
                   <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
@@ -177,7 +179,7 @@ export default function FloatingBasket() {
           <div className="border-t border-[var(--line)] px-4 py-4">
             <div className="flex items-baseline justify-between">
               <span className="text-sm text-[var(--ink-muted)]">
-                {lines.length} xidmət
+                {t.n(t.common.serviceCount, lines.length)}
               </span>
               <span className="font-display text-step-1 text-primary">
                 {formatAzn(total)}
@@ -185,7 +187,7 @@ export default function FloatingBasket() {
             </div>
             <Button variant="cta" className="mt-3 w-full" asChild>
               <Link href="/sebet">
-                Səbətə keç
+                {t.basket.goToBasket}
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </Button>
@@ -197,7 +199,7 @@ export default function FloatingBasket() {
             <Button variant="outline" className="mt-2 w-full" asChild>
               <Link href="/xidmetler#laboratory-catalog">
                 <ListPlus className="h-4 w-4" aria-hidden="true" />
-                Xidmət əlavə et
+                {t.basket.addService}
               </Link>
             </Button>
           </div>
@@ -208,7 +210,7 @@ export default function FloatingBasket() {
         type="button"
         onClick={() => setOpen(!open)}
         aria-expanded={open}
-        aria-label={`Səbətim — ${lines.length} xidmət, ${formatAzn(total)}`}
+        aria-label={`${t.basket.title} — ${t.n(t.common.serviceCount, lines.length)}, ${formatAzn(total)}`}
         className={cn(
           "flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-[background-color,color,transform] duration-700 ease-out hover:scale-105 active:scale-95",
           overHero

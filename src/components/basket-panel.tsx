@@ -9,6 +9,7 @@ import {
   useBasketStore,
 } from "@/lib/basket-store"
 import { shortServiceName } from "@/lib/service-name"
+import { useT } from "@/i18n/client"
 
 const formatAzn = (value: number) =>
   `${Number.isInteger(value) ? value : value.toFixed(2)} AZN`
@@ -22,6 +23,7 @@ const formatAzn = (value: number) =>
  * then holds, which keeps it clear of the header and lets the footer past.
  */
 export default function BasketPanel() {
+  const t = useT()
   const lines = useBasketStore((s) => s.lines)
   const homeCollection = useBasketStore((s) => s.homeCollection)
   const hasHydrated = useBasketStore((s) => s.hasHydrated)
@@ -40,14 +42,14 @@ export default function BasketPanel() {
      */
     <div className="sticky top-24 flex max-h-[calc(100dvh-8rem)] flex-col overflow-hidden rounded-xl border border-[var(--line)] bg-[var(--paper-raised)]">
       <div className="flex shrink-0 items-center justify-between border-b border-[var(--line)] px-4 py-3">
-        <h2 className="font-display text-[var(--ink)]">Səbətim</h2>
+        <h2 className="font-display text-[var(--ink)]">{t.basket.title}</h2>
         {hasHydrated && lines.length > 0 && (
           <button
             type="button"
             onClick={clear}
             className="text-xs text-[var(--ink-muted)] underline-offset-4 hover:text-red-600 hover:underline"
           >
-            Təmizlə
+            {t.basket.clear}
           </button>
         )}
       </div>
@@ -61,10 +63,10 @@ export default function BasketPanel() {
             <ShoppingCart className="h-6 w-6 text-[var(--ink-muted)]" />
           </span>
           <p className="text-sm font-medium text-[var(--ink)]">
-            Səbətiniz boşdur
+            {t.basket.empty}
           </p>
           <p className="mt-1 text-xs text-[var(--ink-muted)]">
-            Başlamaq üçün soldakı siyahıdan xidmət əlavə edin.
+            {t.basket.emptyHint}
           </p>
         </div>
       ) : (
@@ -98,7 +100,7 @@ export default function BasketPanel() {
                   <button
                     type="button"
                     onClick={() => remove(line.slug)}
-                    aria-label={`${line.name} səbətdən çıxar`}
+                    aria-label={t.f(t.basket.removeFrom, { name: line.name })}
                     className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-[var(--ink-muted)] transition-colors hover:bg-red-50 hover:text-red-600"
                   >
                     <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
@@ -111,7 +113,7 @@ export default function BasketPanel() {
           <div className="shrink-0 border-t border-[var(--line)] px-4 py-4">
             <div className="flex items-baseline justify-between">
               <span className="text-sm text-[var(--ink-muted)]">
-                {lines.length} xidmət
+                {t.n(t.common.serviceCount, lines.length)}
               </span>
               <span className="font-display text-step-1 text-primary">
                 {formatAzn(total)}
@@ -119,7 +121,7 @@ export default function BasketPanel() {
             </div>
             <Button variant="cta" className="mt-3 w-full" asChild>
               <Link href="/sebet">
-                Səbətə keç
+                {t.basket.goToBasket}
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </Button>

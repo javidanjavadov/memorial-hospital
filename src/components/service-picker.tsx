@@ -24,6 +24,7 @@ import { branches } from "@/data"
 import { ordersFor, useBasketStore, type BasketLine } from "@/lib/basket-store"
 import { shortServiceName } from "@/lib/service-name"
 import { useCurrentUser } from "@/lib/use-current-user"
+import { useT } from "@/i18n/client"
 import { cn } from "@/lib/utils"
 
 const DEFAULT_BRANCH = "nrimanov"
@@ -87,6 +88,7 @@ const promotedOf = (item: PickerItem) =>
  * render one category of eleven items.
  */
 export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
+  const t = useT()
   const [tab, setTab] = useState<"services" | "orders">("services")
   const [groupSlug, setGroupSlug] = useState(groups[0]?.slug ?? "")
   const [categorySlug, setCategorySlug] = useState(
@@ -191,13 +193,13 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
 
         <div
           role="tablist"
-          aria-label="Kataloq görünüşü"
+          aria-label={t.catalog.categoryView}
           className="mb-6 flex gap-6 border-b border-[var(--line)]"
         >
           {(
             [
-              { id: "services", label: "Xidmət seçimi", icon: ListPlus },
-              { id: "orders", label: "Keçmiş sifarişlər", icon: History },
+              { id: "services", label: t.catalog.serviceSelection, icon: ListPlus },
+              { id: "orders", label: t.catalog.pastOrders, icon: History },
             ] as const
           ).map((item) => (
             <button
@@ -257,8 +259,11 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
                         {/* The Populyar chip is not a category of its own —
                             counting it would claim one more than the strip
                             actually offers. */}
-                        {entry.categories.filter((c) => !c.featured).length}{" "}
-                        kateqoriya · {entry.count} xidmət
+                        {t.n(
+                          t.common.categoryCount,
+                          entry.categories.filter((c) => !c.featured).length
+                        )}{" "}
+                        · {t.n(t.common.serviceCount, entry.count)}
                       </span>
                     </span>
                   </button>
@@ -278,7 +283,7 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
             />
 
             <label className="relative mt-4 block">
-              <span className="sr-only">Xidmət axtar</span>
+              <span className="sr-only">{t.catalog.searchServices}</span>
               <Search
                 className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--ink-muted)]"
                 aria-hidden="true"
@@ -287,7 +292,7 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
                 type="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder={`${category?.name ?? "Kataloq"} içində axtar`}
+                placeholder={t.f(t.catalog.searchIn, { category: category?.name ?? t.nav.services })}
                 className="w-full rounded-lg border border-[var(--line)] bg-[var(--paper-raised)] py-2.5 pl-9 pr-3 text-sm text-[var(--ink)] outline-none focus:border-primary"
               />
             </label>
@@ -303,7 +308,7 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
                     aria-hidden="true"
                   />
                   <span className="text-sm text-[var(--ink-muted)]">
-                    Xidmətlər yüklənir...
+                    {t.catalog.loadingServices}
                   </span>
                 </div>
               ) : failed ? (
@@ -311,25 +316,27 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
                    so it still works when this one does not. */
                 <div className="rounded-xl border border-[var(--line)] p-8 text-center">
                   <p className="text-sm text-[var(--ink)]">
-                    Xidmətlər yüklənmədi.
+                    {t.catalog.loadFailed}
                   </p>
                   {!category?.featured && (
                     <Button variant="outline" className="mt-3" asChild>
                       <Link href={`/xidmetler/${categorySlug}`}>
-                        Kateqoriya səhifəsini aç
+                        {t.catalog.openCategoryPage}
                       </Link>
                     </Button>
                   )}
                 </div>
               ) : visible.length === 0 ? (
                 <p className="py-12 text-center text-sm text-[var(--ink-muted)]">
-                  “{query}” üzrə nəticə tapılmadı.
+                  {t.f(t.catalog.noResults, { query })}
                 </p>
               ) : (
                 <>
                   <p className="mb-3 text-xs text-[var(--ink-muted)]">
-                    {visible.length} xidmət · qiymətlər{" "}
-                    {branches.find((b) => b.id === DEFAULT_BRANCH)?.name} üzrə
+                    {t.n(t.common.serviceCount, visible.length)} ·{" "}
+                    {t.f(t.catalog.pricesForBranch, {
+                      branch: branches.find((b) => b.id === DEFAULT_BRANCH)?.name ?? "",
+                    })}
                   </p>
                   {/*
                     Keyed on the category so the cards replay their entrance
@@ -397,6 +404,8 @@ function CategoryStrip({
   selected: string
   onSelect: (slug: string) => void
 }) {
+  const t = useT()
+
   const scrollBy = (direction: 1 | -1) => {
     const el = ref.current
     if (!el) return
@@ -408,7 +417,7 @@ function CategoryStrip({
       <button
         type="button"
         onClick={() => scrollBy(-1)}
-        aria-label="Geri sürüşdür"
+        aria-label={t.catalog.scrollBack}
         className="absolute left-0 top-1/2 z-10 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[var(--line)] bg-white shadow-sm transition-colors hover:border-primary hover:text-primary md:flex"
       >
         <ChevronLeft className="h-4 w-4" aria-hidden="true" />
@@ -476,7 +485,7 @@ function CategoryStrip({
       <button
         type="button"
         onClick={() => scrollBy(1)}
-        aria-label="İrəli sürüşdür"
+        aria-label={t.catalog.scrollForward}
         className="absolute right-0 top-1/2 z-10 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[var(--line)] bg-white shadow-sm transition-colors hover:border-primary hover:text-primary md:flex"
       >
         <ChevronRight className="h-4 w-4" aria-hidden="true" />
@@ -486,6 +495,7 @@ function CategoryStrip({
 }
 
 function ServiceCard({ item, index }: { item: PickerItem; index: number }) {
+  const t = useT()
   const price = priceOf(item)
   const promoted = promotedOf(item)
   const discounted = promoted !== null && promoted < price
@@ -522,7 +532,7 @@ function ServiceCard({ item, index }: { item: PickerItem; index: number }) {
         empty label — see the note in README about pulling `materials`.
       */}
       <p className="mt-2 text-[0.7rem] leading-tight text-[var(--ink-muted)]">
-        {item.prep ? `Hazır: ${item.prep}` : item.categoryName}
+        {item.prep ? `${t.catalog.readyIn}: ${item.prep}` : item.categoryName}
       </p>
 
       <div className="flex-1" />
@@ -545,6 +555,7 @@ function ServiceCard({ item, index }: { item: PickerItem; index: number }) {
 }
 
 function PastOrders({ onReorder }: { onReorder: () => void }) {
+  const t = useT()
   const allOrders = useBasketStore((s) => s.orders)
   const hasHydrated = useBasketStore((s) => s.hasHydrated)
   const reorder = useBasketStore((s) => s.reorder)
@@ -560,10 +571,10 @@ function PastOrders({ onReorder }: { onReorder: () => void }) {
           aria-hidden="true"
         />
         <p className="text-sm font-medium text-[var(--ink)]">
-          Hələ sifarişiniz yoxdur
+          {t.catalog.noOrdersYet}
         </p>
         <p className="mt-1 text-xs text-[var(--ink-muted)]">
-          Göndərdiyiniz sifarişlər burada saxlanılır.
+          {t.catalog.ordersStoredHere}
         </p>
       </div>
     )
@@ -583,9 +594,9 @@ function PastOrders({ onReorder }: { onReorder: () => void }) {
               </p>
               <p className="mt-0.5 text-xs text-[var(--ink-muted)]">
                 {branches.find((b) => b.id === order.branch)?.name ?? order.branch} ·{" "}
-                {order.lines.length} xidmət
-                {order.homeCollection && " · evdə qanalma"}
-                {order.paymentMethod === "CARD" ? " · kart" : " · nağd"}
+                {t.n(t.common.serviceCount, order.lines.length)}
+                {order.homeCollection && ` · ${t.basket.homeCollection}`}
+                {` · ${order.paymentMethod === "CARD" ? t.basket.card : t.basket.cash}`}
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -601,7 +612,7 @@ function PastOrders({ onReorder }: { onReorder: () => void }) {
                 }}
               >
                 <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
-                Təkrarla
+                {t.catalog.reorder}
               </Button>
             </div>
           </div>

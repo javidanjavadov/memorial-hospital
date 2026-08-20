@@ -5,6 +5,7 @@ import en from "@/i18n/dictionaries/en.json"
 import tr from "@/i18n/dictionaries/tr.json"
 import { locales } from "@/i18n/config"
 import { fill, plural, type Phrase } from "@/i18n/format"
+import { mergeWithFallback } from "@/i18n/merge"
 
 type Node = Record<string, unknown>
 
@@ -128,5 +129,53 @@ describe("fill", () => {
       "qiymətlər Gəncə üzrə"
     )
     expect(fill("{a} {b}", { a: "x" })).toBe("x {b}")
+  })
+})
+
+describe("plural phrases survive the fallback merge", () => {
+  const merge = (locale: Node) =>
+    mergeWithFallback(az as unknown as Node, locale) as unknown as {
+      common: { serviceCount: Phrase; categoryCount: Phrase }
+      doctors: { years: Phrase }
+    }
+
+  /*
+   * The bug this covers shipped: the merge accepted only string overrides, so
+   * Russian and English plural objects were discarded and the Azerbaijani kept
+   * — "50 kateqoriya" in the middle of a Russian page.
+   */
+  it.each([
+    ["ru", ru],
+    ["en", en],
+  ] as const)("keeps the %s plural forms", (_name, dict) => {
+    const merged = merge(dict as unknown as Node)
+    for (const phrase of [
+      merged.common.serviceCount,
+      merged.common.categoryCount,
+      merged.doctors.years,
+    ]) {
+      expect(typeof phrase).toBe("object")
+    }
+  })
+
+  it("renders a different Russian form for 1, 3 and 50", () => {
+    const merged = merge(ru as unknown as Node)
+    const forms = [1, 3, 50].map((n) =>
+      plural(merged.common.serviceCount, n, "ru")
+    )
+    expect(new Set(forms).size).toBe(3)
+    for (const form of forms) expect(form).not.toMatch(/xidmət/)
+  })
+
+  it("still falls back to Azerbaijani for a key a translation is missing", () => {
+    const merged = mergeWithFallback(az as unknown as Node, {
+      common: {},
+    }) as unknown as { common: { loading: string } }
+    expect(merged.common.loading).toBe((az as Node & { common: { loading: string } }).common.loading)
+  })
+
+  it("leaves Turkish counts as plain strings", () => {
+    const merged = merge(tr as unknown as Node)
+    expect(typeof merged.common.serviceCount).toBe("string")
   })
 })
