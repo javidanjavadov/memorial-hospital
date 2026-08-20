@@ -11,6 +11,7 @@ import {
   getCategory,
   getCategoryItems,
   localizeCategoryName,
+  allNamesOf,
   localizeItem,
   getGroupCategories,
   GROUP_ORDER,
@@ -66,7 +67,12 @@ export default async function CategoryPage({ params }: Props) {
   if (!category) notFound()
 
   const locale = await getLocale()
-  const items = getCategoryItems(slug).map((item) => localizeItem(item, locale))
+  /* Localised for display, with every language's name carried alongside: the
+     basket keeps a line after a language switch and has to render it. */
+  const items = getCategoryItems(slug).map((raw) => ({
+    ...localizeItem(raw, locale),
+    names: allNamesOf(raw),
+  }))
   const categoryName = localizeCategoryName(category.name, locale)
   const group = GROUP_ORDER.find((g) => g.slug === category.group)
   const siblings = getGroupCategories(category.group)
@@ -233,6 +239,7 @@ export default async function CategoryPage({ params }: Props) {
                       line={{
                         slug: item.slug,
                         name: item.name,
+                        names: item.names,
                         code: item.code,
                         price,
                         promoted,

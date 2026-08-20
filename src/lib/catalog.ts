@@ -190,6 +190,19 @@ export const localizeItem = (item: CatalogItem, locale: string): CatalogItem =>
         categoryName: say(catalogI18n.categories, item.categoryName, locale),
       }
 
+/**
+ * An item's name in all four languages.
+ *
+ * Stored on the basket line so the basket can still render after a language
+ * switch — it is built in one language and read back in another.
+ */
+export const allNamesOf = (item: CatalogItem) => ({
+  az: item.name,
+  ru: say(catalogI18n.names, item.name, "ru"),
+  en: say(catalogI18n.names, item.name, "en"),
+  tr: say(catalogI18n.names, item.name, "tr"),
+})
+
 /** A category's name in one language. */
 export const localizeCategoryName = (name: string, locale: string) =>
   say(catalogI18n.categories, name, locale)

@@ -2,7 +2,9 @@
 
 import { useEffect, useRef, useState } from "react"
 import { Check, Plus } from "lucide-react"
-import { useBasketStore, type BasketLine } from "@/lib/basket-store"
+import { useBasketStore, type BasketLine,
+  lineName,
+} from "@/lib/basket-store"
 import { cn } from "@/lib/utils"
 import { useT } from "@/i18n/client"
 
@@ -62,7 +64,7 @@ export default function AddToBasketButton({
       }}
       aria-pressed={added}
       aria-label={t.f(added ? t.basket.removeFrom : t.basket.addTo, {
-        name: line.name,
+        name: lineName(line, t.locale),
       })}
       className={cn(
         "inline-flex shrink-0 items-center justify-center gap-1 border font-medium transition-colors duration-200 active:scale-95",

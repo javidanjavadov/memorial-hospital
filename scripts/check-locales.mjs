@@ -113,6 +113,7 @@ const PAGES = [
   "/sertler",
   "/giris",
   "/qeydiyyat",
+  "/sebet",
   ...CATEGORY_PAGES,
   ...DOCTOR_PAGES,
 ]

@@ -79,6 +79,18 @@ await mkdir(OUT, { recursive: true })
 const trim = (item, locale) => ({
   slug: item.slug,
   name: translate(i18n.names, item.name, locale),
+  /*
+   * The name in every language.
+   *
+   * A basket is built in whatever language the visitor was using and then
+   * survives a language switch, so the line has to be able to render in the
+   * new one. Four short names per item is a few hundred bytes; the
+   * alternative is a second network round trip from the basket, or a basket
+   * that quietly keeps speaking the old language.
+   */
+  names: Object.fromEntries(
+    LOCALES.map((l) => [l, translate(i18n.names, item.name, l)])
+  ),
   code: item.code,
   description: translate(i18n.descriptions, item.description, locale),
   prep: translate(i18n.preps, item.prep, locale),

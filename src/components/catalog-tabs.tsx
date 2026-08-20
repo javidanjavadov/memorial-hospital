@@ -4,7 +4,9 @@ import { useState, type ReactNode } from "react"
 import { History, ListPlus, RotateCcw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { branches } from "@/data"
-import { ordersFor, useBasketStore } from "@/lib/basket-store"
+import { ordersFor, useBasketStore,
+  lineName,
+} from "@/lib/basket-store"
 import { shortServiceName } from "@/lib/service-name"
 import { useCurrentUser } from "@/lib/use-current-user"
 import { cn } from "@/lib/utils"
@@ -147,7 +149,7 @@ export default function CatalogTabs({ children }: { children: ReactNode }) {
                           key={line.slug}
                           className="rounded-md bg-[var(--secondary)] px-2 py-1 text-xs text-[var(--ink)]"
                         >
-                          {shortServiceName(line.name)}
+                          {shortServiceName(lineName(line, t.locale))}
                         </li>
                       ))}
                     </ul>

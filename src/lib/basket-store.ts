@@ -6,6 +6,15 @@ import { DEFAULT_BRANCH } from "@/lib/catalog"
 export interface BasketLine {
   slug: string
   name: string
+  /**
+   * The name in every language, when the catalogue supplied it.
+   *
+   * A basket outlives a language switch: it is built in one language, kept in
+   * localStorage, and read back in another. Without this the lines would still
+   * be speaking the language they were added in — which is exactly what
+   * happened.
+   */
+  names?: Partial<Record<"az" | "ru" | "en" | "tr", string>>
   code?: string
   /** Unit price in AZN at the time it was added, for display only. */
   price: number
@@ -161,6 +170,10 @@ export const useBasketStore = create<BasketState>()(
 /** This browser's orders belonging to one account. */
 export const ordersFor = (orders: PastOrder[], userId: string | undefined) =>
   userId ? orders.filter((order) => order.userId === userId) : []
+
+/** A line's name in the current language, falling back to what was stored. */
+export const lineName = (line: BasketLine, locale: string) =>
+  line.names?.[locale as "az"] ?? line.name
 
 /** Sum of the effective (discounted where available) line prices. */
 export const basketSubtotal = (lines: BasketLine[]) =>

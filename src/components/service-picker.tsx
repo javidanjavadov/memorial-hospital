@@ -21,7 +21,9 @@ import BasketPanel from "@/components/basket-panel"
 import PatientHeader from "@/components/patient-header"
 import AddToBasketButton from "@/components/add-to-basket-button"
 import { branches } from "@/data"
-import { ordersFor, useBasketStore, type BasketLine } from "@/lib/basket-store"
+import { ordersFor, useBasketStore, type BasketLine,
+  lineName,
+} from "@/lib/basket-store"
 import { shortServiceName } from "@/lib/service-name"
 import { useCurrentUser } from "@/lib/use-current-user"
 import { useT } from "@/i18n/client"
@@ -49,6 +51,7 @@ export interface PickerGroup {
 interface PickerItem {
   slug: string
   name: string
+  names?: Record<string, string>
   code: string
   description: string
   prep: string
@@ -509,6 +512,7 @@ function ServiceCard({ item, index }: { item: PickerItem; index: number }) {
   const line: BasketLine = {
     slug: item.slug,
     name: item.name,
+    names: item.names,
     code: item.code,
     price,
     promoted,
@@ -629,7 +633,7 @@ function PastOrders({ onReorder }: { onReorder: () => void }) {
                 key={line.slug}
                 className="rounded-md bg-[var(--secondary)] px-2 py-1 text-xs text-[var(--ink)]"
               >
-                {shortServiceName(line.name)}
+                {shortServiceName(lineName(line, t.locale))}
               </li>
             ))}
           </ul>

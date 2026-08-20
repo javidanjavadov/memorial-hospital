@@ -21,6 +21,7 @@ import {
   basketSubtotal,
   HOME_COLLECTION_FEE,
   useBasketStore,
+  lineName,
 } from "@/lib/basket-store"
 import type { BranchKey } from "@/lib/catalog"
 import type { PaymentMethod } from "@/lib/basket-store"
@@ -31,6 +32,7 @@ import ProfileCompletionCard from "@/components/profile-completion-card"
 import { shortServiceName } from "@/lib/service-name"
 import { controlClass } from "@/components/ui/field"
 import { useT } from "@/i18n/client"
+import { localizeBranch } from "@/i18n/data"
 
 const formatAzn = (value: number) =>
   `${Number.isInteger(value) ? value : value.toFixed(2)} AZN`
@@ -69,8 +71,10 @@ export default function SebetPage() {
 
   const subtotal = basketSubtotal(lines)
   const total = subtotal + (homeCollection ? HOME_COLLECTION_FEE : 0)
-  const branchName =
-    branches.find((b) => b.id === branch)?.name ?? branches[0].name
+  const branchName = localizeBranch(
+    branches.find((b) => b.id === branch) ?? branches[0],
+    t.data
+  ).name
 
   if (!hasHydrated || isLoading) {
     return (
@@ -186,7 +190,8 @@ export default function SebetPage() {
       <div className="container mx-auto px-4">
         <h1 className="font-display text-step-3 text-[var(--ink)]">{t.basket.title}</h1>
         <p className="mt-2 text-[var(--ink-muted)]">
-          {lines.length} xidmət · qiymətlər {branchName} üzrə
+          {t.n(t.common.serviceCount, lines.length)} ·{" "}
+          {t.f(t.catalog.pricesForBranch, { branch: branchName })}
         </p>
 
         <PatientHeader className="mt-6" />
@@ -225,10 +230,10 @@ export default function SebetPage() {
                         </p>
                       )}
                       <p
-                        title={line.name}
+                        title={lineName(line, t.locale)}
                         className="mt-0.5 font-medium text-[var(--ink)]"
                       >
-                        {shortServiceName(line.name)}
+                        {shortServiceName(lineName(line, t.locale))}
                       </p>
                     </div>
                     <div className="flex shrink-0 items-center gap-3">
@@ -238,7 +243,7 @@ export default function SebetPage() {
                       <button
                         type="button"
                         onClick={() => remove(line.slug)}
-                        aria-label={`${line.name} səbətdən çıxar`}
+                        aria-label={t.f(t.basket.removeFrom, { name: lineName(line, t.locale) })}
                         className="flex h-8 w-8 items-center justify-center rounded-lg text-[var(--ink-muted)] transition-colors hover:bg-red-50 hover:text-red-600"
                       >
                         <Trash2 className="h-4 w-4" aria-hidden="true" />
@@ -278,11 +283,14 @@ export default function SebetPage() {
                 onChange={(e) => setBranch(e.target.value as BranchKey)}
                 className={`${controlClass} mt-2`}
               >
-                {branches.map((b) => (
-                  <option key={b.id} value={b.id}>
-                    {b.name}
-                  </option>
-                ))}
+                {branches.map((raw) => {
+                  const b = localizeBranch(raw, t.data)
+                  return (
+                    <option key={b.id} value={b.id}>
+                      {b.name}
+                    </option>
+                  )
+                })}
               </select>
               <p className="mt-2 text-xs text-[var(--ink-muted)]">
                 {t.basket.branchPricesVary}

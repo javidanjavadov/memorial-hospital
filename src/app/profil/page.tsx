@@ -33,7 +33,9 @@ import { missingProfileFields } from "@/lib/profile-complete"
 import ResultsPanel from "@/components/results-panel"
 import ProfileCompletionCard from "@/components/profile-completion-card"
 import { useAuthStore } from "@/lib/auth-store"
-import { ordersFor, useBasketStore } from "@/lib/basket-store"
+import { ordersFor, useBasketStore,
+  lineName,
+} from "@/lib/basket-store"
 import { shortServiceName } from "@/lib/service-name"
 import { useSession } from "next-auth/react"
 import { useCurrentUser } from "@/lib/use-current-user"
@@ -684,7 +686,7 @@ function ProfilPageInner() {
                             key={line.slug}
                             className="rounded-md bg-[var(--secondary)] px-2 py-1 text-xs text-[var(--ink)]"
                           >
-                            {shortServiceName(line.name)}
+                            {shortServiceName(lineName(line, t.locale))}
                           </li>
                         ))}
                       </ul>

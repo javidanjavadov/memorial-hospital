@@ -5,6 +5,7 @@ import {
   ordersFor,
   useBasketStore,
   type BasketLine,
+  lineName,
 } from "@/lib/basket-store"
 
 const line = (slug: string, price: number, promoted?: number): BasketLine => ({
@@ -95,5 +96,34 @@ describe("basket", () => {
 
     const slugs = useBasketStore.getState().lines.map((l) => l.slug)
     expect(slugs).toEqual(["a", "b"])
+  })
+})
+
+describe("lineName", () => {
+  /*
+   * A basket outlives a language switch: it is built in one language, kept in
+   * localStorage and read back in another. Without the per-language names the
+   * lines keep speaking the language they were added in, which is exactly what
+   * a browser check caught.
+   */
+  const line = {
+    slug: "a",
+    name: "Ümumi xolesterol",
+    names: { az: "Ümumi xolesterol", ru: "Общий холестерин", en: "Total Cholesterol" },
+    price: 10,
+  }
+
+  it("renders the line in the language being read", () => {
+    expect(lineName(line, "ru")).toBe("Общий холестерин")
+    expect(lineName(line, "en")).toBe("Total Cholesterol")
+    expect(lineName(line, "az")).toBe("Ümumi xolesterol")
+  })
+
+  it("falls back to the stored name for a language it has no entry for", () => {
+    expect(lineName(line, "tr")).toBe("Ümumi xolesterol")
+  })
+
+  it("falls back for a line saved before names were stored", () => {
+    expect(lineName({ slug: "b", name: "Qlükoza", price: 3 }, "ru")).toBe("Qlükoza")
   })
 })

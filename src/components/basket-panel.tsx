@@ -7,6 +7,7 @@ import {
   basketSubtotal,
   HOME_COLLECTION_FEE,
   useBasketStore,
+  lineName,
 } from "@/lib/basket-store"
 import { shortServiceName } from "@/lib/service-name"
 import { useT } from "@/i18n/client"
@@ -88,10 +89,10 @@ export default function BasketPanel() {
                 >
                   <span className="min-w-0 flex-1">
                     <span
-                      title={line.name}
+                      title={lineName(line, t.locale)}
                       className="block text-sm leading-snug text-[var(--ink)]"
                     >
-                      {shortServiceName(line.name)}
+                      {shortServiceName(lineName(line, t.locale))}
                     </span>
                     <span className="mt-0.5 block text-xs text-[var(--ink-muted)]">
                       {formatAzn(effective)}
@@ -100,7 +101,7 @@ export default function BasketPanel() {
                   <button
                     type="button"
                     onClick={() => remove(line.slug)}
-                    aria-label={t.f(t.basket.removeFrom, { name: line.name })}
+                    aria-label={t.f(t.basket.removeFrom, { name: lineName(line, t.locale) })}
                     className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-[var(--ink-muted)] transition-colors hover:bg-red-50 hover:text-red-600"
                   >
                     <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
