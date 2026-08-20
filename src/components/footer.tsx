@@ -12,9 +12,12 @@ import {
   Calendar,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useT } from "@/i18n/client"
 import { YEARS_OF_EXPERIENCE, branches, contactInfo, departments, telHref } from "@/data"
 
 export default function Footer() {
+  const t = useT()
+
   return (
     <footer className="bg-[var(--ink)] text-white">
       {/* Pre Footer CTA */}
@@ -23,10 +26,10 @@ export default function Footer() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="text-center md:text-left">
               <h3 className="text-2xl md:text-3xl font-bold text-white">
-                Sağlamlığınız bizim prioritetimizdir
+                {t.footer.ctaTitle}
               </h3>
               <p className="text-white/90 mt-2">
-                İndi qəbula yazılın, peşəkar həkimlərimiz sizə kömək etsin
+                {t.footer.ctaBody}
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
@@ -37,7 +40,7 @@ export default function Footer() {
               >
                 <a href={telHref(contactInfo.phone)}>
                   <Phone className="w-5 h-5" />
-                  Zəng Edin
+                  {t.footer.callUs}
                 </a>
               </Button>
               <Button
@@ -47,7 +50,7 @@ export default function Footer() {
               >
                 <Link href="/qebul">
                   <Calendar className="w-5 h-5" />
-                  Qəbula Yazıl
+                  {t.nav.bookAppointment}
                 </Link>
               </Button>
             </div>
@@ -70,8 +73,8 @@ export default function Footer() {
               />
             </Link>
             <p className="text-slate-400 text-sm leading-relaxed">
-              Memorial Hospital — Bakıdakı müasir klinik xidmətlər mərkəzi.
-              {YEARS_OF_EXPERIENCE} ildən artıq təcrübə ilə keyfiyyətli tibbi xidmət göstəririk.
+              {t.footer.tagline}
+              {t.f(t.footer.experienceNote, { years: YEARS_OF_EXPERIENCE })}
             </p>
             <div className="flex gap-3">
               <a
@@ -110,7 +113,7 @@ export default function Footer() {
 
           {/* Departments Column */}
           <div>
-            <h4 className="text-lg font-semibold mb-6">Şöbələr</h4>
+            <h4 className="text-lg font-semibold mb-6">{t.footer.departments}</h4>
             <ul className="space-y-3">
               {departments.slice(0, 6).map((dept) => (
                 <li key={dept.id}>
@@ -128,7 +131,7 @@ export default function Footer() {
 
           {/* Branches Column */}
           <div>
-            <h4 className="text-lg font-semibold mb-6">Filiallarımız</h4>
+            <h4 className="text-lg font-semibold mb-6">{t.footer.ourBranches}</h4>
             <ul className="space-y-4">
               {branches.map((branch) => (
                 <li key={branch.id}>
@@ -152,7 +155,7 @@ export default function Footer() {
 
           {/* Contact Column */}
           <div>
-            <h4 className="text-lg font-semibold mb-6">Əlaqə</h4>
+            <h4 className="text-lg font-semibold mb-6">{t.footer.contact}</h4>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <Phone className="w-5 h-5 text-primary mt-0.5 shrink-0" />
@@ -163,7 +166,7 @@ export default function Footer() {
                   >
                     {contactInfo.phone}
                   </a>
-                  <span className="text-xs text-slate-400">Əsas xətt</span>
+                  <span className="text-xs text-slate-400">{t.footer.mainLine}</span>
                 </div>
               </li>
               <li className="flex items-start gap-3">
@@ -196,21 +199,21 @@ export default function Footer() {
               {/* Scoped suppression: the prerendered year and the client's year
                   differ only across a New Year boundary, and only here. */}
               © <span suppressHydrationWarning>{new Date().getFullYear()}</span>{" "}
-              Memorial Hospital. Bütün hüquqlar qorunur.
+              Memorial Hospital. {t.footer.rightsReserved}.
             </p>
             <div className="flex items-center gap-4 text-sm text-white/60">
               <Link href="/siyaset" className="hover:text-white transition-colors duration-200">
-                Məxfilik Siyasəti
+                {t.footer.privacyPolicy}
               </Link>
               <span>|</span>
               <Link href="/sertler" className="hover:text-white transition-colors duration-200">
-                İstifadə Şərtləri
+                {t.footer.termsOfUse}
               </Link>
             </div>
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               className="w-10 h-10 rounded-full bg-accent hover:bg-accent/90 flex items-center justify-center transition-all duration-300 hover:scale-110 hover:-translate-y-1 active:scale-95"
-              aria-label="Yuxarı qalx"
+              aria-label={t.footer.scrollTop}
             >
               <ArrowUp className="w-5 h-5 text-white" />
             </button>

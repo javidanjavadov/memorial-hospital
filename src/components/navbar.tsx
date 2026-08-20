@@ -19,18 +19,21 @@ import {
 import { cn } from "@/lib/utils"
 import { contactInfo, telHref } from "@/data"
 import { missingProfileFields } from "@/lib/profile-complete"
+import { useT } from "@/i18n/client"
+import LanguageSwitcher from "@/components/language-switcher"
 import { useCurrentUser } from "@/lib/use-current-user"
 import { signOut } from "next-auth/react"
 import { smoothScrollToElement } from "@/lib/smooth-scroll"
 
+/** Labels come from the dictionary at render time; only the targets live here. */
 const navItems = [
-  { label: "Ana Səhifə", href: "#hero" },
-  { label: "Haqqımızda", href: "#haqqimizda" },
-  { label: "Həkimlər", href: "#hekimler" },
-  { label: "Xidmətlər", href: "#xidmetler" },
-  { label: "Filiallar", href: "#filiallar" },
-  { label: "Əlaqə", href: "#elaqe" },
-]
+  { key: "home", href: "#hero" },
+  { key: "about", href: "#haqqimizda" },
+  { key: "doctors", href: "#hekimler" },
+  { key: "services", href: "#xidmetler" },
+  { key: "branches", href: "#filiallar" },
+  { key: "contact", href: "#elaqe" },
+] as const
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
@@ -43,6 +46,7 @@ export default function Navbar() {
 
   // Covers both login methods — Google session or local email/password account.
   const { user } = useCurrentUser()
+  const t = useT()
   const missingCount = missingProfileFields(user).length
   const profileIncomplete = !!user && missingCount > 0
 
@@ -167,7 +171,7 @@ export default function Navbar() {
                     : "text-slate-700 hover:text-teal-700 hover:bg-teal-50 after:bg-teal-600"
                 )}
               >
-                {item.label}
+                {t.nav[item.key]}
               </button>
             ))}
           </nav>
@@ -176,7 +180,7 @@ export default function Navbar() {
             <Button variant="emergency" size="sm" asChild>
               <a href={telHref(contactInfo.phone)}>
                 <Phone className="w-4 h-4" aria-hidden="true" />
-                Təcili Zəng
+                {t.nav.emergencyCall}
               </a>
             </Button>
             <Button
@@ -192,13 +196,14 @@ export default function Navbar() {
                   goes to the profile section instead of the public lookup. */}
               <Link href={user ? "/profil?tab=results" : "/neticeler"}>
                 <FileText className="w-4 h-4" aria-hidden="true" />
-                Nəticələrimə bax
+                {t.nav.myResults}
               </Link>
             </Button>
+            <LanguageSwitcher overHero={overHero} />
             <Button variant="cta" size="sm" asChild>
               <Link href="/qebul">
                 <Calendar className="w-4 h-4" aria-hidden="true" />
-                Qəbula Yazıl
+                {t.nav.bookAppointment}
               </Link>
             </Button>
 
@@ -219,7 +224,7 @@ export default function Navbar() {
                   onClick={() => setShowUserMenu((open) => !open)}
                   aria-expanded={showUserMenu}
                   aria-haspopup="menu"
-                  aria-label={`Hesab menyusu — ${user.fullName}`}
+                  aria-label={`${t.nav.accountMenu} — ${user.fullName}`}
                   className={cn(
                     "flex items-center gap-1.5 px-2 py-1.5 rounded-lg transition-colors",
                     overHero ? "hover:bg-white/10" : "hover:bg-slate-50"
@@ -265,7 +270,7 @@ export default function Navbar() {
                       onClick={() => setShowUserMenu(false)}
                     >
                       <User className="w-4 h-4" aria-hidden="true" />
-                      Profilim
+                      {t.nav.myProfile}
                       {profileIncomplete && (
                         <span className="ml-auto rounded-full bg-red-100 px-2 py-0.5 text-[0.65rem] font-medium text-red-700">
                           {missingCount} boş
@@ -288,7 +293,7 @@ export default function Navbar() {
                       className="flex items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 w-full transition-colors"
                     >
                       <LogOut className="w-4 h-4" aria-hidden="true" />
-                      Çıxış
+                      {t.nav.signOut}
                     </button>
                   </div>
                 )}
@@ -305,7 +310,7 @@ export default function Navbar() {
               >
                 <Link href="/giris">
                   <User className="w-4 h-4" aria-hidden="true" />
-                  Daxil Ol
+                  {t.nav.signIn}
                 </Link>
               </Button>
             )}
@@ -363,7 +368,7 @@ export default function Navbar() {
                 className="px-4 py-3 text-sm font-medium text-slate-700 hover:text-teal-700 rounded-lg hover:bg-teal-50 transition-all duration-200 hover:translate-x-1 text-left cursor-pointer"
                 style={{ transitionDelay: isOpen ? `${i * 50}ms` : "0ms" }}
               >
-                {item.label}
+                {t.nav[item.key]}
               </button>
             ))}
             <div className="flex flex-col gap-2 mt-4 pt-4 border-t">
@@ -396,7 +401,7 @@ export default function Navbar() {
                     className="px-4 py-3 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 flex items-center gap-2"
                   >
                     <LogOut className="w-4 h-4" aria-hidden="true" />
-                    Çıxış
+                    {t.nav.signOut}
                   </button>
                 </>
               ) : (
@@ -404,7 +409,7 @@ export default function Navbar() {
                   <Button variant="outline" className="w-full" asChild>
                     <Link href="/giris" onClick={() => setIsOpen(false)}>
                       <User className="w-4 h-4" aria-hidden="true" />
-                      Daxil Ol
+                      {t.nav.signIn}
                     </Link>
                   </Button>
                   <Button variant="cta" className="w-full" asChild>
@@ -417,7 +422,7 @@ export default function Navbar() {
               <Button variant="emergency" size="sm" className="w-full" asChild>
                 <a href={telHref(contactInfo.phone)}>
                   <Phone className="w-4 h-4" aria-hidden="true" />
-                  Təcili Zəng
+                  {t.nav.emergencyCall}
                 </a>
               </Button>
               <Button variant="outline" size="sm" className="w-full" asChild>
@@ -426,13 +431,13 @@ export default function Navbar() {
                   onClick={() => setIsOpen(false)}
                 >
                   <FileText className="w-4 h-4" aria-hidden="true" />
-                  Nəticələrimə bax
+                  {t.nav.myResults}
                 </Link>
               </Button>
               <Button variant="cta" size="sm" className="w-full" asChild>
                 <Link href="/qebul" onClick={() => setIsOpen(false)}>
                   <Calendar className="w-4 h-4" aria-hidden="true" />
-                  Qəbula Yazıl
+                  {t.nav.bookAppointment}
                 </Link>
               </Button>
             </div>

@@ -2,6 +2,9 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import ProfileGate from "@/components/profile-gate";
+import { I18nProvider } from "@/i18n/client";
+import { getDictionary, getLocale } from "@/i18n";
+import { htmlLang } from "@/i18n/config";
 import FloatingBasket from "@/components/floating-basket";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
@@ -75,14 +78,19 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Resolved on the server, so the first byte of HTML is already in the
+  // visitor's language — no flash of Azerbaijani while a bundle loads.
+  const locale = await getLocale()
+  const dict = await getDictionary(locale)
+
   return (
     <html
-      lang="az"
+      lang={htmlLang[locale]}
       className={`${inter.variable} ${spaceGrotesk.variable} h-full antialiased`}
       data-scroll-behavior="smooth"
     >
@@ -119,8 +127,9 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col">
         <AuthSessionProvider>
+          <I18nProvider locale={locale} dict={dict}>
           <a href="#main-content" className="skip-link">
-            Əsas məzmuna keç
+            {dict.nav.skipToContent}
           </a>
           <StoreHydration />
           <BasketHydration />
@@ -133,6 +142,7 @@ export default function RootLayout({
           </main>
           <Footer />
           <FloatingBasket />
+          </I18nProvider>
         </AuthSessionProvider>
       </body>
     </html>
