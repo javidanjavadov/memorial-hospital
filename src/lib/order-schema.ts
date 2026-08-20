@@ -24,7 +24,9 @@ export const orderPayloadSchema = z.object({
   branch: z.enum(["nrimanov", "qarayev", "ganca"]),
   homeCollection: z.boolean(),
   paymentMethod: z.enum(["CASH", "CARD"]),
-  lines: z.array(orderLineSchema).min(1, "Səbət boşdur").max(200),
+  /* The message is a key, not a sentence: this schema runs on the server,
+     where there is no locale, and the client never submits an empty basket. */
+  lines: z.array(orderLineSchema).min(1, "basketEmpty").max(200),
   quotedTotal: z.number().nonnegative(),
   /** Free-text note from the patient. */
   note: z.string().max(1000).optional(),

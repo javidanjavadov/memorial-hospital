@@ -358,7 +358,8 @@
     "messageTooLong": "Message cannot exceed 2000 characters",
     "writeToUsInline": "write to us",
     "cardNoRequired": "Enter your STRIX / card number",
-    "cardNoFormat": "Format: 00000000-0000000000"
+    "cardNoFormat": "Format: 00000000-0000000000",
+    "requestRegistered": "Your request has been registered. To confirm it,"
   },
   "data": {
     "departments": {
@@ -762,7 +763,9 @@
     "completeYourDetails": "Complete your details",
     "detailsList": "First name, surname, patronymic, sex, date of birth, FIN and phone. The laboratory records your sample under these details.",
     "continueWithGoogle": "Continue with Google",
-    "redirecting": "Redirecting..."
+    "redirecting": "Redirecting...",
+    "lookupOffline": "The results lookup is not available online yet. Please contact our call centre.",
+    "basketEmptyError": "The basket is empty"
   },
   "meta": {
     "contact": {

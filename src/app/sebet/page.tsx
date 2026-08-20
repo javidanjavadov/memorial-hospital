@@ -160,13 +160,10 @@ export default function SebetPage() {
               </>
             ) : (
               <>
-                Sifarişiniz profilinizin <strong>“Sifarişlərim”</strong>{" "}
-                bölməsində saxlanıldı. Təsdiq üçün klinikaya zəng etməyiniz
-                xahiş olunur — sifariş avtomatik olaraq göndərilmir.
+{t.basket.orderStoredOnly}
               </>
             )}{" "}
-            <strong>Onlayn ödəniş alınmadı</strong>; ödəniş filialda həyata
-            keçirilir.
+            <strong>{t.basket.noPaymentTaken}</strong>; {t.basket.paymentAtClinic}.
           </p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
             <Button variant="cta" asChild>

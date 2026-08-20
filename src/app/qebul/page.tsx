@@ -261,7 +261,7 @@ function QebulContent() {
               would leave a patient waiting for a confirmation that never comes.
             */}
             <p className="text-slate-600 mb-4">
-              Sorğunuz qeydiyyata alındı. Təsdiq üçün{" "}
+              {t.booking.requestRegistered}{" "}
               <strong>{t.booking.receptionWillCall}</strong>.
               {t.booking.onlyAfterOperator}
             </p>
@@ -308,7 +308,7 @@ function QebulContent() {
             {[
               { num: 1, label: "{t.booking.stepPersonal}" },
               { num: 2, label: "{t.booking.stepDoctor}" },
-              { num: 3, label: "Təsdiq" },
+              { num: 3, label: t.booking.stepConfirm },
             ].map((s, i) => (
               <li
                 key={s.num}
@@ -443,7 +443,7 @@ function QebulContent() {
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Field label="Şöbə" required error={errors.department?.message}>
+                    <Field label={t.booking.department} required error={errors.department?.message}>
                       {(field) => (
                         <select
                           {...field}
@@ -480,7 +480,7 @@ function QebulContent() {
                     {selectedDepartment && (
                       <fieldset className="space-y-2 md:col-span-2">
                         <legend className="text-sm font-medium text-slate-700 mb-2">
-                          Həkim{" "}
+                          {t.booking.doctor}{" "}
                           <span className="font-normal text-slate-500">
                             (ixtiyari)
                           </span>
@@ -618,13 +618,13 @@ function QebulContent() {
                     )}
                     <SummaryRow
                       icon={Stethoscope}
-                      label="Şöbə"
+                      label={t.booking.department}
                       value={getDepartmentName(selectedDepartment)}
                     />
                     {/* The selected doctor was missing from this summary entirely. */}
                     <SummaryRow
                       icon={Stethoscope}
-                      label="Həkim"
+                      label={t.booking.doctor}
                       value={
                         selectedDoctor
                           ? getDoctorName(selectedDoctor)

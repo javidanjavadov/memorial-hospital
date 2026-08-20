@@ -101,7 +101,8 @@ export default function NeticelerPage() {
       // retried in a loop against one solved code.
       captcha?.refresh()
       setValue("securityCode", "")
-      setError(outcome.error)
+      // The lookup returns a key; the wording belongs here.
+      setError(t.ui[outcome.error])
     }
   }
 

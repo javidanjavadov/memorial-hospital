@@ -346,7 +346,8 @@
     "messageTooLong": "Mesaj en fazla 2000 karakter olabilir",
     "writeToUsInline": "bize yazın",
     "cardNoRequired": "STRIX / kart numarasını girin",
-    "cardNoFormat": "Biçim: 00000000-0000000000"
+    "cardNoFormat": "Biçim: 00000000-0000000000",
+    "requestRegistered": "Talebiniz kaydedildi. Onay için"
   },
   "data": {
     "departments": {
@@ -750,7 +751,9 @@
     "completeYourDetails": "Bilgilerinizi tamamlayın",
     "detailsList": "Ad, soyad, baba adı, cinsiyet, doğum tarihi, FIN ve telefon. Laboratuvar numuneyi bu bilgilerle kaydeder.",
     "continueWithGoogle": "Google ile devam et",
-    "redirecting": "Yönlendiriliyor..."
+    "redirecting": "Yönlendiriliyor...",
+    "lookupOffline": "Sonuç sorgulama şu anda online çalışmıyor. Lütfen çağrı merkezimizle iletişime geçin.",
+    "basketEmptyError": "Sepet boş"
   },
   "meta": {
     "contact": {

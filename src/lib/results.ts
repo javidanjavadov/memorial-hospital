@@ -1,4 +1,5 @@
 import type { Gender } from "@/lib/auth-store"
+import type azDict from "@/i18n/dictionaries/az.json"
 
 /**
  * Lookup of a laboratory order's results.
@@ -67,7 +68,8 @@ export interface ResultOrder {
 
 export type ResultLookupOutcome =
   | { ok: true; order: ResultOrder }
-  | { ok: false; error: string }
+  /** `error` is a key in the dictionary's `ui` namespace, not a sentence. */
+  | { ok: false; error: keyof (typeof azDict)["ui"] }
 
 /** Set once a results endpoint exists; the UI hides the feature until then. */
 export const RESULTS_LOOKUP_ENABLED = false
@@ -78,7 +80,8 @@ export async function lookupResults(
   void _request
   return {
     ok: false,
-    error:
-      "Nəticə sorğusu hazırda onlayn işləmir. Zəhmət olmasa çağrı mərkəzimizlə əlaqə saxlayın.",
+    // A dictionary key, not a sentence: this module has no locale, and the
+    // page that shows the failure does the wording.
+    error: "lookupOffline" as const,
   }
 }

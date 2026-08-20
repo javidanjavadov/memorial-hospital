@@ -166,7 +166,7 @@ function ProfilPageInner() {
     return (
       <div className="min-h-[60vh] flex items-center justify-center" role="status">
         <Loader2 className="w-8 h-8 animate-spin text-primary" aria-hidden="true" />
-        <span className="sr-only">Yüklənir</span>
+        <span className="sr-only">{t.common.loading}</span>
       </div>
     )
   }

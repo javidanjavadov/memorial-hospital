@@ -346,7 +346,8 @@
     "messageTooLong": "Mesaj maksimum 2000 simvol ola bilər",
     "writeToUsInline": "bizə yazın",
     "cardNoRequired": "STRIX / KART NO daxil edin",
-    "cardNoFormat": "Format: 00000000-0000000000"
+    "cardNoFormat": "Format: 00000000-0000000000",
+    "requestRegistered": "Sorğunuz qeydiyyata alındı. Təsdiq üçün"
   },
   "data": {
     "departments": {},
@@ -599,7 +600,9 @@
     "completeYourDetails": "Məlumatlarınızı tamamlayın",
     "detailsList": "Ad, soyad, ata adı, cins, doğum tarixi, FIN və telefon. Laboratoriya nümunəni bu məlumatlarla qeyd edir.",
     "continueWithGoogle": "Google ilə davam et",
-    "redirecting": "Yönləndirilir..."
+    "redirecting": "Yönləndirilir...",
+    "lookupOffline": "Nəticə sorğusu hazırda onlayn işləmir. Zəhmət olmasa çağrı mərkəzimizlə əlaqə saxlayın.",
+    "basketEmptyError": "Səbət boşdur"
   },
   "meta": {
     "contact": {

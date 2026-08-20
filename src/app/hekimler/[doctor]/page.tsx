@@ -204,8 +204,8 @@ export default async function DoctorPage({ params }: Props) {
                 <>
                   <p className="text-sm font-medium text-[var(--ink)]">
                     {doctor.available
-                      ? "Onlayn qəbul mövcud deyil"
-                      : "Hazırda qəbul aparmır"}
+                      ? t.ui.noOnlineBookingShort
+                      : t.ui.notAcceptingShort}
                   </p>
                   <p className="mt-1 text-xs leading-relaxed text-[var(--ink-muted)]">
                     {t.doctors.callCentreNote}

@@ -5,9 +5,12 @@ import { Home, Stethoscope, Phone } from "lucide-react"
 import { contactInfo, telHref } from "@/data"
 import { getDictionary } from "@/i18n"
 
-export const metadata: Metadata = {
-  title: "Səhifə tapılmadı",
-  robots: { index: false, follow: false },
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getDictionary()
+  return {
+    title: t.pages.notFoundTitle,
+    robots: { index: false, follow: false },
+  }
 }
 
 /**
