@@ -117,13 +117,23 @@ export const getGroupCategories = (groupSlug: string) => {
     .sort((a, b) => b.count - a.count)
 }
 
-/** Every category slug, for generateStaticParams. */
-export const allCategorySlugs = () =>
-  catalogGroups.flatMap((g) =>
-    g.categories
-      .filter((c) => (itemsByCategory.get(c.slug)?.length ?? 0) > 0)
-      .map((c) => c.slug)
-  )
+/**
+ * Every category slug, for generateStaticParams.
+ *
+ * Deduplicated: "Allergik analizlər" is listed twice upstream under one slug,
+ * and handing the same param to generateStaticParams twice builds the same page
+ * twice. getGroupCategories already drops it, so without this the strip and the
+ * static routes disagreed about how many categories exist.
+ */
+export const allCategorySlugs = () => [
+  ...new Set(
+    catalogGroups.flatMap((g) =>
+      g.categories
+        .filter((c) => (itemsByCategory.get(c.slug)?.length ?? 0) > 0)
+        .map((c) => c.slug)
+    )
+  ),
+]
 
 /**
  * Nərimanov is the hospital's own default branch, and only 18 of 1168 items are

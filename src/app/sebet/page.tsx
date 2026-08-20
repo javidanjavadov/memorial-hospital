@@ -52,7 +52,17 @@ export default function SebetPage() {
   const { user, isLoading } = useCurrentUser()
   const missing = missingProfileFields(user)
 
-  const [sent, setSent] = useState(false)
+  /*
+   * The outcome of the submit, not merely "the button was pressed". `delivered`
+   * says whether the hospital actually received it; the confirmation screen has
+   * to tell the truth either way, because the difference decides whether the
+   * patient needs to pick up the phone.
+   */
+  const [sent, setSent] = useState<
+    { reference: string; delivered: boolean } | null
+  >(null)
+  const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState("")
 
 
   const subtotal = basketSubtotal(lines)
@@ -68,6 +78,57 @@ export default function SebetPage() {
     )
   }
 
+  const placeOrder = async () => {
+    if (!user) return
+
+    setSubmitError("")
+    setSubmitting(true)
+
+    try {
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          branch,
+          homeCollection,
+          paymentMethod,
+          quotedTotal: total,
+          lines: lines.map((line) => ({
+            slug: line.slug,
+            name: line.name,
+            code: line.code ?? "",
+            quotedPrice:
+              line.promoted != null && line.promoted < line.price
+                ? line.promoted
+                : line.price,
+          })),
+        }),
+      })
+
+      const payload = await response.json().catch(() => null)
+
+      if (!response.ok || !payload?.ok) {
+        /*
+         * The basket is deliberately NOT emptied on failure. Rebuilding thirty
+         * tests by hand is how someone gives up and phones a competitor.
+         */
+        setSubmitError(
+          payload?.error ?? "Sifariş göndərilə bilmədi. Yenidən cəhd edin."
+        )
+        return
+      }
+
+      // Only now moves it into history, so a failed send cannot leave a record
+      // of an order that was never placed.
+      submitOrder(user.id)
+      setSent({ reference: payload.reference, delivered: payload.delivered })
+    } catch {
+      setSubmitError("Şəbəkə xətası. Yenidən cəhd edin.")
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
   if (sent) {
     return (
       <div className="min-h-screen bg-[var(--paper)] py-16">
@@ -81,16 +142,28 @@ export default function SebetPage() {
           <h1 className="font-display text-step-2 text-[var(--ink)]">
             Sifarişiniz qeydə alındı
           </h1>
+          <p className="mt-2 font-mono text-sm text-[var(--ink-muted)]">
+            {sent.reference}
+          </p>
+
           {/*
-            Says only what actually happened. The order is saved in this browser
-            and nothing is transmitted, so promising a call back — as this did —
-            would leave someone waiting at home for one nobody was told to make.
-            Restore the operator wording only once an endpoint receives orders.
+            Two different truths, and the wording follows whichever one applies.
+            Promising a call back when no endpoint is configured is what leaves
+            someone waiting at home for one nobody was told to make.
           */}
           <p className="mt-4 text-[var(--ink-muted)]">
-            Sifarişiniz profilinizin <strong>“Sifarişlərim”</strong> bölməsində
-            saxlanıldı. Təsdiq üçün klinikaya zəng etməyiniz xahiş olunur —
-            sifariş avtomatik olaraq klinikaya göndərilmir.{" "}
+            {sent.delivered ? (
+              <>
+                Sifarişiniz klinikaya göndərildi. Operatorumuz sizinlə əlaqə
+                saxlayaraq vaxtı təsdiqləyəcək.
+              </>
+            ) : (
+              <>
+                Sifarişiniz profilinizin <strong>“Sifarişlərim”</strong>{" "}
+                bölməsində saxlanıldı. Təsdiq üçün klinikaya zəng etməyiniz
+                xahiş olunur — sifariş avtomatik olaraq göndərilmir.
+              </>
+            )}{" "}
             <strong>Onlayn ödəniş alınmadı</strong>; ödəniş filialda həyata
             keçirilir.
           </p>
@@ -304,20 +377,30 @@ export default function SebetPage() {
                   />
                 </div>
               ) : user ? (
-                <Button
-                  variant="cta"
-                  size="lg"
-                  className="mt-5 w-full"
-                  onClick={() => {
-                    // Moves the basket into order history rather than discarding
-                    // it, so "Keçmiş sifarişlər" has something to show.
-                    submitOrder(user.id)
-                    setSent(true)
-                  }}
-                >
-                  Sifarişi göndər
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </Button>
+                <>
+                  {submitError && (
+                    <p
+                      role="alert"
+                      className="mt-5 flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700"
+                    >
+                      <AlertCircle
+                        className="mt-0.5 h-4 w-4 shrink-0"
+                        aria-hidden="true"
+                      />
+                      {submitError}
+                    </p>
+                  )}
+                  <Button
+                    variant="cta"
+                    size="lg"
+                    className="mt-5 w-full"
+                    disabled={submitting}
+                    onClick={placeOrder}
+                  >
+                    {submitting ? "Göndərilir..." : "Sifarişi göndər"}
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  </Button>
+                </>
               ) : (
                 /*
                   Signed out, the basket is kept and the order is blocked rather

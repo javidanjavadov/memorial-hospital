@@ -22,4 +22,10 @@ jobs:
       # still imported by a layout) that previously reached the deploy.
       - run: npm run typecheck
       - run: npm run lint
+
+      # Before the build, so a data regression (a price key that matches no
+      # branch, a duplicated category slug) fails in seconds rather than after
+      # a full production build.
+      - run: npm run test
+
       - run: npm run build
