@@ -93,6 +93,10 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
     groups[0]?.categories[0]?.slug ?? ""
   )
   const [items, setItems] = useState<PickerItem[]>([])
+  /* Which category the rendered list belongs to. The list is keyed on this, not
+     on the selected category, so the outgoing cards stay put and fade while the
+     next set loads instead of remounting mid-transition. */
+  const [loadedSlug, setLoadedSlug] = useState("")
   const [loading, setLoading] = useState(true)
   const [failed, setFailed] = useState(false)
   const [query, setQuery] = useState("")
@@ -128,6 +132,7 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
     const cached = cache.current.get(categorySlug)
     if (cached) {
       setItems(cached)
+      setLoadedSlug(categorySlug)
       setLoading(false)
       setFailed(false)
       return
@@ -147,6 +152,7 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
       .then((data: PickerItem[]) => {
         cache.current.set(categorySlug, data)
         setItems(data)
+        setLoadedSlug(categorySlug)
         setLoading(false)
       })
       .catch((error) => {
@@ -262,6 +268,7 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
 
             <CategoryStrip
               ref={chipsRef}
+              groupSlug={group?.slug ?? ""}
               categories={group?.categories ?? []}
               selected={categorySlug}
               onSelect={(slug) => {
@@ -286,7 +293,7 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
             </label>
 
             <div className="mt-5">
-              {loading ? (
+              {loading && items.length === 0 ? (
                 <div
                   className="flex items-center justify-center gap-3 py-16"
                   role="status"
@@ -330,8 +337,12 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
                     switch happens with no visible response at all.
                   */}
                   <ul
-                    key={categorySlug}
-                    className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                    key={loadedSlug}
+                    className={cn(
+                      "grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
+                      loading ? "list-fading" : "list-ready"
+                    )}
+                    aria-busy={loading || undefined}
                   >
                     {visible.map((item, index) => (
                       <ServiceCard key={item.slug} item={item} index={index} />
@@ -375,11 +386,13 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
  */
 function CategoryStrip({
   ref,
+  groupSlug,
   categories,
   selected,
   onSelect,
 }: {
   ref: React.RefObject<HTMLDivElement | null>
+  groupSlug: string
   categories: PickerCategory[]
   selected: string
   onSelect: (slug: string) => void
@@ -409,6 +422,10 @@ function CategoryStrip({
       */}
       <div className="md:px-12">
       <div
+        // Keyed on the group so the chips replay their entrance when it
+        // changes; reusing the row made a group switch look like nothing had
+        // happened up here at all.
+        key={groupSlug}
         ref={ref}
         /*
           `safe center`: centred while the chips fit, and left-aligned once they
@@ -421,16 +438,17 @@ function CategoryStrip({
         */
         className="scrollbar-none flex snap-x gap-2 overflow-x-auto scroll-smooth pb-1 [justify-content:safe_center]"
       >
-        {categories.map((category) => {
+        {categories.map((category, index) => {
           const active = category.slug === selected
           return (
             <button
               key={category.slug}
+              style={{ "--chip-index": Math.min(index, 20) } as React.CSSProperties}
               type="button"
               aria-pressed={active}
               onClick={() => onSelect(category.slug)}
               className={cn(
-                "snap-start whitespace-nowrap rounded-full border px-4 py-2 text-sm transition-all duration-200 active:scale-95",
+                "chip-in snap-start whitespace-nowrap rounded-full border px-4 py-2 text-sm transition-all duration-200 active:scale-95",
                 active
                   ? "border-primary bg-primary text-white"
                   : "border-[var(--line)] bg-[var(--paper-raised)] text-[var(--ink-muted)] hover:border-primary/40 hover:text-[var(--ink)]"
