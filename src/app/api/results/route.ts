@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { auth } from "@/auth"
-import { getDictionary } from "@/i18n"
+import { getDictionary, getLocale } from "@/i18n"
 import { resultsForEmail, toPublicResult } from "@/lib/results-store"
 
 /**
@@ -11,7 +11,8 @@ import { resultsForEmail, toPublicResult } from "@/lib/results-store"
  * number. There is no "look up by id" here at all — you get yours, or nothing.
  */
 export async function GET() {
-  const t = await getDictionary()
+  const locale = await getLocale()
+  const t = await getDictionary(locale)
   const session = await auth()
   const email = session?.user?.email
 
@@ -22,7 +23,7 @@ export async function GET() {
   const results = await resultsForEmail(email)
 
   return NextResponse.json(
-    { results: results.map(toPublicResult) },
+    { results: results.map((result) => toPublicResult(result, locale)) },
     // Medical data: never cached by a proxy, a CDN or the browser's history.
     { headers: { "Cache-Control": "no-store, private" } }
   )

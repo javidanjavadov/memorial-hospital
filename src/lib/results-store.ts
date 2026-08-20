@@ -17,8 +17,11 @@ import { join } from "node:path"
 
 export type ResultFlag = "normal" | "high" | "low"
 
+/** A field the laboratory may hold in several languages. */
+export type Localised = string | Partial<Record<"az" | "ru" | "en" | "tr", string>>
+
 export interface ResultTest {
-  name: string
+  name: Localised
   code?: string
   value: string
   unit?: string
@@ -27,7 +30,7 @@ export interface ResultTest {
 }
 
 export interface ResultPanel {
-  name: string
+  name: Localised
   tests: ResultTest[]
 }
 
@@ -97,10 +100,31 @@ export async function resultPdfForEmail(
   }
 }
 
-/** Strips the PDF filename before results reach the browser. */
-export const toPublicResult = ({ pdf, ...result }: PatientResult) => ({
+/**
+ * Picks one language out of a field the laboratory holds in several.
+ *
+ * A test name is medical text a patient reads, so it follows the page like
+ * everything else. A plain string means the laboratory has only one language
+ * for it, which is what most systems hold — it is then shown as it is rather
+ * than hidden.
+ */
+const say = (value: Localised, locale: string): string =>
+  typeof value === "string"
+    ? value
+    : (value[locale as "az"] ?? value.az ?? Object.values(value)[0] ?? "")
+
+/** Strips the PDF filename, and speaks one language. */
+export const toPublicResult = (
+  { pdf, ...result }: PatientResult,
+  locale: string
+) => ({
   ...result,
   hasPdf: Boolean(pdf),
+  panels: result.panels.map((panel) => ({
+    ...panel,
+    name: say(panel.name, locale),
+    tests: panel.tests.map((test) => ({ ...test, name: say(test.name, locale) })),
+  })),
 })
 
 export type PublicResult = ReturnType<typeof toPublicResult>
