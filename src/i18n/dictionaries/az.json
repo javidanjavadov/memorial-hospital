@@ -32,7 +32,8 @@
     "networkError": "Şəbəkə xətası. Yenidən cəhd edin.",
     "currency": "AZN",
     "serviceCount": "{count} xidmət",
-    "categoryCount": "{count} kateqoriya"
+    "categoryCount": "{count} kateqoriya",
+    "doctorCount": "{count} həkim"
   },
   "basket": {
     "title": "Səbətim",
@@ -258,7 +259,9 @@
     "findDoctorTitle": "Sizə uyğun həkimi tapın",
     "findDoctorSubtitle": "Ad, ixtisas və ya filiala görə axtarın — nəticələr birbaşa qəbul səhifəsinə bağlanır.",
     "specialty": "İxtisas",
-    "findDoctorNote": "Qəbul saatları və qiymətlər həkim səhifəsində göstərilir."
+    "findDoctorNote": "Qəbul saatları və qiymətlər həkim səhifəsində göstərilir.",
+    "aboutBody1": "{year}-cu ildən fəaliyyət göstərən Memorial Hospital, Bakının aparıcı tibbi mərkəzlərindən biridir. Müasir texnologiyalar və təcrübəli həkim heyəti ilə pasiyentlərimizə yüksək keyfiyyətli tibbi xidmət göstəririk.",
+    "aboutBody2": "Missiyamız — hər bir pasiyentin sağlamlığını qorumaq və onlara ən yaxşı tibbi xidməti təqdim etməkdir. {branches} filialımız, {doctors} həkimimiz və {years} ildən artıq təcrübəmizlə sizin xidmətinizdəyik."
   },
   "booking": {
     "bookTitle": "Qəbula Yazıl",
@@ -371,5 +374,40 @@
     ],
     "contact": {},
     "accreditations": {}
+  },
+  "pages": {
+    "aboutTitle": "Haqqımızda",
+    "aboutSubtitle": "Memorial Hospital tarixi, dəyərləri və komandası — 2009-cu ildən Bakıda keyfiyyətli tibbi xidmət.",
+    "valuesTitle": "Dəyərlərimiz",
+    "valueQuality": "Keyfiyyət",
+    "valueQualityBody": "Beynəlxalq standartlara cavab verən tibbi xidmət",
+    "valueHumanity": "İnsanlıq",
+    "valueHumanityBody": "Hər pasiyentə fərdi və diqqətli yanaşma",
+    "valueProfessionalism": "Peşəkarlıq",
+    "valueProfessionalismBody": "Təcrübəli həkim heyəti və müasir avadanlıqlar",
+    "valueGrowth": "İnkişaf",
+    "valueGrowthBody": "Daim tibbi biliklərimizi artırırıq",
+    "historyTitle": "Tarixçəmiz",
+    "milestoneFounded": "Memorial Hospital təsis edildi",
+    "milestoneQarayev": "Qarayev filialı açıldı",
+    "milestoneLab": "Laboratoriya mərkəzi istifadəyə verildi",
+    "milestoneGanja": "Gəncə filialı açıldı",
+    "milestoneOnline": "Onlayn qəbul sistemi tətbiq edildi",
+    "milestonePatients": "100 mininci pasiyent qəbul edildi",
+    "doctorsEyebrow": "Həkim heyəti",
+    "doctorsTitle": "Həkimlərimiz",
+    "searchDoctorLabel": "Həkim və ya ixtisas axtar",
+    "searchDoctorPlaceholder": "Həkim adı və ya ixtisas…",
+    "filterBySpecialty": "İxtisasa görə süz",
+    "filterByBranch": "Filiala görə süz",
+    "allSpecialties": "Bütün ixtisaslar",
+    "allBranches": "Bütün filiallar",
+    "noDoctorsFound": "Heç bir həkim tapılmadı",
+    "noDoctorsHint": "Axtarış şərtlərini dəyişməyi yoxlayın.",
+    "resetFilters": "Filtrləri sıfırla",
+    "notFoundTitle": "Səhifə Tapılmadı",
+    "notFoundBody": "Axtardığınız səhifə mövcud deyil və ya köçürülüb.",
+    "goHome": "Ana Səhifə",
+    "bookAppointment": "Qəbula Yazıl"
   }
 }

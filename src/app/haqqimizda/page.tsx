@@ -3,47 +3,51 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Shield, Award, Heart, Target } from "lucide-react"
 import { FOUNDED_YEAR, YEARS_OF_EXPERIENCE } from "@/data"
 import { pageMetadata } from "@/lib/site"
+import { getDictionary } from "@/i18n"
 
-export const metadata: Metadata = pageMetadata({
-  title: "Haqqımızda",
-  description:
-    "Memorial Hospital tarixi, dəyərləri və komandası — 2009-cu ildən Bakıda keyfiyyətli tibbi xidmət.",
-  path: "/haqqimizda",
-})
+/*
+ * generateMetadata rather than a static object: the title and description are
+ * what a search engine and a shared link show, and they have to follow the
+ * visitor's language like the page itself.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getDictionary()
+  return pageMetadata({
+    title: t.pages.aboutTitle,
+    description: t.pages.aboutSubtitle,
+    path: "/haqqimizda",
+  })
+}
 
-const values = [
-  {
-    icon: Shield,
-    title: "Keyfiyyət",
-    description: "Beynəlxalq standartlara cavab verən tibbi xidmət",
-  },
-  {
-    icon: Heart,
-    title: "İnsanənlik",
-    description: "Hər pasiyentə fərdi və diqqətli yanaşma",
-  },
+/* Built from the dictionary at render time: a module-level array is evaluated
+   once at import, before any locale is known. */
+type Copy = Awaited<ReturnType<typeof getDictionary>>
+
+const buildValues = (t: Copy) => [
+  { icon: Shield, title: t.pages.valueQuality, description: t.pages.valueQualityBody },
+  { icon: Heart, title: t.pages.valueHumanity, description: t.pages.valueHumanityBody },
   {
     icon: Award,
-    title: "Peşəkarlıq",
-    description: "Təcrübəli həkim heyəti və müasir avadanlıqlar",
+    title: t.pages.valueProfessionalism,
+    description: t.pages.valueProfessionalismBody,
   },
-  {
-    icon: Target,
-    title: "İnkişaf",
-    description: "Daim tibbi biliklərimizi artırırıq",
-  },
+  { icon: Target, title: t.pages.valueGrowth, description: t.pages.valueGrowthBody },
 ]
 
-const timeline = [
-  { year: String(FOUNDED_YEAR), event: "Memorial Hospital təsis edildi" },
-  { year: "2012", event: "Qarayev filialı açıldı" },
-  { year: "2015", event: "Laboratoriya mərkəzi istifadəyə verildi" },
-  { year: "2018", event: "Gəncə filialı açıldı" },
-  { year: "2020", event: "Onlayn qəbul sistemi tətbiq edildi" },
-  { year: "2023", event: "100-cü mininci pasiyent qəbul edildi" },
+const buildTimeline = (t: Copy) => [
+  { year: String(FOUNDED_YEAR), event: t.pages.milestoneFounded },
+  { year: "2012", event: t.pages.milestoneQarayev },
+  { year: "2015", event: t.pages.milestoneLab },
+  { year: "2018", event: t.pages.milestoneGanja },
+  { year: "2020", event: t.pages.milestoneOnline },
+  { year: "2023", event: t.pages.milestonePatients },
 ]
 
-export default function HaqqimizdaPage() {
+export default async function HaqqimizdaPage() {
+  const t = await getDictionary()
+  const values = buildValues(t)
+  const timeline = buildTimeline(t)
+
   return (
     <div className="min-h-screen bg-[var(--paper)]">
       {/* Hero */}
@@ -51,7 +55,7 @@ export default function HaqqimizdaPage() {
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
-              Haqqımızda
+              {t.pages.aboutTitle}
             </h1>
             <p className="text-lg text-slate-600 leading-relaxed">
               Memorial Hospital {FOUNDED_YEAR}-cu ildən Bakıda keyfiyyətli tibbi
@@ -66,7 +70,7 @@ export default function HaqqimizdaPage() {
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-slate-900 text-center mb-12">
-            Dəyərlərimiz
+            {t.pages.valuesTitle}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {values.map((value, i) => (
@@ -88,7 +92,7 @@ export default function HaqqimizdaPage() {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-slate-900 text-center mb-12">
-            Tarixçəmiz
+            {t.pages.historyTitle}
           </h2>
           <div className="max-w-2xl mx-auto">
             {timeline.map((item, i) => (

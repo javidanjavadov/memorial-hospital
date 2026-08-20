@@ -6,6 +6,7 @@ import { ArrowRight, Home } from "lucide-react"
 import { AnimateOnScroll } from "@/components/animations"
 import { serviceCategories } from "@/data"
 import { useT } from "@/i18n/client"
+import { localizeServiceCategory } from "@/i18n/data"
 
 /**
  * Top-level service groups, matching how the hospital actually organises them.
@@ -39,7 +40,9 @@ export default function ServicesSection() {
           one line of padding.
         */}
         <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {serviceCategories.map((service, i) => (
+          {serviceCategories.map((raw, i) => {
+            const service = localizeServiceCategory(raw, t.data)
+            return (
             <li key={service.id} className="h-full">
               <AnimateOnScroll delay={i * 70} className="h-full">
                 <Link
@@ -79,7 +82,8 @@ export default function ServicesSection() {
                 </Link>
               </AnimateOnScroll>
             </li>
-          ))}
+            )
+          })}
         </ul>
       </div>
     </section>

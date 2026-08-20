@@ -32,7 +32,8 @@
     "networkError": "Ağ hatası. Tekrar deneyin.",
     "currency": "AZN",
     "serviceCount": "{count} hizmet",
-    "categoryCount": "{count} kategori"
+    "categoryCount": "{count} kategori",
+    "doctorCount": "{count} doktor"
   },
   "basket": {
     "title": "Sepetim",
@@ -258,7 +259,9 @@
     "findDoctorTitle": "Size uygun doktoru bulun",
     "findDoctorSubtitle": "Ada, branşa veya şubeye göre arayın — sonuçlar doğrudan randevu sayfasına bağlanır.",
     "specialty": "Branş",
-    "findDoctorNote": "Randevu saatleri ve ücretler doktor sayfasında belirtilir."
+    "findDoctorNote": "Randevu saatleri ve ücretler doktor sayfasında belirtilir.",
+    "aboutBody1": "{year} yılından bu yana hizmet veren Memorial Hospital, Bakü’nün önde gelen tıp merkezlerinden biridir. Modern teknoloji ve deneyimli hekim kadromuzla hastalarımıza yüksek kaliteli sağlık hizmeti sunuyoruz.",
+    "aboutBody2": "Misyonumuz, her hastanın sağlığını korumak ve ona en iyi sağlık hizmetini sunmaktır. {branches} şubemiz, {doctors} doktorumuz ve {years} yılı aşkın deneyimimizle hizmetinizdeyiz."
   },
   "booking": {
     "bookTitle": "Randevu Alın",
@@ -497,5 +500,40 @@
         "markNote": "Katılımcı"
       }
     }
+  },
+  "pages": {
+    "aboutTitle": "Hakkımızda",
+    "aboutSubtitle": "Memorial Hospital tarihi, değerleri ve ekibi — 2009 yılından bu yana Bakü şehrinde kaliteli sağlık hizmeti.",
+    "valuesTitle": "Değerlerimiz",
+    "valueQuality": "Kalite",
+    "valueQualityBody": "Uluslararası standartlara uygun sağlık hizmeti",
+    "valueHumanity": "İnsanlık",
+    "valueHumanityBody": "Her hastaya kişisel ve özenli yaklaşım",
+    "valueProfessionalism": "Profesyonellik",
+    "valueProfessionalismBody": "Deneyimli hekim kadrosu ve modern ekipmanlar",
+    "valueGrowth": "Gelişim",
+    "valueGrowthBody": "Tıbbi bilgi birikimimizi sürekli geliştiriyoruz",
+    "historyTitle": "Tarihçemiz",
+    "milestoneFounded": "Memorial Hospital kuruldu",
+    "milestoneQarayev": "Qarayev şubesi açıldı",
+    "milestoneLab": "Laboratuvar merkezi hizmete açıldı",
+    "milestoneGanja": "Gence şubesi açıldı",
+    "milestoneOnline": "Online randevu sistemi devreye alındı",
+    "milestonePatients": "100 bininci hasta kabul edildi",
+    "doctorsEyebrow": "Hekim Kadrosu",
+    "doctorsTitle": "Doktorlarımız",
+    "searchDoctorLabel": "Doktor veya branş ara",
+    "searchDoctorPlaceholder": "Doktor adı veya branş…",
+    "filterBySpecialty": "Branşa göre filtrele",
+    "filterByBranch": "Şubeye göre filtrele",
+    "allSpecialties": "Tüm branşlar",
+    "allBranches": "Tüm şubeler",
+    "noDoctorsFound": "Doktor bulunamadı",
+    "noDoctorsHint": "Arama kriterlerinizi değiştirmeyi deneyin.",
+    "resetFilters": "Filtreleri sıfırla",
+    "notFoundTitle": "Sayfa Bulunamadı",
+    "notFoundBody": "Aradığınız sayfa mevcut değil veya taşınmış olabilir.",
+    "goHome": "Ana Sayfa",
+    "bookAppointment": "Randevu Al"
   }
 }

@@ -105,7 +105,7 @@ export default function DepartmentsSection() {
                 </span>
                 {count > 0 && (
                   <span className="mt-3 block text-xs text-[var(--ink-muted)]">
-                    {count} həkim
+                    {t.n(t.common.doctorCount, count)}
                   </span>
                 )}
               </Link>

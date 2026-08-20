@@ -6,6 +6,7 @@ import { Search, SlidersHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import DoctorCard from "@/components/doctor-card"
 import { branches, departments, doctors } from "@/data"
+import { useT } from "@/i18n/client"
 
 export default function HekimlerPage() {
   return (
@@ -16,6 +17,7 @@ export default function HekimlerPage() {
 }
 
 function HekimlerContent() {
+  const t = useT()
   // Seeded from the URL (/hekimler?q=…&dept=…&branch=…) so the homepage search
   // can hand its query over, and so a filtered view is shareable.
   const searchParams = useSearchParams()
@@ -59,10 +61,10 @@ function HekimlerContent() {
       <div className="border-b border-slate-200 bg-white">
         <div className="container mx-auto px-4 py-14 md:py-20">
           <p className="mb-3 text-sm tracking-[0.14em] text-[var(--ink-muted)] uppercase">
-            Həkim heyəti
+            {t.pages.doctorsEyebrow}
           </p>
           <h1 className="font-display text-step-4 max-w-3xl text-[var(--ink)]">
-            Həkimlərimiz
+            {t.pages.doctorsTitle}
           </h1>
           <p className="mt-4 max-w-2xl text-lg text-slate-600">
             {doctors.length} həkim, {departments.length} ixtisas üzrə{" "}
@@ -77,7 +79,7 @@ function HekimlerContent() {
         <div className="container mx-auto flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center">
           <div className="relative flex-1">
             <label htmlFor={searchId} className="sr-only">
-              Həkim və ya ixtisas axtar
+              {t.pages.searchDoctorLabel}
             </label>
             <Search
               className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-slate-400"
@@ -86,7 +88,7 @@ function HekimlerContent() {
             <input
               id={searchId}
               type="search"
-              placeholder="Həkim adı və ya ixtisas…"
+              placeholder={t.pages.searchDoctorPlaceholder}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="h-11 w-full rounded-lg border border-slate-200 bg-white pr-4 pl-10 text-sm transition-colors hover:border-slate-300 focus-visible:border-teal-500 focus-visible:ring-2 focus-visible:ring-teal-500/30 focus-visible:outline-none"
@@ -99,7 +101,7 @@ function HekimlerContent() {
               aria-hidden="true"
             />
             <label htmlFor={deptId} className="sr-only">
-              İxtisasa görə süz
+              {t.pages.filterBySpecialty}
             </label>
             <select
               id={deptId}
@@ -107,7 +109,7 @@ function HekimlerContent() {
               onChange={(e) => setFilterDept(e.target.value)}
               className={`${selectClass} flex-1 sm:flex-none`}
             >
-              <option value="">Bütün ixtisaslar</option>
+              <option value="">{t.pages.allSpecialties}</option>
               {departments.map((d) => (
                 <option key={d.id} value={d.id}>
                   {d.name}
@@ -116,7 +118,7 @@ function HekimlerContent() {
             </select>
 
             <label htmlFor={branchId} className="sr-only">
-              Filiala görə süz
+              {t.pages.filterByBranch}
             </label>
             <select
               id={branchId}
@@ -124,7 +126,7 @@ function HekimlerContent() {
               onChange={(e) => setFilterBranch(e.target.value)}
               className={`${selectClass} flex-1 sm:flex-none`}
             >
-              <option value="">Bütün filiallar</option>
+              <option value="">{t.pages.allBranches}</option>
               {branches.map((b) => (
                 <option key={b.id} value={b.id}>
                   {b.name}
@@ -149,14 +151,14 @@ function HekimlerContent() {
         ) : (
           <div className="rounded-2xl border border-slate-200 bg-white py-20 text-center">
             <p className="mb-2 text-lg font-medium text-slate-700">
-              Heç bir həkim tapılmadı
+              {t.pages.noDoctorsFound}
             </p>
             <p className="mb-6 text-sm text-slate-500">
-              Axtarış şərtlərini dəyişməyi yoxlayın.
+              {t.pages.noDoctorsHint}
             </p>
             {hasFilters && (
               <Button variant="outline" onClick={resetFilters}>
-                Filtrləri sıfırla
+                {t.pages.resetFilters}
               </Button>
             )}
           </div>

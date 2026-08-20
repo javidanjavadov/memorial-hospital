@@ -18,6 +18,9 @@ import AccreditationSection from "@/components/accreditation-section"
 import AccreditationBar from "@/components/accreditation-bar"
 import FaqSection from "@/components/faq-section"
 import { getDictionary } from "@/i18n"
+// Server Components get the plain dictionary; `fill` is the same interpolator
+// the client hook exposes as t.f.
+import { fill } from "@/i18n/format"
 
 export default async function Home() {
   // A Server Component: it reads the dictionary directly rather than through
@@ -63,13 +66,14 @@ export default async function Home() {
                   Memorial Hospital <span className="text-primary">{t.home.aboutEyebrow}</span>
                 </h2>
                 <p className="text-lg text-slate-600 leading-relaxed">
-                  {FOUNDED_YEAR}-cu ildən fəaliyyət göstərən Memorial Hospital, Bakının aparıcı tibbi mərkəzlərindən biridir. 
-                  Müasir texnologiyalar və təcrübəli həkim heyəti ilə pasiyentlərimizə yüksək keyfiyyətli tibbi xidmət göstəririk.
+                  {fill(t.home.aboutBody1, { year: FOUNDED_YEAR })}
                 </p>
                 <p className="text-lg text-slate-600 leading-relaxed">
-                  Missiyamız — hər bir pasiyentin sağlamlığını qorumaq və onlara ən yaxşı tibbi xidməti təqdim etməkdir. 
-                  {branches.length} filialımız, {doctors.length} həkimimiz və {YEARS_OF_EXPERIENCE} ildən
-                  artıq təcrübəmizlə sizin xidmətinizdəyik.
+                  {fill(t.home.aboutBody2, {
+                    branches: branches.length,
+                    doctors: doctors.length,
+                    years: YEARS_OF_EXPERIENCE,
+                  })}
                 </p>
                 <div className="grid grid-cols-2 gap-4 pt-4">
                   <div className="flex items-center gap-3">

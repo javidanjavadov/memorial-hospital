@@ -40,6 +40,25 @@ export function localizeBranch(branch: Branch, data: DataDictionary): Branch {
   }
 }
 
+/**
+ * The five cards on the homepage services strip.
+ *
+ * They share their ids with departments — "laboratoriya", "poliklinika",
+ * "checkup" — so they read from the same map rather than a second one that
+ * would have to be kept in step by hand.
+ */
+export function localizeServiceCategory<
+  T extends { id: string; name: string; description: string },
+>(category: T, data: DataDictionary): T {
+  const translated = data?.departments?.[category.id]
+  if (!translated) return category
+  return {
+    ...category,
+    name: translated.name || category.name,
+    description: translated.description || category.description,
+  }
+}
+
 /** Catalogue group name and blurb, keyed by the group's slug. */
 export function localizeGroup(
   group: { slug: string; name: string; blurb: string },

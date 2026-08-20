@@ -39,9 +39,13 @@ export type Dictionary = Omit<Source, "common" | "doctors" | "data"> & {
    */
   data: DataTranslations
 } & {
-  common: Omit<Source["common"], "serviceCount" | "categoryCount"> & {
+  common: Omit<
+    Source["common"],
+    "serviceCount" | "categoryCount" | "doctorCount"
+  > & {
     serviceCount: Phrase
     categoryCount: Phrase
+    doctorCount: Phrase
   }
   doctors: Omit<Source["doctors"], "years"> & { years: Phrase }
 }

@@ -38,6 +38,10 @@
     "categoryCount": {
       "one": "{count} category",
       "other": "{count} categories"
+    },
+    "doctorCount": {
+      "one": "{count} doctor",
+      "other": "{count} doctors"
     }
   },
   "basket": {
@@ -267,7 +271,9 @@
     "findDoctorTitle": "Find the right doctor for you",
     "findDoctorSubtitle": "Search by name, specialty or branch — every result links straight to booking.",
     "specialty": "Specialty",
-    "findDoctorNote": "Consultation hours and prices are shown on each doctor page."
+    "findDoctorNote": "Consultation hours and prices are shown on each doctor page.",
+    "aboutBody1": "Operating since {year}, Memorial Hospital is one of the leading medical centres in Baku. With modern technology and an experienced medical team, we provide our patients with high-quality care.",
+    "aboutBody2": "Our mission is to protect the health of every patient and give them the best care we can. We are at your service with {branches} branches, {doctors} doctors and more than {years} years of experience."
   },
   "booking": {
     "bookTitle": "Book an Appointment",
@@ -506,5 +512,40 @@
         "markNote": "Participant"
       }
     }
+  },
+  "pages": {
+    "aboutTitle": "About Us",
+    "aboutSubtitle": "The history, values and team of Memorial Hospital — providing quality healthcare in Baku since 2009.",
+    "valuesTitle": "Our Values",
+    "valueQuality": "Quality",
+    "valueQualityBody": "Medical care that meets international standards",
+    "valueHumanity": "Compassion",
+    "valueHumanityBody": "A personal, attentive approach to every patient",
+    "valueProfessionalism": "Professionalism",
+    "valueProfessionalismBody": "Experienced medical staff and modern equipment",
+    "valueGrowth": "Growth",
+    "valueGrowthBody": "We are constantly expanding our medical expertise",
+    "historyTitle": "Our History",
+    "milestoneFounded": "Memorial Hospital was founded",
+    "milestoneQarayev": "Qarayev branch opened",
+    "milestoneLab": "Laboratory centre opened",
+    "milestoneGanja": "Ganja branch opened",
+    "milestoneOnline": "Online appointment system launched",
+    "milestonePatients": "100,000th patient treated",
+    "doctorsEyebrow": "Medical Staff",
+    "doctorsTitle": "Our Doctors",
+    "searchDoctorLabel": "Search for a doctor or specialty",
+    "searchDoctorPlaceholder": "Doctor name or specialty…",
+    "filterBySpecialty": "Filter by specialty",
+    "filterByBranch": "Filter by branch",
+    "allSpecialties": "All specialties",
+    "allBranches": "All branches",
+    "noDoctorsFound": "No doctors found",
+    "noDoctorsHint": "Try adjusting your search criteria.",
+    "resetFilters": "Reset filters",
+    "notFoundTitle": "Page Not Found",
+    "notFoundBody": "The page you are looking for does not exist or has been moved.",
+    "goHome": "Go Home",
+    "bookAppointment": "Book Appointment"
   }
 }
