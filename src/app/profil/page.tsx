@@ -231,7 +231,8 @@ function ProfilPageInner() {
       return
     }
     const result = cancelAppointment(id)
-    if (!result.ok) setCancelError(result.error)
+    // The store returns a key; the wording belongs to whoever shows it.
+    if (!result.ok) setCancelError(t.ui[result.error])
   }
 
   const missing = missingProfileFields(user)

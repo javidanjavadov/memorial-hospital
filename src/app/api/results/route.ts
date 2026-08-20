@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { auth } from "@/auth"
+import { getDictionary } from "@/i18n"
 import { resultsForEmail, toPublicResult } from "@/lib/results-store"
 
 /**
@@ -10,11 +11,12 @@ import { resultsForEmail, toPublicResult } from "@/lib/results-store"
  * number. There is no "look up by id" here at all — you get yours, or nothing.
  */
 export async function GET() {
+  const t = await getDictionary()
   const session = await auth()
   const email = session?.user?.email
 
   if (!email) {
-    return NextResponse.json({ error: "Sessiya tapılmadı" }, { status: 401 })
+    return NextResponse.json({ error: t.ui.sessionNotFound }, { status: 401 })
   }
 
   const results = await resultsForEmail(email)

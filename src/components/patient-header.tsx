@@ -4,6 +4,7 @@ import Link from "next/link"
 import { ordersFor, useBasketStore } from "@/lib/basket-store"
 import { useCurrentUser } from "@/lib/use-current-user"
 import { cn } from "@/lib/utils"
+import { useT } from "@/i18n/client"
 
 /** dd.MM.yyyy — see the note in src/app/profil/page.tsx on az-AZ formatting. */
 const formatDate = (iso: string) => {
@@ -25,6 +26,7 @@ const formatDate = (iso: string) => {
  * particular yet.
  */
 export default function PatientHeader({ className }: { className?: string }) {
+  const t = useT()
   const { user } = useCurrentUser()
   const orders = useBasketStore((s) => s.orders)
   const hasHydrated = useBasketStore((s) => s.hasHydrated)
@@ -58,15 +60,15 @@ export default function PatientHeader({ className }: { className?: string }) {
         <dl className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[var(--ink-muted)]">
           {user.birthDate && (
             <div className="flex gap-1">
-              <dt>Doğum tarixi:</dt>
+              <dt>{t.profile.birthDate}:</dt>
               <dd className="font-medium text-[var(--ink)]">
                 {formatDate(user.birthDate)}
               </dd>
             </div>
           )}
           <div className="flex gap-1">
-            <dt className="sr-only">Cins</dt>
-            <dd>{user.gender === "FEMALE" ? "Qadın" : "Kişi"}</dd>
+            <dt className="sr-only">{t.profile.gender}</dt>
+            <dd>{user.gender === "FEMALE" ? t.profile.female : t.profile.male}</dd>
           </div>
           {user.finCode && (
             <div className="flex gap-1">
@@ -77,7 +79,7 @@ export default function PatientHeader({ className }: { className?: string }) {
             </div>
           )}
           <div className="flex gap-1">
-            <dt>Sifariş sayı:</dt>
+            <dt>{t.profile.orderCount}:</dt>
             <dd className="font-medium text-[var(--ink)]">{orderCount}</dd>
           </div>
         </dl>

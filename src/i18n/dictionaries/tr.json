@@ -724,6 +724,18 @@
     "notFoundWhatYouNeed": "Aradığınızı bulamadınız mı?",
     "callCentreInfo": "Çağrı merkezimiz, tahlil fiyatları ve hazırlık kuralları hakkında bilgi vermektedir.",
     "findDoctor": "Doktor bul",
-    "priceVaryNote": "Fiyatlar şubeye göre değişiklik gösterebilir. Tahlile hazırlık kuralları ve güncel fiyat için çağrı merkezimizle iletişime geçin."
+    "priceVaryNote": "Fiyatlar şubeye göre değişiklik gösterebilir. Tahlile hazırlık kuralları ve güncel fiyat için çağrı merkezimizle iletişime geçin.",
+    "facebookPage": "Facebook sayfamız (yeni pencerede açılır)",
+    "instagramPage": "Instagram sayfamız (yeni pencerede açılır)",
+    "whatsappWrite": "WhatsApp'tan yazın (yeni pencerede açılır)",
+    "slotTaken": "Bu saat dolu. Lütfen başka bir saat seçin.",
+    "appointmentSaveFailed": "Randevu kaydedilemedi",
+    "sessionNotFound": "Oturum bulunamadı",
+    "appointmentNotFound": "Randevu bulunamadı",
+    "cancelNotAllowed": "Bu randevuyu iptal etme yetkiniz yok",
+    "changeSaveFailed": "Değişiklik kaydedilemedi",
+    "badRequest": "Geçersiz istek",
+    "orderInvalid": "Sipariş bilgileri geçersiz",
+    "notFoundShort": "Bulunamadı"
   }
 }

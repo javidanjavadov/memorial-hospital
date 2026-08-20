@@ -573,6 +573,18 @@
     "notFoundWhatYouNeed": "Axtardığınızı tapmadınız?",
     "callCentreInfo": "Çağrı mərkəzimiz analizin qiyməti və hazırlıq qaydaları barədə məlumat verir.",
     "findDoctor": "Həkim axtar",
-    "priceVaryNote": "Qiymətlər filiala görə dəyişə bilər. Analizə hazırlıq qaydaları və dəqiq qiymət üçün çağrı mərkəzimizlə əlaqə saxlayın."
+    "priceVaryNote": "Qiymətlər filiala görə dəyişə bilər. Analizə hazırlıq qaydaları və dəqiq qiymət üçün çağrı mərkəzimizlə əlaqə saxlayın.",
+    "facebookPage": "Facebook səhifəmiz (yeni pəncərədə açılır)",
+    "instagramPage": "Instagram səhifəmiz (yeni pəncərədə açılır)",
+    "whatsappWrite": "WhatsApp ilə yazın (yeni pəncərədə açılır)",
+    "slotTaken": "Bu vaxt artıq doludur. Zəhmət olmasa başqa vaxt seçin.",
+    "appointmentSaveFailed": "Qəbul yaddaşa yazıla bilmədi",
+    "sessionNotFound": "Sessiya tapılmadı",
+    "appointmentNotFound": "Qəbul tapılmadı",
+    "cancelNotAllowed": "Bu qəbulu ləğv etmək icazəniz yoxdur",
+    "changeSaveFailed": "Dəyişiklik yaddaşa yazıla bilmədi",
+    "badRequest": "Yanlış sorğu",
+    "orderInvalid": "Sifariş məlumatları düzgün deyil",
+    "notFoundShort": "Tapılmadı"
   }
 }

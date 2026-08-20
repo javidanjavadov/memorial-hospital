@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { auth } from "@/auth"
+import { getDictionary } from "@/i18n"
 import {
   orderPayloadSchema,
   orderReference,
@@ -24,11 +25,15 @@ import {
  * When the hospital connects their endpoint, only the two variables change.
  */
 export async function POST(request: Request) {
+  // The visitor's own language, from the cookie on this request: an error a
+  // patient reads must not arrive in a language they may not.
+  const t = await getDictionary()
+
   const session = await auth()
   const account = session?.user
 
   if (!account?.email) {
-    return NextResponse.json({ error: "Sessiya tapılmadı" }, { status: 401 })
+    return NextResponse.json({ error: t.ui.sessionNotFound }, { status: 401 })
   }
 
   /*
@@ -39,7 +44,7 @@ export async function POST(request: Request) {
   const profile = account.profile
   if (!profile) {
     return NextResponse.json(
-      { error: "Profil tamamlanmayıb", code: "PROFILE_INCOMPLETE" },
+      { error: t.profile.incompleteTitle, code: "PROFILE_INCOMPLETE" },
       { status: 409 }
     )
   }
@@ -48,13 +53,13 @@ export async function POST(request: Request) {
   try {
     body = await request.json()
   } catch {
-    return NextResponse.json({ error: "Yanlış sorğu" }, { status: 400 })
+    return NextResponse.json({ error: t.ui.badRequest }, { status: 400 })
   }
 
   const parsed = orderPayloadSchema.safeParse(body)
   if (!parsed.success) {
     return NextResponse.json(
-      { error: "Sifariş məlumatları düzgün deyil" },
+      { error: t.ui.orderInvalid },
       { status: 400 }
     )
   }
@@ -123,7 +128,7 @@ export async function POST(request: Request) {
           ok: false,
           delivered: false,
           reference: outbound.reference,
-          error: "Sifariş göndərilə bilmədi",
+          error: t.basket.submitFailed,
         },
         { status: 502 }
       )
@@ -144,7 +149,7 @@ export async function POST(request: Request) {
         ok: false,
         delivered: false,
         reference: outbound.reference,
-        error: "Sifariş göndərilə bilmədi",
+        error: t.basket.submitFailed,
       },
       { status: 502 }
     )

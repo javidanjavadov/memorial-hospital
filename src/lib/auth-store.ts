@@ -1,6 +1,7 @@
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
 import { generateId } from "@/lib/crypto"
+import type azDict from "@/i18n/dictionaries/az.json"
 
 export type Gender = "MALE" | "FEMALE"
 
@@ -47,7 +48,15 @@ export interface Appointment {
   createdAt: string
 }
 
-export type AuthResult = { ok: true } | { ok: false; error: string }
+/**
+ * `error` is a key in the dictionary's `ui` namespace, not a sentence.
+ *
+ * The store has no locale — it is a browser store shared by every language —
+ * so it names the failure and the component that shows it does the wording.
+ */
+export type AuthResult =
+  | { ok: true }
+  | { ok: false; error: keyof (typeof azDict)["ui"] }
 
 interface AuthState {
   user: User | null
@@ -134,7 +143,7 @@ export const useAuthStore = create<AuthState>()(
         if (clash) {
           return {
             ok: false,
-            error: "Bu vaxt artıq doludur. Zəhmət olmasa başqa vaxt seçin.",
+            error: "slotTaken",
           }
         }
 
@@ -147,7 +156,7 @@ export const useAuthStore = create<AuthState>()(
         }
 
         if (!saveStoredAppointments([...all, newAppointment])) {
-          return { ok: false, error: "Qəbul yaddaşa yazıla bilmədi" }
+          return { ok: false, error: "appointmentSaveFailed" }
         }
 
         set({ appointments: appointmentsFor(userId, [...all, newAppointment]) })
@@ -156,20 +165,20 @@ export const useAuthStore = create<AuthState>()(
 
       cancelAppointment: (id) => {
         const { user } = get()
-        if (!user) return { ok: false, error: "Sessiya tapılmadı" }
+        if (!user) return { ok: false, error: "sessionNotFound" }
 
         const all = getStoredAppointments()
         const idx = all.findIndex((a) => a.id === id)
-        if (idx === -1) return { ok: false, error: "Qəbul tapılmadı" }
+        if (idx === -1) return { ok: false, error: "appointmentNotFound" }
 
         // Ownership check: previously any id could be cancelled by anyone.
         if (all[idx].userId !== user.id) {
-          return { ok: false, error: "Bu qəbulu ləğv etmək icazəniz yoxdur" }
+          return { ok: false, error: "cancelNotAllowed" }
         }
 
         all[idx] = { ...all[idx], status: "cancelled" }
         if (!saveStoredAppointments(all)) {
-          return { ok: false, error: "Dəyişiklik yaddaşa yazıla bilmədi" }
+          return { ok: false, error: "changeSaveFailed" }
         }
 
         set({ appointments: appointmentsFor(user.id, all) })

@@ -82,7 +82,7 @@ export default function Footer() {
                 href="https://www.facebook.com/MemorialHospital.az"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Facebook səhifəmiz (yeni pəncərədə açılır)"
+                aria-label={t.ui.facebookPage}
                 className="w-10 h-10 rounded-full bg-white/10 hover:bg-accent flex items-center justify-center transition-all duration-300 hover:scale-110 hover:-translate-y-0.5"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -93,7 +93,7 @@ export default function Footer() {
                 href="https://www.instagram.com/memorialhospital.az/"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Instagram səhifəmiz (yeni pəncərədə açılır)"
+                aria-label={t.ui.instagramPage}
                 className="w-10 h-10 rounded-full bg-white/10 hover:bg-accent flex items-center justify-center transition-all duration-300 hover:scale-110 hover:-translate-y-0.5"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -104,7 +104,7 @@ export default function Footer() {
                 href="https://api.whatsapp.com/send?phone=994557101050"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="WhatsApp ilə yazın (yeni pəncərədə açılır)"
+                aria-label={t.ui.whatsappWrite}
                 className="w-10 h-10 rounded-full bg-white/10 hover:bg-green-600 flex items-center justify-center transition-all duration-300 hover:scale-110 hover:-translate-y-0.5"
               >
                 <MessageCircle className="w-5 h-5" aria-hidden="true" />

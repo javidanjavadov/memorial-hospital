@@ -736,6 +736,18 @@
     "notFoundWhatYouNeed": "Did not find what you were looking for?",
     "callCentreInfo": "Our call centre can tell you the price of a test and how to prepare for it.",
     "findDoctor": "Find a doctor",
-    "priceVaryNote": "Prices may vary by branch. Please contact our call centre for test preparation guidelines and exact pricing."
+    "priceVaryNote": "Prices may vary by branch. Please contact our call centre for test preparation guidelines and exact pricing.",
+    "facebookPage": "Our Facebook page (opens in a new window)",
+    "instagramPage": "Our Instagram page (opens in a new window)",
+    "whatsappWrite": "Message us on WhatsApp (opens in a new window)",
+    "slotTaken": "That time is already taken. Please choose another.",
+    "appointmentSaveFailed": "The appointment could not be saved",
+    "sessionNotFound": "Session not found",
+    "appointmentNotFound": "Appointment not found",
+    "cancelNotAllowed": "You are not allowed to cancel this appointment",
+    "changeSaveFailed": "The change could not be saved",
+    "badRequest": "Invalid request",
+    "orderInvalid": "The order details are not valid",
+    "notFoundShort": "Not found"
   }
 }

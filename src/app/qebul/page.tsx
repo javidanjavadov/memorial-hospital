@@ -217,7 +217,7 @@ function QebulContent() {
     })
 
     if (!result.ok) {
-      setSubmitError(result.error)
+      setSubmitError(t.ui[result.error])
       return
     }
 
