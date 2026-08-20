@@ -81,7 +81,15 @@ export default function FloatingBasket() {
   const total = basketSubtotal(lines)
 
   return (
-    <div ref={panelRef} className="fixed bottom-5 right-4 z-50 md:bottom-8 md:right-6">
+    <div
+      ref={panelRef}
+      className={cn(
+        "fixed bottom-5 right-4 z-50 md:bottom-8 md:right-6",
+        // The catalogue shows a basket column from xl up; two baskets on one
+        // screen is one too many.
+        pathname === "/xidmetler" && "xl:hidden"
+      )}
+    >
       {open && (
         <div
           role="dialog"

@@ -17,6 +17,8 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import ServiceInfoButton from "@/components/service-info-button"
+import BasketPanel from "@/components/basket-panel"
+import PatientHeader from "@/components/patient-header"
 import AddToBasketButton from "@/components/add-to-basket-button"
 import { branches } from "@/data"
 import { ordersFor, useBasketStore, type BasketLine } from "@/lib/basket-store"
@@ -95,6 +97,25 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
   const [failed, setFailed] = useState(false)
   const [query, setQuery] = useState("")
 
+  /*
+   * A group can be linked to directly — /xidmetler#polyclinic-catalog.
+   *
+   * It has to be an effect, and it has to set state: the fragment is never
+   * sent to the server, so reading it in the initialiser would render one
+   * group on the server and another on the client, and hydration would
+   * mismatch. Read once on mount rather than watched — after that the visitor
+   * is driving, and a stale hash should not yank them back.
+   */
+  /* eslint-disable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps */
+  useEffect(() => {
+    const hash = window.location.hash.slice(1)
+    const target = groups.find((entry) => entry.slug === hash)
+    if (!target) return
+    setGroupSlug(target.slug)
+    setCategorySlug(target.categories[0]?.slug ?? "")
+  }, [])
+  /* eslint-enable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps */
+
   const cache = useRef(new Map<string, PickerItem[]>())
   const chipsRef = useRef<HTMLDivElement>(null)
 
@@ -158,7 +179,10 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
     : items
 
   return (
-    <div className="min-w-0">
+    <div className="grid gap-6 xl:grid-cols-[1fr_20rem] xl:items-start">
+      <div className="min-w-0">
+        <PatientHeader className="mb-6" />
+
         <div
           role="tablist"
           aria-label="Kataloq görünüşü"
@@ -224,7 +248,11 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
                         {entry.name}
                       </span>
                       <span className="block text-xs text-[var(--ink-muted)]">
-                        {entry.categories.length} kateqoriya · {entry.count} xidmət
+                        {/* The Populyar chip is not a category of its own —
+                            counting it would claim one more than the strip
+                            actually offers. */}
+                        {entry.categories.filter((c) => !c.featured).length}{" "}
+                        kateqoriya · {entry.count} xidmət
                       </span>
                     </span>
                   </button>
@@ -318,6 +346,16 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
             <PastOrders onReorder={() => setTab("services")} />
           </div>
         )}
+      </div>
+
+      {/*
+        The basket kept in view beside the catalogue, as the hospital's panel
+        has it. Wide screens only — below xl there is no room for a column, and
+        the pinned button covers it there.
+      */}
+      <aside className="hidden xl:block">
+        <BasketPanel />
+      </aside>
     </div>
   )
 }
