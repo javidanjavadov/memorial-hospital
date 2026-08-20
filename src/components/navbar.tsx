@@ -6,6 +6,7 @@ import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import {
+  AlertCircle,
   Menu,
   X,
   Phone,
@@ -18,6 +19,7 @@ import {
 import { cn } from "@/lib/utils"
 import { contactInfo, telHref } from "@/data"
 import { useAuthStore } from "@/lib/auth-store"
+import { missingProfileFields } from "@/lib/profile-complete"
 import { useCurrentUser } from "@/lib/use-current-user"
 import { signOut } from "next-auth/react"
 import { smoothScrollToElement } from "@/lib/smooth-scroll"
@@ -43,6 +45,8 @@ export default function Navbar() {
 
   // Covers both login methods — Google session or local email/password account.
   const { user } = useCurrentUser()
+  const missingCount = missingProfileFields(user).length
+  const profileIncomplete = !!user && missingCount > 0
   const localLogout = useAuthStore((s) => s.logout)
 
   const handleLogout = useCallback(() => {
@@ -230,8 +234,23 @@ export default function Navbar() {
                     overHero ? "hover:bg-white/10" : "hover:bg-slate-50"
                   )}
                 >
-                  <span className="w-8 h-8 bg-teal-500 rounded-full flex items-center justify-center text-xs font-bold text-white">
-                    {initials}
+                  <span className="relative">
+                    <span className="w-8 h-8 bg-teal-500 rounded-full flex items-center justify-center text-xs font-bold text-white">
+                      {initials}
+                    </span>
+                    {/* Carried on the avatar itself, so the prompt is visible
+                        from every page rather than only after the menu is
+                        opened. aria-label rather than a bare dot: a red circle
+                        announces nothing to a screen reader. */}
+                    {profileIncomplete && (
+                      <span
+                        role="status"
+                        aria-label="Profil məlumatları tamamlanmayıb"
+                        className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 ring-2 ring-white"
+                      >
+                        <AlertCircle className="h-3 w-3 text-white" aria-hidden="true" />
+                      </span>
+                    )}
                   </span>
                   <ChevronDown
                     className={cn("w-4 h-4", overHero ? "text-white" : "text-slate-500")}
@@ -256,7 +275,17 @@ export default function Navbar() {
                     >
                       <User className="w-4 h-4" aria-hidden="true" />
                       Profilim
+                      {profileIncomplete && (
+                        <span className="ml-auto rounded-full bg-red-100 px-2 py-0.5 text-[0.65rem] font-medium text-red-700">
+                          {missingCount} boş
+                        </span>
+                      )}
                     </Link>
+                    {profileIncomplete && (
+                      <p className="border-t bg-amber-50 px-4 py-2 text-[0.7rem] leading-snug text-amber-900">
+                        Sifariş və qəbul üçün profil məlumatları tamamlanmalıdır.
+                      </p>
+                    )}
                     <hr className="border-slate-100" />
                     <button
                       type="button"
@@ -361,6 +390,11 @@ export default function Navbar() {
                       {initials}
                     </span>
                     {user.fullName}
+                    {profileIncomplete && (
+                      <span className="ml-auto rounded-full bg-red-100 px-2 py-0.5 text-[0.65rem] font-medium text-red-700">
+                        {missingCount} boş
+                      </span>
+                    )}
                   </Link>
                   <button
                     type="button"

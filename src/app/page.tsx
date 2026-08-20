@@ -21,8 +21,22 @@ import FaqSection from "@/components/faq-section"
 export default function Home() {
   return (
     <>
-      <div id="hero"><HeroSection /></div>
-      <AccreditationBar />
+      {/*
+        One screen, whatever the screen is: the sticky header, the photograph
+        and the accreditation bar together come to exactly 100svh, so IAS,
+        RIQAS and QCMD are visible without scrolling on any monitor rather than
+        at a height that happened to suit one.
+
+        `svh` not `vh` — on mobile `vh` measures the viewport with the browser
+        chrome hidden, so the block would run taller than the screen.
+
+        `min-h`, not a fixed height: on a short screen it grows instead of
+        crushing the hero or clipping the bar.
+      */}
+      <div id="hero" className="-mt-16 flex min-h-[100svh] flex-col md:-mt-20">
+        <HeroSection />
+        <AccreditationBar />
+      </div>
       <ServicesSection />
       <div id="haqqimizda">
         <section className="py-16 md:py-24 bg-[var(--paper)]">

@@ -15,7 +15,9 @@ import { accreditations } from "@/data/accreditations"
 export default function AccreditationBar() {
   return (
     <section
-      className="bg-primary text-white"
+      // shrink-0: inside the homepage one-screen block it must keep its full
+      // height and let the photograph absorb the difference.
+      className="shrink-0 bg-primary text-white"
       aria-label="Laboratoriya akkreditasiyaları"
     >
       <div className="container mx-auto px-4">

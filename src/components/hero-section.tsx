@@ -39,11 +39,16 @@ const badges = [
 export default function HeroSection() {
   return (
     /*
-      Pulled up by the header's height so the photograph starts at the very top
-      of the page and runs behind the (transparent) navbar. The matching top
-      padding puts the content back below it, so nothing sits under the bar.
+      Height comes from the wrapper on the homepage, which sizes the header, the
+      photograph and the accreditation bar to exactly one screen: this takes
+      whatever is left over. The top padding keeps the content clear of the
+      (transparent) navbar the photograph runs behind.
+
+      The min-height is the floor for short laptop screens — below it the
+      heading and the buttons would start colliding, and a cramped hero is
+      worse than one that pushes the bar slightly below the fold.
     */
-    <section className="relative -mt-16 flex h-[78svh] max-h-[760px] min-h-[560px] w-full items-center overflow-hidden pt-16 md:-mt-20 md:pt-20">
+    <section className="relative flex w-full flex-1 items-center overflow-hidden pt-16 min-h-[26rem] md:pt-20">
       <Image
         src="/hero/hero-lab.webp"
         alt=""
