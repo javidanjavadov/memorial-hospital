@@ -113,7 +113,7 @@ export default function ProfileCompletionCard({
                     )}
                     {t.profile[field.label]}
                     <span className="sr-only">
-                      {pending ? " — doldurulmayıb" : " — tamamlanıb"}
+                      {pending ? " {t.ui.fieldEmpty}" : " {t.ui.fieldFilled}"}
                     </span>
                   </li>
                 )

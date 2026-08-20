@@ -736,6 +736,54 @@
     "changeSaveFailed": "Değişiklik kaydedilemedi",
     "badRequest": "Geçersiz istek",
     "orderInvalid": "Sipariş bilgileri geçersiz",
-    "notFoundShort": "Bulunamadı"
+    "notFoundShort": "Bulunamadı",
+    "noOnlineBookingShort": "Online randevu mevcut değil",
+    "notAcceptingShort": "Şu anda hasta kabul etmiyor",
+    "labStaff": "Laboratuvar kadrosu",
+    "appointment": "Randevu",
+    "viewOnMap": "Haritada gör",
+    "branchesPageDescription": "Memorial Hospital şubeleri — adresler, telefon numaraları ve çalışma saatleri.",
+    "manifestDescription": "Memorial Hospital — online randevu, doktorlar ve şube bilgileri.",
+    "twoSteps": "İki adım — hesap, ardından hasta bilgileri",
+    "createWithGoogle": "Google ile hesap oluşturun",
+    "noPasswordsStored": "Şifre saklamıyoruz — giriş Google tarafından doğrulanır.",
+    "completeYourDetails": "Bilgilerinizi tamamlayın",
+    "detailsList": "Ad, soyad, baba adı, cinsiyet, doğum tarihi, FIN ve telefon. Laboratuvar numuneyi bu bilgilerle kaydeder.",
+    "continueWithGoogle": "Google ile devam et",
+    "redirecting": "Yönlendiriliyor..."
+  },
+  "meta": {
+    "contact": {
+      "title": "İletişim",
+      "description": "Memorial Hospital ile iletişime geçin — telefon, e-posta, adres ve çalışma saatleri."
+    },
+    "signIn": {
+      "title": "Giriş Yap",
+      "description": "Memorial Hospital hesabınıza giriş yapın ve randevularınızı yönetin."
+    },
+    "doctors": {
+      "title": "Doktorlar",
+      "description": "Memorial Hospital doktorlarını uzmanlık, şube ve tecrübeye göre arayın ve online randevu alın."
+    },
+    "results": {
+      "title": "Sonuçlarımı Görüntüle",
+      "description": "Memorial Hospital laboratuvar sonuçlarınızı hasta ve sipariş numarasıyla görüntüleyin."
+    },
+    "profile": {
+      "title": "Profilim",
+      "description": "Kişisel bilgilerinizi ve randevularınızı yönetin."
+    },
+    "booking": {
+      "title": "Randevu Al",
+      "description": "Memorial Hospital için online randevu oluşturun — bölüm, doktor, şube ve saati kendiniz seçin."
+    },
+    "signUp": {
+      "title": "Kayıt Ol",
+      "description": "Memorial Hospital için yeni hesap oluşturun ve online randevu alın."
+    },
+    "basket": {
+      "title": "Sepetim",
+      "description": "Seçtiğiniz laboratuvar testleri ve siparişiniz."
+    }
   }
 }

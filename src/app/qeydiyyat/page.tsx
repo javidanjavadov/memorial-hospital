@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import GoogleAuthSection from "@/components/google-auth-section"
 import { googleConfigured } from "@/lib/auth-flags"
 import { contactInfo, telHref } from "@/data"
+import { getDictionary } from "@/i18n"
 
 /**
  * Registration is now: sign in with Google, then complete the details Google
@@ -15,7 +16,9 @@ import { contactInfo, telHref } from "@/data"
  * sign-up that hands real identity documents to a fake lock, the account is
  * Google's and the patient details are validated and stored server-side.
  */
-export default function QeydiyyatPage() {
+export default async function QeydiyyatPage() {
+  const t = await getDictionary()
+
   return (
     <div className="min-h-screen bg-[var(--paper)] flex items-center justify-center py-16 px-4">
       <Card className="w-full max-w-md border-0 shadow-xl">
@@ -26,9 +29,9 @@ export default function QeydiyyatPage() {
           >
             <UserPlus className="h-8 w-8 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-slate-900">Qeydiyyat</h1>
+          <h1 className="text-2xl font-bold text-slate-900">{t.meta.signUp.title}</h1>
           <p className="mt-1 text-sm text-slate-500">
-            İki addım — hesab, sonra pasiyent məlumatları
+            {t.ui.twoSteps}
           </p>
         </CardHeader>
 
@@ -40,9 +43,9 @@ export default function QeydiyyatPage() {
                 aria-hidden="true"
               />
               <span className="text-sm text-[var(--ink)]">
-                <strong className="block">Google ilə hesab yaradın</strong>
+                <strong className="block">{t.ui.createWithGoogle}</strong>
                 <span className="text-xs text-[var(--ink-muted)]">
-                  Şifrə saxlamırıq — giriş Google tərəfindən yoxlanılır.
+                  {t.ui.noPasswordsStored}
                 </span>
               </span>
             </li>
@@ -52,10 +55,9 @@ export default function QeydiyyatPage() {
                 aria-hidden="true"
               />
               <span className="text-sm text-[var(--ink)]">
-                <strong className="block">Məlumatlarınızı tamamlayın</strong>
+                <strong className="block">{t.ui.completeYourDetails}</strong>
                 <span className="text-xs text-[var(--ink-muted)]">
-                  Ad, soyad, ata adı, cins, doğum tarixi, FIN və telefon.
-                  Laboratoriya nümunəni bu məlumatlarla qeyd edir.
+{t.ui.detailsList}
                 </span>
               </span>
             </li>

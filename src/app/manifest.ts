@@ -1,12 +1,15 @@
 import type { MetadataRoute } from "next"
 import { siteName } from "@/lib/site"
+import { getDictionary } from "@/i18n"
 
-export default function manifest(): MetadataRoute.Manifest {
+export default async function manifest(): Promise<MetadataRoute.Manifest> {
+  const t = await getDictionary()
+
   return {
-    name: `${siteName} | Bakıdakı Müasir Klinik Xidmətlər Mərkəzi`,
+    name: t.ui.siteTitle,
     short_name: siteName,
     description:
-      "Memorial Hospital — onlayn qəbul, həkimlər və filiallar haqqında məlumat.",
+      t.ui.manifestDescription,
     start_url: "/",
     display: "standalone",
     background_color: "#ffffff",

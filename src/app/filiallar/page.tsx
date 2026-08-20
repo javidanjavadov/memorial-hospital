@@ -1,12 +1,14 @@
 import type { Metadata } from "next"
 import { pageMetadata } from "@/lib/site"
 
-export const metadata: Metadata = pageMetadata({
-  title: "Filiallar",
-  description:
-    "Memorial Hospital filialları — ünvanlar, telefon nömrələri və iş saatları.",
-  path: "/filiallar",
-})
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getDictionary()
+  return pageMetadata({
+    title: t.nav.branches,
+    description: t.ui.branchesPageDescription,
+    path: "/filiallar",
+  })
+}
 
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -24,7 +26,7 @@ export default async function FiliallarPage() {
       <div className="container mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
-            Filiallarımız
+            {t.home.branchesTitle}
           </h1>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
             {t.home.branchesSubtitle}
@@ -40,7 +42,7 @@ export default async function FiliallarPage() {
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
                     <MapPin className="w-12 h-12 text-teal-700 mx-auto mb-2" />
-                    <span className="text-sm font-medium text-teal-700">Xəritədə bax</span>
+                    <span className="text-sm font-medium text-teal-700">{t.ui.viewOnMap}</span>
                   </div>
                 </div>
                 <a
@@ -76,12 +78,12 @@ export default async function FiliallarPage() {
                   <Button variant="outline" className="flex-1" asChild>
                     <a href={telHref(branch.phone)}>
                       <Phone className="w-4 h-4" />
-                      Zəng Et
+                      {t.home.callButton}
                     </a>
                   </Button>
                   <Button variant="cta" className="flex-1" asChild>
                     <Link href="/qebul">
-                      Qəbula Yazıl
+                      {t.home.bookButton}
                       <ArrowRight className="w-4 h-4" />
                     </Link>
                   </Button>

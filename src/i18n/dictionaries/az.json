@@ -585,6 +585,54 @@
     "changeSaveFailed": "Dəyişiklik yaddaşa yazıla bilmədi",
     "badRequest": "Yanlış sorğu",
     "orderInvalid": "Sifariş məlumatları düzgün deyil",
-    "notFoundShort": "Tapılmadı"
+    "notFoundShort": "Tapılmadı",
+    "noOnlineBookingShort": "Onlayn qəbul mövcud deyil",
+    "notAcceptingShort": "Hazırda qəbul aparmır",
+    "labStaff": "Laboratoriya heyəti",
+    "appointment": "Qəbul",
+    "viewOnMap": "Xəritədə bax",
+    "branchesPageDescription": "Memorial Hospital filialları — ünvanlar, telefon nömrələri və iş saatları.",
+    "manifestDescription": "Memorial Hospital — onlayn qəbul, həkimlər və filiallar haqqında məlumat.",
+    "twoSteps": "İki addım — hesab, sonra pasiyent məlumatları",
+    "createWithGoogle": "Google ilə hesab yaradın",
+    "noPasswordsStored": "Şifrə saxlamırıq — giriş Google tərəfindən yoxlanılır.",
+    "completeYourDetails": "Məlumatlarınızı tamamlayın",
+    "detailsList": "Ad, soyad, ata adı, cins, doğum tarixi, FIN və telefon. Laboratoriya nümunəni bu məlumatlarla qeyd edir.",
+    "continueWithGoogle": "Google ilə davam et",
+    "redirecting": "Yönləndirilir..."
+  },
+  "meta": {
+    "contact": {
+      "title": "Əlaqə",
+      "description": "Memorial Hospital ilə əlaqə saxlayın — telefon, email, ünvan və iş saatları."
+    },
+    "signIn": {
+      "title": "Daxil Ol",
+      "description": "Memorial Hospital hesabınıza daxil olun və qəbullarınızı idarə edin."
+    },
+    "doctors": {
+      "title": "Həkimlər",
+      "description": "Memorial Hospital həkimləri — ixtisas, filial və təcrübəyə görə axtarın və onlayn qəbula yazılın."
+    },
+    "results": {
+      "title": "Nəticələrimə bax",
+      "description": "Memorial Hospital laborator analiz nəticələrinizi pasiyent və sifariş nömrəsi ilə görün."
+    },
+    "profile": {
+      "title": "Profilim",
+      "description": "Şəxsi məlumatlarınızı və qəbullarınızı idarə edin."
+    },
+    "booking": {
+      "title": "Qəbula Yazıl",
+      "description": "Memorial Hospital-da onlayn qəbul yaradın — şöbə, həkim, filial və vaxtı özünüz seçin."
+    },
+    "signUp": {
+      "title": "Qeydiyyat",
+      "description": "Memorial Hospital-da yeni hesab yaradın və onlayn qəbula yazılın."
+    },
+    "basket": {
+      "title": "Səbətim",
+      "description": "Seçdiyiniz laborator analizlər və sifariş."
+    }
   }
 }

@@ -80,7 +80,7 @@ export default function DoctorCard({
             <dd>{doctor.branch}</dd>
           </div>
           <div>
-            <dt className="sr-only">Təcrübə</dt>
+            <dt className="sr-only">{t.doctors.experience}</dt>
             <dd>{doctor.experience} il təcrübə</dd>
           </div>
         </dl>
@@ -91,7 +91,7 @@ export default function DoctorCard({
               {doctor.price} <span className="text-[var(--ink-muted)]">AZN</span>
             </p>
           ) : (
-            <p className="text-xs text-[var(--ink-muted)]">Laboratoriya heyəti</p>
+            <p className="text-xs text-[var(--ink-muted)]">{t.ui.labStaff}</p>
           )}
 
           {bookable && (
@@ -99,7 +99,7 @@ export default function DoctorCard({
               href={`/qebul?doctor=${doctor.id}`}
               className="relative z-10 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--primary)] transition-colors hover:text-[var(--ink)]"
             >
-              Qəbul
+              {t.ui.appointment}
               <ArrowRight
                 className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5"
                 aria-hidden="true"

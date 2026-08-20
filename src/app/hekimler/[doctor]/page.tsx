@@ -255,7 +255,7 @@ export default async function DoctorPage({ params }: Props) {
           <section className="mt-12">
             <h2 className="font-display text-step-2 text-[var(--ink)]">
               {relatedByDepartment
-                ? `${department?.name ?? "Şöbə"} üzrə digər həkimlər`
+                ? `${department?.name ?? t.doctors.department} üzrə digər həkimlər`
                 : // The branch name already ends in "filialı", so no second one.
                   `${branch?.name ?? doctor.branch} üzrə digər həkimlər`}
             </h2>

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { signIn } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react"
+import { useT } from "@/i18n/client"
 
 /** Google's brand mark. Google's terms require their own logo, unmodified. */
 function GoogleMark() {
@@ -30,12 +31,16 @@ function GoogleMark() {
 }
 
 export default function GoogleSignInButton({
-  label = "Google ilə davam et",
+  label,
   callbackUrl = "/profil",
 }: {
   label?: string
   callbackUrl?: string
 }) {
+  const t = useT()
+  // Defaulted here rather than in the signature: a default expression is
+  // evaluated where the parameter is declared, before the hook has run.
+  const text = label ?? t.ui.continueWithGoogle
   const [isSigningIn, setIsSigningIn] = useState(false)
 
   /*
@@ -43,7 +48,7 @@ export default function GoogleSignInButton({
    *
    * Pressing Back from Google restores this page from the browser's
    * back/forward cache, which does NOT remount React — so `isSigningIn` stayed
-   * true and the button was left permanently disabled reading "Yönləndirilir...".
+   * true and the button was left permanently disabled reading "{t.ui.redirecting}".
    *
    * `pageshow` with `persisted` covers the bfcache restore; `visibilitychange`
    * covers browsers that do not use bfcache here (and the case where the
@@ -90,7 +95,7 @@ export default function GoogleSignInButton({
       ) : (
         <GoogleMark />
       )}
-      {isSigningIn ? "Yönləndirilir..." : label}
+      {isSigningIn ? t.ui.redirecting : text}
     </Button>
   )
 }

@@ -748,6 +748,54 @@
     "changeSaveFailed": "The change could not be saved",
     "badRequest": "Invalid request",
     "orderInvalid": "The order details are not valid",
-    "notFoundShort": "Not found"
+    "notFoundShort": "Not found",
+    "noOnlineBookingShort": "Online booking unavailable",
+    "notAcceptingShort": "Not currently seeing patients",
+    "labStaff": "Laboratory staff",
+    "appointment": "Book",
+    "viewOnMap": "View on map",
+    "branchesPageDescription": "Memorial Hospital branches — addresses, phone numbers and opening hours.",
+    "manifestDescription": "Memorial Hospital — online booking, doctors and branch information.",
+    "twoSteps": "Two steps — an account, then your patient details",
+    "createWithGoogle": "Create an account with Google",
+    "noPasswordsStored": "We store no passwords — sign-in is verified by Google.",
+    "completeYourDetails": "Complete your details",
+    "detailsList": "First name, surname, patronymic, sex, date of birth, FIN and phone. The laboratory records your sample under these details.",
+    "continueWithGoogle": "Continue with Google",
+    "redirecting": "Redirecting..."
+  },
+  "meta": {
+    "contact": {
+      "title": "Contact Us",
+      "description": "Get in touch with Memorial Hospital — phone, email, address and working hours."
+    },
+    "signIn": {
+      "title": "Sign In",
+      "description": "Sign in to your Memorial Hospital account to manage your appointments."
+    },
+    "doctors": {
+      "title": "Doctors",
+      "description": "Find Memorial Hospital doctors by specialty, branch and experience, and book an appointment online."
+    },
+    "results": {
+      "title": "My Results",
+      "description": "View your Memorial Hospital lab results using your patient and order number."
+    },
+    "profile": {
+      "title": "My Profile",
+      "description": "Manage your personal details and appointments."
+    },
+    "booking": {
+      "title": "Book an Appointment",
+      "description": "Book an appointment online at Memorial Hospital — choose your department, doctor, branch and time."
+    },
+    "signUp": {
+      "title": "Sign Up",
+      "description": "Create a new Memorial Hospital account and book your appointment online."
+    },
+    "basket": {
+      "title": "My Basket",
+      "description": "Your selected lab tests and order."
+    }
   }
 }

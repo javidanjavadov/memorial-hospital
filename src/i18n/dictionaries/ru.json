@@ -756,6 +756,54 @@
     "changeSaveFailed": "Не удалось сохранить изменение",
     "badRequest": "Некорректный запрос",
     "orderInvalid": "Данные заказа некорректны",
-    "notFoundShort": "Не найдено"
+    "notFoundShort": "Не найдено",
+    "noOnlineBookingShort": "Онлайн-запись недоступна",
+    "notAcceptingShort": "Сейчас не ведёт приём",
+    "labStaff": "Лабораторный персонал",
+    "appointment": "Запись",
+    "viewOnMap": "Посмотреть на карте",
+    "branchesPageDescription": "Филиалы Memorial Hospital — адреса, номера телефонов и часы работы.",
+    "manifestDescription": "Memorial Hospital — онлайн-запись, врачи и информация о филиалах.",
+    "twoSteps": "Два шага — аккаунт, затем данные пациента",
+    "createWithGoogle": "Создайте аккаунт через Google",
+    "noPasswordsStored": "Мы не храним пароли — вход проверяется Google.",
+    "completeYourDetails": "Заполните ваши данные",
+    "detailsList": "Имя, фамилия, отчество, пол, дата рождения, FIN и телефон. Лаборатория оформляет образец по этим данным.",
+    "continueWithGoogle": "Продолжить с Google",
+    "redirecting": "Перенаправление..."
+  },
+  "meta": {
+    "contact": {
+      "title": "Контакты",
+      "description": "Свяжитесь с Memorial Hospital — телефон, email, адрес и часы работы."
+    },
+    "signIn": {
+      "title": "Вход",
+      "description": "Войдите в свой аккаунт Memorial Hospital и управляйте записями на приём."
+    },
+    "doctors": {
+      "title": "Врачи",
+      "description": "Врачи Memorial Hospital — ищите по специальности, филиалу и опыту работы и записывайтесь онлайн."
+    },
+    "results": {
+      "title": "Мои результаты",
+      "description": "Просмотрите результаты лабораторных анализов Memorial Hospital по номеру пациента и заказа."
+    },
+    "profile": {
+      "title": "Мой профиль",
+      "description": "Управляйте своими личными данными и записями на приём."
+    },
+    "booking": {
+      "title": "Записаться на приём",
+      "description": "Запишитесь онлайн в Memorial Hospital — выберите отделение, врача, филиал и удобное время."
+    },
+    "signUp": {
+      "title": "Регистрация",
+      "description": "Создайте новый аккаунт в Memorial Hospital и запишитесь на приём онлайн."
+    },
+    "basket": {
+      "title": "Моя корзина",
+      "description": "Выбранные лабораторные анализы и ваш заказ."
+    }
   }
 }
