@@ -179,7 +179,7 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
     : items
 
   return (
-    <div className="grid gap-6 xl:grid-cols-[1fr_20rem] xl:items-start">
+    <div className="grid gap-6 xl:grid-cols-[1fr_20rem]">
       <div className="min-w-0">
         <PatientHeader className="mb-6" />
 

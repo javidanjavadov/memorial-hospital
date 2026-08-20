@@ -32,8 +32,15 @@ export default function BasketPanel() {
   const total = subtotal + (homeCollection ? HOME_COLLECTION_FEE : 0)
 
   return (
-    <div className="sticky top-24 rounded-xl border border-[var(--line)] bg-[var(--paper-raised)]">
-      <div className="flex items-center justify-between border-b border-[var(--line)] px-4 py-3">
+    /*
+     * Fills the screen beside the catalogue rather than sitting as a small box
+     * at the top of a very tall column. Height is the viewport less the sticky
+     * header and the page's own padding, so the totals stay on screen while the
+     * left side scrolls past — matching it to the actual left-hand height would
+     * make a panel thousands of pixels tall for a basket of two lines.
+     */
+    <div className="sticky top-24 flex h-[calc(100dvh-8rem)] flex-col overflow-hidden rounded-xl border border-[var(--line)] bg-[var(--paper-raised)]">
+      <div className="flex shrink-0 items-center justify-between border-b border-[var(--line)] px-4 py-3">
         <h2 className="font-display text-[var(--ink)]">Səbətim</h2>
         {hasHydrated && lines.length > 0 && (
           <button
@@ -47,7 +54,7 @@ export default function BasketPanel() {
       </div>
 
       {!hasHydrated || lines.length === 0 ? (
-        <div className="px-4 py-10 text-center">
+        <div className="flex flex-1 flex-col items-center justify-center px-4 py-10 text-center">
           <span
             className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-[var(--secondary)]"
             aria-hidden="true"
@@ -64,10 +71,11 @@ export default function BasketPanel() {
       ) : (
         <>
           {/*
-            Capped and scrollable: a basket of thirty tests would otherwise run
-            past the viewport and push the total out of reach.
+            Takes the space left between the header and the totals and scrolls
+            inside it, so a basket of thirty tests never pushes the total off
+            the bottom.
           */}
-          <ul className="max-h-[22rem] divide-y divide-[var(--line)] overflow-y-auto">
+          <ul className="flex-1 divide-y divide-[var(--line)] overflow-y-auto">
             {lines.map((line) => {
               const effective =
                 line.promoted != null && line.promoted < line.price
@@ -102,7 +110,7 @@ export default function BasketPanel() {
             })}
           </ul>
 
-          <div className="border-t border-[var(--line)] px-4 py-4">
+          <div className="shrink-0 border-t border-[var(--line)] px-4 py-4">
             <div className="flex items-baseline justify-between">
               <span className="text-sm text-[var(--ink-muted)]">
                 {lines.length} xidmət
