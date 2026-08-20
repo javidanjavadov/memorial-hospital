@@ -1,7 +1,10 @@
+"use client"
+
 import Link from "next/link"
 import { ArrowRight, Clock, FlaskConical, MapPin, ShieldCheck, Stethoscope, Users } from "lucide-react"
 import { AnimateOnScroll } from "@/components/animations"
 import { branches, departments, doctors, FOUNDED_YEAR, YEARS_OF_EXPERIENCE } from "@/data"
+import { useT } from "@/i18n/client"
 
 /*
  * Replaces the previous testimonials carousel.
@@ -15,52 +18,59 @@ import { branches, departments, doctors, FOUNDED_YEAR, YEARS_OF_EXPERIENCE } fro
  * If real, consented patient testimonials are collected later, they can be
  * reinstated as their own section.
  */
-const facts = [
+type T = ReturnType<typeof useT>
+
+/* Built from the dictionary at render time: a module-level array is evaluated
+   once at import, before any locale is known. */
+const buildFacts = (t: T) => [
   {
     icon: Users,
     value: `${doctors.length}`,
-    label: "Həkim",
-    detail: `${departments.length} ixtisas üzrə peşəkar heyət`,
+    label: t.home.trustDoctor,
+    detail: t.f(t.home.trustStaffDetail, { count: departments.length }),
   },
   {
     icon: MapPin,
     value: `${branches.length}`,
-    label: "Filial",
-    detail: "Bakıda iki, Gəncədə bir filial",
+    label: t.basket.branch,
+    detail: t.home.trustBranchesNote,
   },
   {
     icon: Clock,
     value: "24/7",
-    label: "Gəncə filialı",
-    detail: "Həftənin 7 günü fasiləsiz xidmət",
+    label: t.home.trustGanjaBranch,
+    detail: t.home.trustSevenDays,
   },
   {
     icon: ShieldCheck,
     value: `${YEARS_OF_EXPERIENCE}+`,
-    label: "İl təcrübə",
-    detail: `${FOUNDED_YEAR}-cu ildən fəaliyyət göstərir`,
+    label: t.home.trustYearsLabel,
+    detail: t.f(t.home.trustSince, { year: FOUNDED_YEAR }),
   },
 ]
 
-const capabilities = [
+const buildCapabilities = (t: T) => [
   {
     icon: FlaskConical,
-    title: "Öz laboratoriyamız",
-    body: "Klinik-biokimyəvi, genetik və metabolizm laboratoriyaları ayrı-ayrı rəhbərlərin nəzarətindədir — nümunə kənara göndərilmir.",
+    title: t.home.trustOwnLab,
+    body: t.home.trustOwnLabBody,
   },
   {
     icon: Stethoscope,
-    title: "İxtisaslaşmış heyət",
-    body: "Terapiyadan neyrocərrahiyyəyə qədər hər ixtisas üzrə həkimlər, orta hesabla 20 ilə yaxın təcrübə ilə.",
+    title: t.home.trustSpecialists,
+    body: t.home.trustSpecialistsBody,
   },
   {
     icon: Clock,
-    title: "Onlayn qəbul",
-    body: "Həkimi, filialı və vaxtı özünüz seçin. Reqistratura təsdiq üçün sizə zəng edir.",
+    title: t.home.trustOnlineBooking,
+    body: t.home.trustOnlineBookingBody,
   },
 ]
 
 export default function TrustSection() {
+  const t = useT()
+  const facts = buildFacts(t)
+  const capabilities = buildCapabilities(t)
   return (
     <section className="bg-[var(--ink)] py-20 md:py-28">
       <div className="container mx-auto px-4">

@@ -1,18 +1,22 @@
+"use client"
+
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import DoctorCard from "@/components/doctor-card"
 import { AnimateOnScroll } from "@/components/animations"
 import { departments, doctors } from "@/data"
+import { useT } from "@/i18n/client"
 
 /**
  * Doctors shown on the homepage before sending people to the full listing.
- * One row, not two — the section is a taster, and "Bütün həkimlər" carries
+ * One row, not two — the section is a taster, and "{t.home.allDoctors}" carries
  * anyone who wants the rest.
  */
 const FEATURED_COUNT = 4
 
 export default function DoctorsSection() {
+  const t = useT()
   const featured = doctors.slice(0, FEATURED_COUNT)
 
   return (
@@ -22,7 +26,7 @@ export default function DoctorsSection() {
           <div className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <div className="max-w-2xl">
               <p className="mb-3 text-sm tracking-[0.14em] text-[var(--ink-muted)] uppercase">
-                Həkim heyəti
+                {t.home.doctorsEyebrow}
               </p>
               <h2 className="font-display text-step-3 text-[var(--ink)]">
                 {doctors.length} həkim, {departments.length} ixtisas
@@ -35,7 +39,7 @@ export default function DoctorsSection() {
 
             <Button variant="outline" size="lg" asChild className="shrink-0">
               <Link href="/hekimler">
-                Bütün həkimlər
+                {t.home.allDoctors}
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </Button>

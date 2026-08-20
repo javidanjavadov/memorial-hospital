@@ -1,24 +1,28 @@
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight, Home } from "lucide-react"
 import { AnimateOnScroll } from "@/components/animations"
 import { serviceCategories } from "@/data"
+import { useT } from "@/i18n/client"
 
 /**
  * Top-level service groups, matching how the hospital actually organises them.
  * The illustrations are the hospital's own brand artwork.
  */
 export default function ServicesSection() {
+  const t = useT()
   return (
     <section className="bg-white py-16 md:py-20">
       <div className="container mx-auto px-4">
         <AnimateOnScroll>
           <div className="mb-8 max-w-2xl">
             <p className="mb-3 text-sm tracking-[0.14em] text-[var(--ink-muted)] uppercase">
-              Xidmətlər
+              {t.home.servicesEyebrow}
             </p>
             <h2 className="font-display text-step-3 text-[var(--ink)]">
-              Nə üçün müraciət edirsiniz?
+              {t.home.servicesTitle}
             </h2>
             <p className="mt-4 text-step-1 text-[var(--ink-muted)]">
               Laboratoriya analizindən kompleks check-up müayinəyə qədər bütün

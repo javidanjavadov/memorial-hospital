@@ -1,6 +1,9 @@
+"use client"
+
 import Link from "next/link"
 import { ArrowRight, ShieldCheck } from "lucide-react"
 import { accreditations } from "@/data/accreditations"
+import { useT } from "@/i18n/client"
 
 /**
  * Accreditation marks directly under the hero.
@@ -13,12 +16,13 @@ import { accreditations } from "@/data/accreditations"
  * Marks only here; the section lower down carries the explanation.
  */
 export default function AccreditationBar() {
+  const t = useT()
   return (
     <section
       // shrink-0: inside the homepage one-screen block it must keep its full
       // height and let the photograph absorb the difference.
       className="shrink-0 bg-primary text-white"
-      aria-label="Laboratoriya akkreditasiyaları"
+      aria-label={t.home.accreditationBarLabel}
     >
       <div className="container mx-auto px-4">
         {/*

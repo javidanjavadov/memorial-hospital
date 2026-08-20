@@ -1,6 +1,9 @@
+"use client"
+
 import Image from "next/image"
 import { AnimateOnScroll } from "@/components/animations"
 import { accreditations } from "@/data/accreditations"
+import { useT } from "@/i18n/client"
 
 /**
  * Laboratory accreditation and external quality assessment.
@@ -15,16 +18,17 @@ import { accreditations } from "@/data/accreditations"
  */
 
 export default function AccreditationSection() {
+  const t = useT()
   return (
     <section id="akkreditasiya" className="scroll-mt-24 bg-[var(--ink)] py-16 text-white md:py-24">
       <div className="container mx-auto px-4">
         <AnimateOnScroll>
           <div className="mb-14 max-w-3xl text-center md:mx-auto">
             <p className="mb-4 text-sm tracking-[0.2em] text-[var(--accent)] uppercase">
-              Keyfiyyətə nəzarət
+              {t.home.accreditationEyebrow}
             </p>
             <h2 className="font-display text-step-4">
-              Beynəlxalq standartlarla təsdiqlənmiş laboratoriya
+              {t.home.accreditationTitle}
             </h2>
             <p className="mt-5 text-step-1 text-white/70">
               Nəticələrimizin dəqiqliyi müstəqil beynəlxalq proqramlar

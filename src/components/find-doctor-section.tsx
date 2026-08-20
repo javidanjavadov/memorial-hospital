@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { Search, Stethoscope, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { branches, departments } from "@/data"
+import { useT } from "@/i18n/client"
 
 /**
  * Doctor search, lifted out of the hero.
@@ -17,6 +18,7 @@ import { branches, departments } from "@/data"
  * — so a filtered result is also a shareable link.
  */
 export default function FindDoctorSection() {
+  const t = useT()
   const [query, setQuery] = useState("")
   const [department, setDepartment] = useState("")
   const [branch, setBranch] = useState("")
@@ -44,10 +46,10 @@ export default function FindDoctorSection() {
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-4xl text-center">
           <p className="mb-3 text-xs font-semibold tracking-[0.2em] text-primary">
-            HƏKİM AXTAR
+            {t.home.findDoctorEyebrow}
           </p>
           <h2 className="font-display text-step-3 text-[var(--ink)]">
-            Sizə uyğun həkimi tapın
+            {t.home.findDoctorTitle}
           </h2>
           <p className="mt-3 text-[var(--ink-muted)]">
             Ad, ixtisas və ya filiala görə axtarın — nəticələr birbaşa qəbul
@@ -74,7 +76,7 @@ export default function FindDoctorSection() {
                 type="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Həkim adı və ya ixtisas"
+                placeholder={t.home.searchDoctorPlaceholder}
                 className={`${field} pl-10`}
               />
             </div>
@@ -89,7 +91,7 @@ export default function FindDoctorSection() {
                 onChange={(e) => setDepartment(e.target.value)}
                 className={field}
               >
-                <option value="">Bütün ixtisaslar</option>
+                <option value="">{t.home.allSpecialties}</option>
                 {departments.map((d) => (
                   <option key={d.id} value={d.id}>
                     {d.name}
@@ -108,7 +110,7 @@ export default function FindDoctorSection() {
                 onChange={(e) => setBranch(e.target.value)}
                 className={field}
               >
-                <option value="">Bütün filiallar</option>
+                <option value="">{t.home.allBranches}</option>
                 {branches.map((b) => (
                   <option key={b.id} value={b.id}>
                     {b.name}
@@ -126,7 +128,7 @@ export default function FindDoctorSection() {
 
         <p className="mt-4 flex items-center justify-center gap-2 text-sm text-[var(--ink-muted)]">
           <Stethoscope className="h-4 w-4 text-primary" aria-hidden="true" />
-          Qəbul saatları və qiymətlər həkim səhifəsində göstərilir.
+          {t.home.findDoctorNote}
         </p>
       </div>
     </section>

@@ -1,7 +1,10 @@
+"use client"
+
 import Link from "next/link"
 import { ChevronDown, MessageCircleQuestion } from "lucide-react"
 import { AnimateOnScroll } from "@/components/animations"
 import { contactInfo, faqs, telHref } from "@/data"
+import { useT } from "@/i18n/client"
 
 /**
  * Frequently asked questions, straight from the hospital's own published
@@ -13,6 +16,7 @@ import { contactInfo, faqs, telHref } from "@/data"
  * collapsed answer.
  */
 export default function FaqSection() {
+  const t = useT()
   return (
     <section className="py-16 md:py-24 bg-[var(--paper)]">
       <div className="container mx-auto px-4">
@@ -22,10 +26,10 @@ export default function FaqSection() {
               SUALLAR
             </p>
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              Tez-tez verilən suallar
+              {t.home.faqTitle}
             </h2>
             <p className="text-lg text-slate-600">
-              Analizlər, qəbul və evdə xidmət barədə ən çox soruşulanlar.
+              {t.home.faqSubtitle}
             </p>
           </div>
         </AnimateOnScroll>
@@ -68,7 +72,7 @@ export default function FaqSection() {
                 href="/elaqe"
                 className="font-semibold text-primary hover:underline"
               >
-                bizə yazın
+                {t.home.faqWriteToUs}
               </Link>
               .
             </p>

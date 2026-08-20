@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { AnimateOnScroll } from "@/components/animations"
 import { departments, doctorsByDepartment } from "@/data"
 import { cn } from "@/lib/utils"
+import { useT } from "@/i18n/client"
 
 /**
  * Specialty directory. Each entry links straight into the filtered doctor
@@ -24,6 +25,7 @@ const STAGGER_MS = 60
 const EXIT_MS = 280
 
 export default function DepartmentsSection() {
+  const t = useT()
   const [expanded, setExpanded] = useState(false)
   /** Extra cards stay mounted while they animate out. */
   const [closing, setClosing] = useState(false)
@@ -62,10 +64,10 @@ export default function DepartmentsSection() {
         <AnimateOnScroll>
           <div className="mb-12 max-w-2xl">
             <p className="mb-3 text-sm tracking-[0.14em] text-[var(--ink-muted)] uppercase">
-              İxtisaslar
+              {t.home.departmentsEyebrow}
             </p>
             <h2 className="font-display text-step-3 text-[var(--ink)]">
-              Şöbələrimiz
+              {t.home.departmentsTitle}
             </h2>
             <p className="mt-4 text-step-1 text-[var(--ink-muted)]">
               {departments.length} ixtisas üzrə diaqnostika və müalicə.
@@ -147,7 +149,7 @@ export default function DepartmentsSection() {
               aria-expanded={expanded}
               aria-controls="departments-grid"
             >
-              {expanded ? "Daha az göstər" : `Daha çox göstər (${remaining})`}
+              {expanded ? t.home.showLess : `Daha çox göstər (${remaining})`}
               <ChevronDown
                 className={`h-4 w-4 transition-transform duration-300 ${
                   expanded ? "rotate-180" : ""

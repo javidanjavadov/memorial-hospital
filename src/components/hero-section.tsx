@@ -1,3 +1,5 @@
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
 import {
@@ -8,6 +10,7 @@ import {
   Stethoscope,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useT } from "@/i18n/client"
 import { CountUp } from "@/components/animations"
 import {
   branches,
@@ -30,13 +33,24 @@ import {
  * Every figure comes from the roster rather than being typed in.
  */
 
-const badges = [
-  { icon: ShieldCheck, label: `${branches.length} filial` },
-  { icon: Clock, label: "Gəncədə 24/7" },
-  { icon: Star, label: `${YEARS_OF_EXPERIENCE} il təcrübə` },
+/* Built inside the component: a module-level array is evaluated once at import,
+   before any locale is known. */
+const buildBadges = (t: ReturnType<typeof useT>) => [
+  {
+    icon: ShieldCheck,
+    label: t.f(t.home.heroBadgeBranches, { count: branches.length }),
+  },
+  { icon: Clock, label: t.home.heroBadgeGanja },
+  {
+    icon: Star,
+    label: t.f(t.home.heroBadgeYears, { count: YEARS_OF_EXPERIENCE }),
+  },
 ]
 
 export default function HeroSection() {
+  const t = useT()
+  const badges = buildBadges(t)
+
   return (
     /*
       Height comes from the wrapper on the homepage, which sizes the header, the
@@ -85,21 +99,23 @@ export default function HeroSection() {
           </ul>
 
           <h1 className="font-display text-step-4">
-            Sağlamlığınız üçün{" "}
-            <span className="text-[var(--accent)]">peşəkar qayğı</span>
+            {t.home.heroLead}{" "}
+            <span className="text-[var(--accent)]">{t.home.heroTitle}</span>
           </h1>
 
           <p className="mt-4 max-w-xl text-step-0 text-white/80">
-            {doctors.length} həkim, {departments.length} ixtisas və{" "}
-            {branches.length} filial. Laboratoriya analizindən kompleks check-up
-            müayinəyə qədər — hamısı bir yerdə.
+            {t.f(t.home.heroSubtitle, {
+              doctors: doctors.length,
+              departments: departments.length,
+              branches: branches.length,
+            })}
           </p>
 
           <dl className="mt-7 grid max-w-lg grid-cols-3 gap-4">
             {[
-              { value: doctors.length, suffix: "", label: "Həkim" },
-              { value: departments.length, suffix: "", label: "İxtisas" },
-              { value: YEARS_OF_EXPERIENCE, suffix: "+", label: "İl təcrübə" },
+              { value: doctors.length, suffix: "", label: t.home.statDoctor },
+              { value: departments.length, suffix: "", label: t.home.statSpecialty },
+              { value: YEARS_OF_EXPERIENCE, suffix: "+", label: t.home.statYears },
             ].map((stat) => (
               <div key={stat.label}>
                 <dd className="font-display text-step-2 text-white">
@@ -113,7 +129,7 @@ export default function HeroSection() {
           <div className="mt-7 flex flex-wrap gap-3">
             <Button variant="cta" size="lg" asChild>
               <Link href="/qebul">
-                Onlayn qəbula yazıl
+                {t.home.heroBook}
                 <ArrowRight className="h-5 w-5" aria-hidden="true" />
               </Link>
             </Button>
@@ -125,7 +141,7 @@ export default function HeroSection() {
             >
               <Link href="/hekimler">
                 <Stethoscope className="h-5 w-5" aria-hidden="true" />
-                Həkimlərə bax
+                {t.home.heroDoctors}
               </Link>
             </Button>
           </div>

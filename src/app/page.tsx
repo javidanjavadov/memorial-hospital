@@ -17,8 +17,14 @@ import TrustSection from "@/components/trust-section"
 import AccreditationSection from "@/components/accreditation-section"
 import AccreditationBar from "@/components/accreditation-bar"
 import FaqSection from "@/components/faq-section"
+import { getDictionary } from "@/i18n"
 
-export default function Home() {
+export default async function Home() {
+  // A Server Component: it reads the dictionary directly rather than through
+  // the client context, so the markup is in the right language before any
+  // JavaScript runs.
+  const t = await getDictionary()
+
   return (
     <>
       {/*
@@ -54,7 +60,7 @@ export default function Home() {
               <AnimateOnScroll animation="left">
               <div className="space-y-6">
                 <h2 className="text-3xl md:text-4xl font-bold text-slate-900">
-                  Memorial Hospital <span className="text-primary">Haqqında</span>
+                  Memorial Hospital <span className="text-primary">{t.home.aboutEyebrow}</span>
                 </h2>
                 <p className="text-lg text-slate-600 leading-relaxed">
                   {FOUNDED_YEAR}-cu ildən fəaliyyət göstərən Memorial Hospital, Bakının aparıcı tibbi mərkəzlərindən biridir. 
@@ -70,7 +76,7 @@ export default function Home() {
                     <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
                       <span className="text-primary font-bold text-lg">{YEARS_OF_EXPERIENCE}+</span>
                     </div>
-                    <span className="text-sm font-medium text-slate-700">İllik təcrübə</span>
+                    <span className="text-sm font-medium text-slate-700">{t.home.yearsExperience}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
@@ -78,7 +84,7 @@ export default function Home() {
                         {doctors.length}
                       </span>
                     </div>
-                    <span className="text-sm font-medium text-slate-700">Təcrübəli həkim</span>
+                    <span className="text-sm font-medium text-slate-700">{t.home.experiencedDoctors}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
@@ -92,7 +98,7 @@ export default function Home() {
                     <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
                       <span className="text-primary font-bold text-lg">24/7</span>
                     </div>
-                    <span className="text-sm font-medium text-slate-700">Təcili yardım</span>
+                    <span className="text-sm font-medium text-slate-700">{t.home.emergency}</span>
                   </div>
                 </div>
               </div>
@@ -100,27 +106,27 @@ export default function Home() {
               <AnimateOnScroll animation="right" delay={150}>
               <div className="relative">
                 <div className="bg-[var(--ink)] rounded-3xl p-8 text-white shadow-2xl">
-                  <h3 className="text-2xl font-bold mb-4">Niyə Memorial Hospital?</h3>
+                  <h3 className="text-2xl font-bold mb-4">{t.home.whyTitle}</h3>
                   <ul className="space-y-3">
                     <li className="flex items-start gap-3">
                       <span className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center shrink-0 text-sm">✓</span>
-                      <span>Müasir tibbi avadanlıqlar</span>
+                      <span>{t.home.whyModernEquipment}</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <span className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center shrink-0 text-sm">✓</span>
-                      <span>Təcrübəli həkim heyəti</span>
+                      <span>{t.home.whyExperiencedStaff}</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <span className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center shrink-0 text-sm">✓</span>
-                      <span>Rəqabətli qiymətlər</span>
+                      <span>{t.home.whyCompetitivePrices}</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <span className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center shrink-0 text-sm">✓</span>
-                      <span>24/7 təcili yardım</span>
+                      <span>{t.home.whyEmergency}</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <span className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center shrink-0 text-sm">✓</span>
-                      <span>Online qəbul sistemi</span>
+                      <span>{t.home.whyOnlineBooking}</span>
                     </li>
                   </ul>
                 </div>
@@ -142,10 +148,10 @@ export default function Home() {
           <div className="container mx-auto px-4">
             <div className="text-center mb-12 md:mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-                Bizimlə <span className="text-primary">Əlaqə</span> Saxlayın
+                {t.home.contactHeading}
               </h2>
               <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-                Sualınız var? Bizimlə əlaqə saxlayın, kömək edək
+                {t.home.contactSubtitle}
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
@@ -153,22 +159,22 @@ export default function Home() {
                 <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <svg className="w-6 h-6 text-primary" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" /></svg>
                 </div>
-                <h3 className="font-semibold text-slate-900 mb-1">Zəng Edin</h3>
+                <h3 className="font-semibold text-slate-900 mb-1">{t.home.callUs}</h3>
                 <a href={telHref(contactInfo.phone)} className="text-primary font-medium hover:underline">+994 55 710 10 50</a>
               </div>
               <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm text-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                 <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <svg className="w-6 h-6 text-primary" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" /></svg>
                 </div>
-                <h3 className="font-semibold text-slate-900 mb-1">Ünvanımız</h3>
-                <p className="text-sm text-slate-600">Bakı ş., Nərimanov r., Ü.Hacıbəyli küç. 42</p>
+                <h3 className="font-semibold text-slate-900 mb-1">{t.home.ourAddress}</h3>
+                <p className="text-sm text-slate-600">{contactInfo.address}</p>
               </div>
               <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm text-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                 <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <svg className="w-6 h-6 text-primary" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                 </div>
-                <h3 className="font-semibold text-slate-900 mb-1">İş Vaxtı</h3>
-                <p className="text-sm text-slate-600">B.e - Cümə: 08:00 - 20:00</p>
+                <h3 className="font-semibold text-slate-900 mb-1">{t.home.workingHours}</h3>
+                <p className="text-sm text-slate-600">{contactInfo.workingHours}</p>
               </div>
             </div>
           </div>

@@ -18,23 +18,32 @@ import {
 import { branches, telHref } from "@/data"
 import { AnimateOnScroll } from "@/components/animations"
 import { cn } from "@/lib/utils"
+import { useT } from "@/i18n/client"
 
 // Leaflet reaches for `window` at import time, so it cannot be server-rendered.
 const BranchesMap = dynamic(() => import("@/components/branches-map"), {
   ssr: false,
-  loading: () => (
-    <div
-      className="flex h-[420px] items-center justify-center rounded-xl border border-[var(--line)] bg-[var(--secondary)] text-sm text-slate-600 lg:h-[520px]"
-      role="status"
-    >
-      Xəritə yüklənir...
-    </div>
-  ),
+  loading: () => <MapLoading />,
 })
 
 type View = "grid" | "map"
 
+/* Its own component so it can read the dictionary: the `loading` callback that
+   dynamic() takes is evaluated outside any component, where a hook cannot run. */
+function MapLoading() {
+  const t = useT()
+  return (
+    <div
+      className="flex h-[420px] items-center justify-center rounded-xl border border-[var(--line)] bg-[var(--secondary)] text-sm text-slate-600 lg:h-[520px]"
+      role="status"
+    >
+      {t.home.mapLoading}
+    </div>
+  )
+}
+
 export default function BranchesSection() {
+  const t = useT()
   const [view, setView] = useState<View>("grid")
 
   return (
@@ -43,7 +52,7 @@ export default function BranchesSection() {
         <AnimateOnScroll>
         <div className="text-center mb-12 md:mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-            Filiallarımız
+            {t.home.branchesTitle}
           </h2>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
             Sizinə ən yaxın filialı seçin və keyfiyyətli tibbi xidmətdən
@@ -54,12 +63,12 @@ export default function BranchesSection() {
 
         <div
           role="tablist"
-          aria-label="Filial görünüşü"
+          aria-label={t.home.branchView}
           className="mb-8 flex justify-center gap-1 rounded-lg border border-[var(--line)] bg-white p-1 mx-auto w-fit"
         >
           {([
-            { id: "grid", label: "Siyahı", icon: LayoutGrid },
-            { id: "map", label: "Xəritə", icon: MapIcon },
+            { id: "grid", label: t.home.listView, icon: LayoutGrid },
+            { id: "map", label: t.home.mapView, icon: MapIcon },
           ] as const).map((tab) => (
             <button
               key={tab.id}
@@ -147,12 +156,12 @@ export default function BranchesSection() {
                   <Button variant="outline" className="flex-1" asChild>
                     <a href={telHref(branch.phone)}>
                       <Phone className="w-4 h-4" />
-                      Zəng Et
+                      {t.home.callButton}
                     </a>
                   </Button>
                   <Button variant="cta" className="flex-1" asChild>
                     <Link href="/qebul">
-                      Qəbula Yazıl
+                      {t.home.bookButton}
                       <ArrowRight className="w-4 h-4" />
                     </Link>
                   </Button>
