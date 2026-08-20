@@ -101,11 +101,20 @@ export const getGroup = (slug: string) =>
   catalogGroups.find((g) => g.slug === slug)
 
 /** Categories of a group that actually have items, largest first. */
-export const getGroupCategories = (groupSlug: string) =>
-  (getGroup(groupSlug)?.categories ?? [])
+export const getGroupCategories = (groupSlug: string) => {
+  const seen = new Set<string>()
+  return (getGroup(groupSlug)?.categories ?? [])
     .map((c) => ({ ...c, count: itemsByCategory.get(c.slug)?.length ?? 0 }))
-    .filter((c) => c.count > 0)
+    .filter((c) => {
+      // "Allergik analizlər" is listed twice upstream under one slug. Two
+      // entries sharing a slug are one category — and a duplicated React key
+      // left a stale chip behind when the group changed.
+      if (c.count === 0 || seen.has(c.slug)) return false
+      seen.add(c.slug)
+      return true
+    })
     .sort((a, b) => b.count - a.count)
+}
 
 /** Every category slug, for generateStaticParams. */
 export const allCategorySlugs = () =>

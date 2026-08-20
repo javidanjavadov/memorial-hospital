@@ -60,7 +60,15 @@ for (const group of GROUPS) {
   if (!source) continue
 
   const categories = []
+  // The hospital's catalogue lists "Allergik analizlər" twice under the same
+  // slug. Two entries with one slug are one category, and duplicated keys break
+  // React's reconciliation downstream — a chip from the previous group survived
+  // a group switch.
+  const seen = new Set()
+
   for (const category of source.categories) {
+    if (seen.has(category.slug)) continue
+    seen.add(category.slug)
     const items = (byCategory.get(category.slug) ?? [])
       .slice()
       .sort((a, b) => priceOf(a) - priceOf(b))
