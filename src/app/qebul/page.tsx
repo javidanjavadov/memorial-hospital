@@ -32,37 +32,38 @@ import {
   getDepartmentName,
   getDoctorName,
 } from "@/data"
-import {
-  fullName,
-  optionalEmail,
-  optionalFinCode,
-  optionalText,
-  phoneNumber,
-} from "@/lib/validation"
+import { createValidators } from "@/lib/validation"
 import { missingProfileFields } from "@/lib/profile-complete"
 import ProfileCompletionCard from "@/components/profile-completion-card"
 import { useAuthStore } from "@/lib/auth-store"
 import Link from "next/link"
+import { useT } from "@/i18n/client"
 
-const schema = z.object({
-  fullName,
-  phone: phoneNumber,
-  // Optional fields must accept "" — see lib/validation.ts.
-  email: optionalEmail,
-  finCode: optionalFinCode,
-  department: z.string().min(1, "Şöbə seçin"),
-  doctor: optionalText(64, ""),
-  branch: z.string().min(1, "Filial seçin"),
-  date: z.string().min(1, "Tarix seçin"),
-  time: z.string().min(1, "Vaxt seçin"),
-  complaint: optionalText(1000, "Qeyd maksimum 1000 simvol ola bilər"),
-  consent: z.literal(true, {
-    message: "Davam etmək üçün məlumatların emalına razılıq verməlisiniz",
-  }),
-})
+/* Built from the dictionary: a zod message is text a patient reads, and zod
+   bakes it into the schema at construction, so the schema cannot be a module
+   constant if the errors are to follow the page's language. */
+const buildSchema = (t: ReturnType<typeof useT>) => {
+  const v = createValidators(t.validation)
+  return z.object({
+    fullName: v.fullName,
+    phone: v.phoneNumber,
+    // Optional fields must accept "" — see lib/validation.ts.
+    email: v.optionalEmail,
+    finCode: v.optionalFinCode,
+    department: z.string().min(1, t.booking.selectDepartment),
+    doctor: v.optionalText(64, ""),
+    branch: z.string().min(1, t.booking.selectBranch),
+    date: z.string().min(1, t.booking.selectDate),
+    time: z.string().min(1, t.booking.selectTime),
+    complaint: v.optionalText(1000, t.booking.noteTooLong),
+    consent: z.literal(true, { message: t.booking.consentRequired }),
+  })
+}
 
-type FormInput = z.input<typeof schema>
-type FormData = z.output<typeof schema>
+type Schema = ReturnType<typeof buildSchema>
+
+type FormInput = z.input<Schema>
+type FormData = z.output<Schema>
 
 /** Fields that must be valid before the given step can be left. */
 const stepFields: Record<number, (keyof FormInput)[]> = {
@@ -104,6 +105,8 @@ export default function QebulPage() {
 }
 
 function QebulContent() {
+  const t = useT()
+  const schema = useMemo(() => buildSchema(t), [t])
   const searchParams = useSearchParams()
   const doctorParam = searchParams.get("doctor")
 
@@ -248,7 +251,7 @@ function QebulContent() {
               <CheckCircle className="w-10 h-10 text-green-600" />
             </div>
             <h1 className="text-3xl font-bold text-slate-900 mb-4">
-              Qəbul sorğunuz qeydə alındı
+              {t.booking.requestReceived}
             </h1>
             {/*
               Deliberately does not claim an SMS or email was sent: this build
@@ -257,26 +260,26 @@ function QebulContent() {
             */}
             <p className="text-slate-600 mb-4">
               Sorğunuz qeydiyyata alındı. Təsdiq üçün{" "}
-              <strong>reqistratura sizinlə telefon vasitəsilə əlaqə saxlayacaq</strong>.
-              Qəbul yalnız operator təsdiqindən sonra qüvvəyə minir.
+              <strong>{t.booking.receptionWillCall}</strong>.
+              {t.booking.onlyAfterOperator}
             </p>
             <p className="text-sm text-slate-500 mb-8">
-              Sorğu nömrəsi: <span className="font-mono">{reference}</span>
+              {t.booking.requestNumber} <span className="font-mono">{reference}</span>
               {user ? (
                 <>
                   {" · "}
                   <Link href="/profil" className="text-teal-700 hover:underline">
-                    Profilinizdə baxın
+                    {t.booking.viewInProfile}
                   </Link>
                 </>
               ) : null}
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Button variant="cta" asChild>
-                <Link href="/">Ana Səhifə</Link>
+                <Link href="/">{t.booking.home}</Link>
               </Button>
               <Button variant="outline" onClick={startOver}>
-                Yeni Qəbul Yarat
+                {t.booking.newAppointment}
               </Button>
             </div>
           </div>
@@ -290,19 +293,19 @@ function QebulContent() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-            Qəbula Yazıl
+            {t.booking.bookTitle}
           </h1>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Aşağıdakı formu doldurun və qəbulunuzu təsdiqləyin
+            {t.booking.bookSubtitle}
           </p>
         </div>
 
         {/* Progress */}
         <div className="max-w-3xl mx-auto mb-10">
-          <ol className="flex items-center justify-between" aria-label="Qəbul mərhələləri">
+          <ol className="flex items-center justify-between" aria-label={t.booking.bookSteps}>
             {[
-              { num: 1, label: "Şəxsi Məlumatlar" },
-              { num: 2, label: "Həkim Seçimi" },
+              { num: 1, label: "{t.booking.stepPersonal}" },
+              { num: 2, label: "{t.booking.stepDoctor}" },
               { num: 3, label: "Təsdiq" },
             ].map((s, i) => (
               <li
@@ -330,7 +333,7 @@ function QebulContent() {
                   </span>
                   <span className="sr-only">
                     Mərhələ {s.num}: {s.label}
-                    {step > s.num ? " (tamamlandı)" : ""}
+                    {step > s.num ? " {t.booking.stepCompleted}" : ""}
                   </span>
                 </div>
                 {i < 2 && (
@@ -354,7 +357,7 @@ function QebulContent() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <User className="w-5 h-5 text-primary" aria-hidden="true" />
-                    Şəxsi Məlumatlar
+                    {t.booking.stepPersonal}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -364,7 +367,7 @@ function QebulContent() {
                         <Input
                           {...field}
                           autoComplete="name"
-                          placeholder="Adınız və soyadınız"
+                          placeholder={t.booking.fullName}
                           {...register("fullName")}
                           className={errors.fullName ? "border-red-500" : ""}
                         />
@@ -372,7 +375,7 @@ function QebulContent() {
                     </Field>
 
                     <Field
-                      label="Telefon Nömrəsi"
+                      label="{t.booking.phoneNumber}"
                       required
                       error={errors.phone?.message}
                     >
@@ -409,7 +412,7 @@ function QebulContent() {
 
                     <Field
                       label="FIN Kod"
-                      hint="İxtiyari — 7 simvol."
+                      hint="{t.booking.optionalFin}"
                       error={errors.finCode?.message}
                     >
                       {(field) => (
@@ -433,7 +436,7 @@ function QebulContent() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Stethoscope className="w-5 h-5 text-primary" aria-hidden="true" />
-                    Qəbul Məlumatları
+                    {t.booking.appointmentDetails}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -445,7 +448,7 @@ function QebulContent() {
                           {...register("department")}
                           className={controlClass}
                         >
-                          <option value="">Şöbə seçin</option>
+                          <option value="">{t.booking.selectDepartment}</option>
                           {departments.map((dept) => (
                             <option key={dept.id} value={dept.id}>
                               {dept.name}
@@ -462,7 +465,7 @@ function QebulContent() {
                           {...register("branch")}
                           className={controlClass}
                         >
-                          <option value="">Filial seçin</option>
+                          <option value="">{t.booking.selectBranch}</option>
                           {branches.map((branch) => (
                             <option key={branch.id} value={branch.id}>
                               {branch.name}
@@ -538,8 +541,8 @@ function QebulContent() {
                       required
                       hint={
                         selectedDate
-                          ? "Dolu və keçmiş vaxtlar seçilə bilməz."
-                          : "Əvvəlcə tarix seçin."
+                          ? "{t.booking.slotsUnavailable}"
+                          : "{t.booking.pickDateFirst}"
                       }
                       error={errors.time?.message}
                     >
@@ -550,7 +553,7 @@ function QebulContent() {
                           disabled={!selectedDate}
                           className={`${controlClass} disabled:opacity-60 disabled:cursor-not-allowed`}
                         >
-                          <option value="">Vaxt seçin</option>
+                          <option value="">{t.booking.selectTime}</option>
                           {timeSlots.map((time) => {
                             const taken = unavailableSlots.has(time)
                             return (
@@ -566,8 +569,8 @@ function QebulContent() {
                   </div>
 
                   <Field
-                    label="Şikayət / Qeyd"
-                    hint="İxtiyari. Zəhmət olmasa şəxsiyyət və ya kart məlumatlarınızı yazmayın."
+                    label="{t.booking.complaint}"
+                    hint="{t.booking.complaintHint}"
                     error={errors.complaint?.message}
                   >
                     {(field) => (
@@ -575,7 +578,7 @@ function QebulContent() {
                         {...field}
                         rows={4}
                         maxLength={1000}
-                        placeholder="Şikayətinizi qeyd edin (ixtiyari)"
+                        placeholder={t.booking.complaintPlaceholder}
                         {...register("complaint")}
                         className={textareaClass}
                       />
@@ -591,7 +594,7 @@ function QebulContent() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <CheckCircle className="w-5 h-5 text-primary" aria-hidden="true" />
-                    Qəbulu Təsdiqləyin
+                    {t.booking.confirmAppointment}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -623,7 +626,7 @@ function QebulContent() {
                       value={
                         selectedDoctor
                           ? getDoctorName(selectedDoctor)
-                          : "Reqistratura təyin edəcək"
+                          : "{t.booking.assignedByReception}"
                       }
                     />
                     <SummaryRow
@@ -636,7 +639,7 @@ function QebulContent() {
                     {values.complaint && (
                       <SummaryRow
                         icon={FileText}
-                        label="Şikayət / Qeyd"
+                        label="{t.booking.complaint}"
                         value={values.complaint}
                       />
                     )}
@@ -661,7 +664,7 @@ function QebulContent() {
                           href="/siyaset"
                           className="text-teal-700 font-medium hover:underline"
                         >
-                          Məxfilik siyasəti
+                          {t.booking.privacyPolicy}
                         </Link>
                       </label>
                     </div>
@@ -707,7 +710,7 @@ function QebulContent() {
                   <ProfileCompletionCard compact
                     missing={missing}
                     next="/qebul"
-                    reason="Qəbul hesabınıza yazılır, ona görə profil məlumatları tamamlanmalıdır."
+                    reason="{t.booking.profileNeededForBooking}"
                   />
                 ) : (
                   <Button
@@ -721,7 +724,7 @@ function QebulContent() {
                     ) : (
                       <CheckCircle className="w-5 h-5" aria-hidden="true" />
                     )}
-                    {isSubmitting ? "Göndərilir..." : "Qəbulu Təsdiqlə"}
+                    {isSubmitting ? "{t.booking.sending}" : "{t.booking.confirmButton}"}
                   </Button>
                 )}
               </div>

@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest"
-import {
-  birthDate,
-  optionalFinCode,
-  phoneNumber,
-  requiredFinCode,
-} from "@/lib/validation"
-import { profileSchema } from "@/lib/profile-schema"
+import { azValidationMessages, createValidators } from "@/lib/validation"
+import { createProfileSchema } from "@/lib/profile-schema"
+
+/* The Azerbaijani bundle: these tests are about the rules, not the wording. */
+const { birthDate, optionalFinCode, phoneNumber, requiredFinCode } =
+  createValidators(azValidationMessages)
+const profileSchema = createProfileSchema(azValidationMessages)
 
 const valid = {
   firstName: "Aysel",

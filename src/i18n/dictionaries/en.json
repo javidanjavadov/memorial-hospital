@@ -547,5 +547,30 @@
     "notFoundBody": "The page you are looking for does not exist or has been moved.",
     "goHome": "Go Home",
     "bookAppointment": "Book Appointment"
+  },
+  "validation": {
+    "nameMin": "{label} must be at least {min} characters",
+    "nameMax": "{label} can be at most {max} characters",
+    "nameLettersOnly": "{label} can only contain letters",
+    "firstNameLabel": "First name",
+    "lastNameLabel": "Last name",
+    "fatherNameLabel": "Patronymic",
+    "fullNameMin": "Name must be at least 3 characters",
+    "fullNameMax": "Name can be at most 100 characters",
+    "fullNameComplete": "Please enter your full first and last name",
+    "genderRequired": "Please select a gender",
+    "emailRequired": "Please enter your email",
+    "emailInvalid": "Please enter a valid email",
+    "phoneRequired": "Please enter your phone number",
+    "phoneDigits": "Phone number must be 9–15 digits",
+    "finRequired": "Please enter your FIN code",
+    "finFormat": "FIN code must be 7 letters or digits",
+    "finInvalid": "FIN code is invalid",
+    "birthDateRequired": "Please select your date of birth",
+    "birthDateInvalid": "Date of birth is invalid",
+    "passwordMin": "Password must be at least 8 characters",
+    "passwordMax": "Password can be at most 128 characters",
+    "passwordComplexity": "Password must include at least one letter and one digit",
+    "textMax": "Can be at most {max} characters"
   }
 }

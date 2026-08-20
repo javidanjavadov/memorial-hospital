@@ -409,5 +409,30 @@
     "notFoundBody": "Axtardığınız səhifə mövcud deyil və ya köçürülüb.",
     "goHome": "Ana Səhifə",
     "bookAppointment": "Qəbula Yazıl"
+  },
+  "validation": {
+    "nameMin": "{label} minimum {min} simvol olmalıdır",
+    "nameMax": "{label} maksimum {max} simvol ola bilər",
+    "nameLettersOnly": "{label} yalnız hərflərdən ibarət ola bilər",
+    "firstNameLabel": "Ad",
+    "lastNameLabel": "Soyad",
+    "fatherNameLabel": "Ata adı",
+    "fullNameMin": "Ad minimum 3 simvol olmalıdır",
+    "fullNameMax": "Ad maksimum 100 simvol ola bilər",
+    "fullNameComplete": "Ad və soyadınızı tam yazın",
+    "genderRequired": "Cinsi seçin",
+    "emailRequired": "Email daxil edin",
+    "emailInvalid": "Düzgün email daxil edin",
+    "phoneRequired": "Telefon nömrəsi daxil edin",
+    "phoneDigits": "Telefon nömrəsi 9–15 rəqəmdən ibarət olmalıdır",
+    "finRequired": "FIN kod daxil edin",
+    "finFormat": "FIN kod 7 hərf və ya rəqəmdən ibarət olmalıdır",
+    "finInvalid": "FIN kod düzgün deyil",
+    "birthDateRequired": "Doğum tarixini seçin",
+    "birthDateInvalid": "Doğum tarixi düzgün deyil",
+    "passwordMin": "Şifrə minimum 8 simvol olmalıdır",
+    "passwordMax": "Şifrə maksimum 128 simvol ola bilər",
+    "passwordComplexity": "Şifrə ən azı bir hərf və bir rəqəm daxil etməlidir",
+    "textMax": "Maksimum {max} simvol ola bilər"
   }
 }

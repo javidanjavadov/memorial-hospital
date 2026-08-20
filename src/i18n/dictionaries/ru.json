@@ -555,5 +555,30 @@
     "notFoundBody": "Запрашиваемая страница не существует или была перемещена.",
     "goHome": "На главную",
     "bookAppointment": "Записаться на приём"
+  },
+  "validation": {
+    "nameMin": "{label} должно содержать минимум {min} символов",
+    "nameMax": "{label} может содержать максимум {max} символов",
+    "nameLettersOnly": "{label} может содержать только буквы",
+    "firstNameLabel": "Имя",
+    "lastNameLabel": "Фамилия",
+    "fatherNameLabel": "Отчество",
+    "fullNameMin": "Имя должно содержать минимум 3 символа",
+    "fullNameMax": "Имя может содержать максимум 100 символов",
+    "fullNameComplete": "Укажите имя и фамилию полностью",
+    "genderRequired": "Выберите пол",
+    "emailRequired": "Введите email",
+    "emailInvalid": "Введите корректный email",
+    "phoneRequired": "Введите номер телефона",
+    "phoneDigits": "Номер телефона должен содержать от 9 до 15 цифр",
+    "finRequired": "Введите FIN-код",
+    "finFormat": "FIN-код должен состоять из 7 букв или цифр",
+    "finInvalid": "FIN-код указан неверно",
+    "birthDateRequired": "Выберите дату рождения",
+    "birthDateInvalid": "Дата рождения указана неверно",
+    "passwordMin": "Пароль должен содержать минимум 8 символов",
+    "passwordMax": "Пароль может содержать максимум 128 символов",
+    "passwordComplexity": "Пароль должен содержать хотя бы одну букву и одну цифру",
+    "textMax": "Может содержать максимум {max} символов"
   }
 }

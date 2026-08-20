@@ -1,6 +1,7 @@
 import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
-import { buildFullName, profileSchema } from "@/lib/profile-schema"
+import { buildFullName, createProfileSchema } from "@/lib/profile-schema"
+import { azValidationMessages } from "@/lib/validation"
 
 /**
  * Google sign-in is optional at build time: the site has to keep building and
@@ -76,7 +77,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (trigger === "update") {
         const incoming = (session as { user?: { profile?: unknown } })?.user
           ?.profile
-        const parsed = profileSchema.safeParse(incoming)
+        /* The bundle is only used for messages, and nothing here surfaces them:
+           this is the last line of defence, not the form. */
+        const parsed = createProfileSchema(azValidationMessages).safeParse(incoming)
         if (parsed.success) {
           token.profile = {
             ...parsed.data,

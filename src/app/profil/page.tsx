@@ -1,6 +1,6 @@
 "use client"
 
-import { Suspense, useEffect, useState } from "react"
+import { Suspense, useEffect, useState, useMemo } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { useForm } from "react-hook-form"
@@ -44,30 +44,27 @@ import {
   getDoctorName,
   telHref,
 } from "@/data"
-import {
-  fatherName,
-  firstName,
-  gender,
-  lastName,
-  phoneNumber,
-  requiredEmail,
-  requiredFinCode,
-  birthDate,
-} from "@/lib/validation"
+import { createValidators } from "@/lib/validation"
+import { useT } from "@/i18n/client"
 
-const profileSchema = z.object({
-  firstName,
-  lastName,
-  fatherName,
-  gender,
-  birthDate,
-  email: requiredEmail,
-  phone: phoneNumber,
-  finCode: requiredFinCode,
-})
+const buildProfileSchema = (t: ReturnType<typeof useT>) => {
+  const v = createValidators(t.validation)
+  return z.object({
+    firstName: v.firstName,
+    lastName: v.lastName,
+    fatherName: v.fatherName,
+    gender: v.gender,
+    birthDate: v.birthDate,
+    email: v.requiredEmail,
+    phone: v.phoneNumber,
+    finCode: v.requiredFinCode,
+  })
+}
 
-type ProfileInput = z.input<typeof profileSchema>
-type ProfileData = z.output<typeof profileSchema>
+type ProfileSchema = ReturnType<typeof buildProfileSchema>
+
+type ProfileInput = z.input<ProfileSchema>
+type ProfileData = z.output<ProfileSchema>
 
 /**
  * dd.MM.yyyy, written out rather than left to toLocaleDateString("az-AZ").
@@ -98,6 +95,8 @@ const statusLabels: Record<string, string> = {
 }
 
 function ProfilPageInner() {
+  const t = useT()
+  const profileSchema = useMemo(() => buildProfileSchema(t), [t])
   const router = useRouter()
   // Either login method resolves to the same shape here.
   const { user, isLoading, source } = useCurrentUser()

@@ -535,5 +535,30 @@
     "notFoundBody": "Aradığınız sayfa mevcut değil veya taşınmış olabilir.",
     "goHome": "Ana Sayfa",
     "bookAppointment": "Randevu Al"
+  },
+  "validation": {
+    "nameMin": "{label} en az {min} karakter olmalıdır",
+    "nameMax": "{label} en fazla {max} karakter olabilir",
+    "nameLettersOnly": "{label} yalnızca harflerden oluşabilir",
+    "firstNameLabel": "Ad",
+    "lastNameLabel": "Soyad",
+    "fatherNameLabel": "Baba adı",
+    "fullNameMin": "Ad en az 3 karakter olmalıdır",
+    "fullNameMax": "Ad en fazla 100 karakter olabilir",
+    "fullNameComplete": "Lütfen adınızı ve soyadınızı eksiksiz yazın",
+    "genderRequired": "Lütfen cinsiyet seçin",
+    "emailRequired": "Lütfen e-posta adresinizi girin",
+    "emailInvalid": "Lütfen geçerli bir e-posta adresi girin",
+    "phoneRequired": "Lütfen telefon numaranızı girin",
+    "phoneDigits": "Telefon numarası 9-15 haneli olmalıdır",
+    "finRequired": "Lütfen FIN kodunuzu girin",
+    "finFormat": "FIN kodu 7 harf veya rakamdan oluşmalıdır",
+    "finInvalid": "FIN kodu geçersiz",
+    "birthDateRequired": "Lütfen doğum tarihinizi seçin",
+    "birthDateInvalid": "Doğum tarihi geçersiz",
+    "passwordMin": "Şifre en az 8 karakter olmalıdır",
+    "passwordMax": "Şifre en fazla 128 karakter olabilir",
+    "passwordComplexity": "Şifre en az bir harf ve bir rakam içermelidir",
+    "textMax": "En fazla {max} karakter olabilir"
   }
 }

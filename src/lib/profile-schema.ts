@@ -1,33 +1,29 @@
 import * as z from "zod"
-import {
-  birthDate,
-  fatherName,
-  firstName,
-  gender,
-  lastName,
-  phoneNumber,
-  requiredFinCode,
-} from "@/lib/validation"
+import { createValidators, type ValidationMessages } from "@/lib/validation"
 
 /**
  * The patient details Google cannot supply.
  *
- * Validated on the SERVER before anything is written into the session cookie.
- * The same schema backs the form, so the two cannot drift — but the form's copy
- * is a convenience, and the server's copy is the one that decides.
+ * Built from a message bundle so the errors speak the visitor's language, and
+ * validated again on the SERVER before anything is written into the session —
+ * the form's copy is a convenience, the server's copy is what decides.
  */
-export const profileSchema = z.object({
-  firstName,
-  lastName,
-  fatherName,
-  gender,
-  birthDate,
-  phone: phoneNumber,
-  finCode: requiredFinCode,
-})
+export function createProfileSchema(messages: ValidationMessages) {
+  const v = createValidators(messages)
+  return z.object({
+    firstName: v.firstName,
+    lastName: v.lastName,
+    fatherName: v.fatherName,
+    gender: v.gender,
+    birthDate: v.birthDate,
+    phone: v.phoneNumber,
+    finCode: v.requiredFinCode,
+  })
+}
 
-export type ProfileInput = z.input<typeof profileSchema>
-export type ProfileData = z.output<typeof profileSchema>
+export type ProfileSchema = ReturnType<typeof createProfileSchema>
+export type ProfileInput = z.input<ProfileSchema>
+export type ProfileData = z.output<ProfileSchema>
 
 /** Soyad Ad Ata adı — the order used on Azerbaijani medical records. */
 export const buildFullName = (parts: {

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -18,23 +18,27 @@ import {
   CheckCircle,
 } from "lucide-react"
 import { contactInfo, telHref } from "@/data"
-import { fullName, phoneNumber, requiredEmail } from "@/lib/validation"
+import { createValidators } from "@/lib/validation"
 import { useT } from "@/i18n/client"
 
-const schema = z.object({
-  name: fullName,
-  email: requiredEmail,
-  phone: phoneNumber,
-  message: z
-    .string()
-    .min(10, "Mesaj minimum 10 simvol olmalıdır")
-    .max(2000, "Mesaj maksimum 2000 simvol ola bilər"),
-})
+const buildSchema = (t: ReturnType<typeof useT>) => {
+  const v = createValidators(t.validation)
+  return z.object({
+    name: v.fullName,
+    email: v.requiredEmail,
+    phone: v.phoneNumber,
+    message: z
+      .string()
+      .min(10, t.booking.messageTooShort)
+      .max(2000, t.booking.messageTooLong),
+  })
+}
 
-type FormData = z.infer<typeof schema>
+type FormData = z.infer<ReturnType<typeof buildSchema>>
 
 export default function ElaqePage() {
   const t = useT()
+  const schema = useMemo(() => buildSchema(t), [t])
   const [sent, setSent] = useState(false)
 
   const {
