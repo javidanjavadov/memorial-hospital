@@ -30,11 +30,13 @@ import { missingProfileFields } from "@/lib/profile-complete"
 import ProfileCompletionCard from "@/components/profile-completion-card"
 import { shortServiceName } from "@/lib/service-name"
 import { controlClass } from "@/components/ui/field"
+import { useT } from "@/i18n/client"
 
 const formatAzn = (value: number) =>
   `${Number.isInteger(value) ? value : value.toFixed(2)} AZN`
 
 export default function SebetPage() {
+  const t = useT()
   const lines = useBasketStore((s) => s.lines)
   const branch = useBasketStore((s) => s.branch)
   const homeCollection = useBasketStore((s) => s.homeCollection)
@@ -73,7 +75,7 @@ export default function SebetPage() {
   if (!hasHydrated || isLoading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center" role="status">
-        <span className="text-[var(--ink-muted)]">Yüklənir...</span>
+        <span className="text-[var(--ink-muted)]">{t.common.loading}</span>
       </div>
     )
   }
@@ -113,7 +115,7 @@ export default function SebetPage() {
          * tests by hand is how someone gives up and phones a competitor.
          */
         setSubmitError(
-          payload?.error ?? "Sifariş göndərilə bilmədi. Yenidən cəhd edin."
+          payload?.error ?? t.basket.submitFailed
         )
         return
       }
@@ -123,7 +125,7 @@ export default function SebetPage() {
       submitOrder(user.id)
       setSent({ reference: payload.reference, delivered: payload.delivered })
     } catch {
-      setSubmitError("Şəbəkə xətası. Yenidən cəhd edin.")
+      setSubmitError(t.common.networkError)
     } finally {
       setSubmitting(false)
     }
@@ -140,7 +142,7 @@ export default function SebetPage() {
             <CheckCircle className="h-10 w-10 text-green-600" />
           </div>
           <h1 className="font-display text-step-2 text-[var(--ink)]">
-            Sifarişiniz qeydə alındı
+            {t.basket.orderPlaced}
           </h1>
           <p className="mt-2 font-mono text-sm text-[var(--ink-muted)]">
             {sent.reference}
@@ -154,8 +156,7 @@ export default function SebetPage() {
           <p className="mt-4 text-[var(--ink-muted)]">
             {sent.delivered ? (
               <>
-                Sifarişiniz klinikaya göndərildi. Operatorumuz sizinlə əlaqə
-                saxlayaraq vaxtı təsdiqləyəcək.
+{t.basket.orderDelivered}
               </>
             ) : (
               <>
@@ -169,7 +170,7 @@ export default function SebetPage() {
           </p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
             <Button variant="cta" asChild>
-              <Link href="/xidmetler">Xidmətlərə qayıt</Link>
+              <Link href="/xidmetler">{t.basket.backToServices}</Link>
             </Button>
             <Button variant="outline" asChild>
               <a href={telHref(contactInfo.phone)}>
@@ -186,7 +187,7 @@ export default function SebetPage() {
   return (
     <div className="min-h-screen bg-[var(--paper)] py-12 md:py-16">
       <div className="container mx-auto px-4">
-        <h1 className="font-display text-step-3 text-[var(--ink)]">Səbətim</h1>
+        <h1 className="font-display text-step-3 text-[var(--ink)]">{t.basket.title}</h1>
         <p className="mt-2 text-[var(--ink-muted)]">
           {lines.length} xidmət · qiymətlər {branchName} üzrə
         </p>
@@ -199,10 +200,10 @@ export default function SebetPage() {
               className="mx-auto mb-4 h-12 w-12 text-[var(--ink-muted)]"
               aria-hidden="true"
             />
-            <p className="text-[var(--ink-muted)]">Səbətiniz boşdur.</p>
+            <p className="text-[var(--ink-muted)]">{t.basket.empty}</p>
             <Button variant="cta" className="mt-6" asChild>
               <Link href="/xidmetler">
-                Xidmətlərə bax
+                {t.profile.browseServices}
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </Button>
@@ -254,7 +255,7 @@ export default function SebetPage() {
                 <Button variant="outline" size="sm" asChild>
                   <Link href="/xidmetler#laboratory-catalog">
                     <ListPlus className="h-4 w-4" aria-hidden="true" />
-                    Xidmət əlavə et
+                    {t.basket.addService}
                   </Link>
                 </Button>
                 <button
@@ -262,7 +263,7 @@ export default function SebetPage() {
                   onClick={clear}
                   className="text-sm text-[var(--ink-muted)] underline-offset-4 hover:text-red-600 hover:underline"
                 >
-                  Səbəti təmizlə
+                  {t.basket.clearBasket}
                 </button>
               </li>
             </ul>
@@ -287,7 +288,7 @@ export default function SebetPage() {
                 ))}
               </select>
               <p className="mt-2 text-xs text-[var(--ink-muted)]">
-                Qiymətlər filiala görə dəyişir.
+                {t.basket.branchPricesVary}
               </p>
 
               <label className="mt-5 flex items-start gap-3">
@@ -302,7 +303,7 @@ export default function SebetPage() {
                     className="mr-1 inline h-4 w-4 text-primary"
                     aria-hidden="true"
                   />
-                  Evdə qanalma xidməti
+                  {t.basket.homeCollection}
                   <span className="mt-0.5 block text-xs text-[var(--ink-muted)]">
                     +{formatAzn(HOME_COLLECTION_FEE)}
                   </span>
@@ -311,13 +312,13 @@ export default function SebetPage() {
 
               <fieldset className="mt-5">
                 <legend className="text-sm font-medium text-[var(--ink)]">
-                  Ödəniş üsulu
+                  {t.basket.paymentMethod}
                 </legend>
                 <div className="mt-2 grid grid-cols-2 gap-2">
                   {(
                     [
-                      { id: "CASH", label: "Nağd", icon: Banknote },
-                      { id: "CARD", label: "Kart", icon: CreditCard },
+                      { id: "CASH", label: t.basket.cash, icon: Banknote },
+                      { id: "CARD", label: t.basket.card, icon: CreditCard },
                     ] as const
                   ).map((option) => (
                     <label
@@ -342,26 +343,25 @@ export default function SebetPage() {
                   ))}
                 </div>
                 <p className="mt-2 text-xs text-[var(--ink-muted)]">
-                  Ödəniş filialda həyata keçirilir — kart üçün POS-terminal
-                  mövcuddur.
+{t.basket.paymentAtBranch}
                 </p>
               </fieldset>
 
               <dl className="mt-5 space-y-2 border-t border-[var(--line)] pt-4 text-sm">
                 <div className="flex justify-between">
-                  <dt className="text-[var(--ink-muted)]">Xidmətlər</dt>
+                  <dt className="text-[var(--ink-muted)]">{t.basket.services}</dt>
                   <dd className="text-[var(--ink)]">{formatAzn(subtotal)}</dd>
                 </div>
                 {homeCollection && (
                   <div className="flex justify-between">
-                    <dt className="text-[var(--ink-muted)]">Qanalma xidməti</dt>
+                    <dt className="text-[var(--ink-muted)]">{t.basket.collectionFee}</dt>
                     <dd className="text-[var(--ink)]">
                       {formatAzn(HOME_COLLECTION_FEE)}
                     </dd>
                   </div>
                 )}
                 <div className="flex justify-between border-t border-[var(--line)] pt-2">
-                  <dt className="font-medium text-[var(--ink)]">Ümumi</dt>
+                  <dt className="font-medium text-[var(--ink)]">{t.basket.total}</dt>
                   <dd className="font-display text-step-1 text-primary">
                     {formatAzn(total)}
                   </dd>
@@ -373,7 +373,7 @@ export default function SebetPage() {
                   <ProfileCompletionCard compact
                     missing={missing}
                     next="/sebet"
-                    reason="Nümunə sizin adınıza qeydə alınır, ona görə sifarişdən əvvəl bu məlumatlar tamamlanmalıdır."
+                    reason={t.basket.signInReason}
                   />
                 </div>
               ) : user ? (
@@ -397,7 +397,7 @@ export default function SebetPage() {
                     disabled={submitting}
                     onClick={placeOrder}
                   >
-                    {submitting ? "Göndərilir..." : "Sifarişi göndər"}
+                    {submitting ? "{t.basket.submitting}" : "{t.basket.submitOrder}"}
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </Button>
                 </>
@@ -410,11 +410,10 @@ export default function SebetPage() {
                 */
                 <div className="mt-5 rounded-lg border border-[var(--line)] bg-[var(--secondary)] p-4">
                   <p className="text-sm text-[var(--ink)]">
-                    Sifariş vermək üçün hesabınıza daxil olun.
+                    {t.basket.signInToOrder}
                   </p>
                   <p className="mt-1 text-xs text-[var(--ink-muted)]">
-                    Analiz nəticələri hesabınıza bağlanır, ona görə sifariş
-                    şəxsiyyəti təsdiqlənmiş istifadəçi adından verilir.
+{t.basket.signInReason}
                   </p>
                   <Button variant="cta" size="lg" className="mt-3 w-full" asChild>
                     <Link href="/giris?next=/sebet">
@@ -423,7 +422,7 @@ export default function SebetPage() {
                     </Link>
                   </Button>
                   <Button variant="outline" className="mt-2 w-full" asChild>
-                    <Link href="/qeydiyyat">Qeydiyyatdan keç</Link>
+                    <Link href="/qeydiyyat">{t.auth.signUpTitle}</Link>
                   </Button>
                 </div>
               )}
@@ -438,8 +437,7 @@ export default function SebetPage() {
                   className="mt-0.5 h-3.5 w-3.5 shrink-0"
                   aria-hidden="true"
                 />
-                Onlayn ödəniş hələlik mövcud deyil və sifariş klinikaya
-                avtomatik göndərilmir — təsdiq üçün zəng etməyiniz xahiş olunur.
+{t.basket.noOnlinePayment}
               </p>
             </aside>
           </div>

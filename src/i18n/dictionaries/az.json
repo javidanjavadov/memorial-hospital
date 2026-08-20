@@ -335,7 +335,9 @@
     "callUs": "Zəng Edin",
     "messageTooShort": "Mesaj minimum 10 simvol olmalıdır",
     "messageTooLong": "Mesaj maksimum 2000 simvol ola bilər",
-    "writeToUsInline": "bizə yazın"
+    "writeToUsInline": "bizə yazın",
+    "cardNoRequired": "STRIX / KART NO daxil edin",
+    "cardNoFormat": "Format: 00000000-0000000000"
   },
   "data": {
     "departments": {},

@@ -335,7 +335,9 @@
     "callUs": "Bizi Arayın",
     "messageTooShort": "Mesaj en az 10 karakter olmalıdır",
     "messageTooLong": "Mesaj en fazla 2000 karakter olabilir",
-    "writeToUsInline": "bize yazın"
+    "writeToUsInline": "bize yazın",
+    "cardNoRequired": "STRIX / kart numarasını girin",
+    "cardNoFormat": "Biçim: 00000000-0000000000"
   },
   "data": {
     "departments": {

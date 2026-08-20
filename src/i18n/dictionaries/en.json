@@ -347,7 +347,9 @@
     "callUs": "Call Us",
     "messageTooShort": "Message must be at least 10 characters",
     "messageTooLong": "Message cannot exceed 2000 characters",
-    "writeToUsInline": "write to us"
+    "writeToUsInline": "write to us",
+    "cardNoRequired": "Enter your STRIX / card number",
+    "cardNoFormat": "Format: 00000000-0000000000"
   },
   "data": {
     "departments": {

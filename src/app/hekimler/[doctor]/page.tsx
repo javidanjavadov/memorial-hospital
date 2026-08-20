@@ -24,6 +24,7 @@ import {
 } from "@/data"
 import { pageMetadata, siteUrl } from "@/lib/site"
 import { cn } from "@/lib/utils"
+import { getDictionary } from "@/i18n"
 
 type Props = { params: Promise<{ doctor: string }> }
 
@@ -62,6 +63,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * short page.
  */
 export default async function DoctorPage({ params }: Props) {
+  const t = await getDictionary()
   const { doctor: id } = await params
   const doctor = doctors.find((d) => d.id === id)
   if (!doctor) notFound()
@@ -85,14 +87,14 @@ export default async function DoctorPage({ params }: Props) {
   const colleagues = (relatedByDepartment ? sameDepartment : sameBranch).slice(0, 4)
 
   const facts = [
-    { icon: Stethoscope, label: "İxtisas", value: doctor.specialty },
+    { icon: Stethoscope, label: t.doctors.specialty, value: doctor.specialty },
     {
       icon: BriefcaseMedical,
-      label: "Şöbə",
+      label: t.doctors.department,
       value: department?.name ?? doctor.department,
     },
-    { icon: MapPin, label: "Filial", value: branch?.name ?? doctor.branch },
-    { icon: Clock, label: "Təcrübə", value: `${doctor.experience} il` },
+    { icon: MapPin, label: t.doctors.branch, value: branch?.name ?? doctor.branch },
+    { icon: Clock, label: t.doctors.experience, value: `${doctor.experience} il` },
   ]
 
   return (
@@ -106,7 +108,7 @@ export default async function DoctorPage({ params }: Props) {
             className="inline-flex items-center gap-2 text-sm text-[var(--ink-muted)] transition-colors hover:text-primary"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            Bütün həkimlər
+            {t.doctors.allDoctors}
           </Link>
 
           {/*
@@ -187,7 +189,7 @@ export default async function DoctorPage({ params }: Props) {
                   <Button variant="cta" size="lg" className="mt-4 w-full" asChild>
                     <Link href={`/qebul?doctor=${doctor.id}`}>
                       <CalendarCheck className="h-5 w-5" aria-hidden="true" />
-                      Qəbula yazıl
+                      {t.home.bookButton}
                     </Link>
                   </Button>
                 </>
@@ -204,7 +206,7 @@ export default async function DoctorPage({ params }: Props) {
                       : "Hazırda qəbul aparmır"}
                   </p>
                   <p className="mt-1 text-xs leading-relaxed text-[var(--ink-muted)]">
-                    Ətraflı məlumat üçün çağrı mərkəzimizlə əlaqə saxlayın.
+                    {t.doctors.callCentreNote}
                   </p>
                 </>
               )}
@@ -231,7 +233,7 @@ export default async function DoctorPage({ params }: Props) {
         {branch && (
           <section className="rounded-2xl border border-[var(--line)] bg-[var(--paper-raised)] p-6">
             <h2 className="font-display text-step-1 text-[var(--ink)]">
-              Qəbul yeri
+              {t.doctors.appointmentPlace}
             </h2>
             <p className="mt-2 text-[var(--ink-muted)]">{branch.address}</p>
             <p className="mt-1 text-sm text-[var(--ink-muted)]">
@@ -241,7 +243,7 @@ export default async function DoctorPage({ params }: Props) {
               href={`/filiallar#${branch.id}`}
               className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
             >
-              Filial haqqında
+              {t.doctors.aboutBranch}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </section>

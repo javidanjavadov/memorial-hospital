@@ -90,11 +90,13 @@ export default function QebulPage() {
       fallback={
         <div className="min-h-screen bg-[var(--paper)] py-16 md:py-24 flex items-center justify-center">
           <div className="text-center" role="status">
+            {/* No text: this fallback renders outside the dictionary
+                provider's reach, and a spinner reads the same in every
+                language. */}
             <div
-              className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"
+              className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto"
               aria-hidden="true"
             />
-            <p className="text-slate-600">Yüklənir...</p>
           </div>
         </div>
       }
@@ -395,7 +397,7 @@ function QebulContent() {
                         blocked submission with no visible explanation. */}
                     <Field
                       label="Email"
-                      hint="İxtiyari."
+                      hint="{t.booking.optional}"
                       error={errors.email?.message}
                     >
                       {(field) => (

@@ -81,7 +81,7 @@ export default function ElaqePage() {
             Əlaqə
           </h1>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Sualınız var? Bizimlə əlaqə saxlayın
+            {t.booking.contactSubtitle}
           </p>
         </div>
 
@@ -89,7 +89,7 @@ export default function ElaqePage() {
           {/* Contact Form */}
           <Card className="border-0 shadow-lg">
             <CardHeader>
-              <CardTitle>Bizə Yazın</CardTitle>
+              <CardTitle>{t.booking.writeToUs}</CardTitle>
             </CardHeader>
             <CardContent>
               {sent ? (
@@ -99,7 +99,7 @@ export default function ElaqePage() {
                     aria-hidden="true"
                   />
                   <h2 className="text-xl font-bold text-slate-900 mb-2">
-                    Mesajınız hazırlandı
+                    {t.booking.messagePrepared}
                   </h2>
                   <p className="text-slate-500 mb-4">
                     E-poçt proqramınızda mesaj açıldı — göndərməni orada
@@ -140,7 +140,7 @@ export default function ElaqePage() {
                       <Input
                         {...field}
                         autoComplete="name"
-                        placeholder="Adınız və soyadınız"
+                        placeholder={t.booking.fullName}
                         {...register("name")}
                         className={errors.name ? "border-red-500" : ""}
                       />
@@ -176,7 +176,7 @@ export default function ElaqePage() {
                   <Field
                     label="Mesaj"
                     required
-                    hint="Zəhmət olmasa şəxsi sağlamlıq məlumatlarınızı bu formda yazmayın."
+                    hint="{t.booking.noHealthDataNote}"
                     error={errors.message?.message}
                   >
                     {(field) => (
@@ -184,7 +184,7 @@ export default function ElaqePage() {
                         {...field}
                         rows={4}
                         maxLength={2000}
-                        placeholder="Mesajınızı yazın..."
+                        placeholder={t.booking.messagePlaceholder}
                         {...register("message")}
                         className={textareaClass}
                       />
@@ -199,7 +199,7 @@ export default function ElaqePage() {
                     disabled={isSubmitting}
                   >
                     <Send className="w-5 h-5" aria-hidden="true" />
-                    Göndər
+                    {t.booking.send}
                   </Button>
                 </form>
               )}
@@ -210,7 +210,7 @@ export default function ElaqePage() {
           <div className="space-y-6">
             <Card className="border-0 shadow-lg">
               <CardContent className="p-6 space-y-4">
-                <h3 className="font-bold text-slate-900 text-lg mb-4">Əlaqə Məlumatları</h3>
+                <h3 className="font-bold text-slate-900 text-lg mb-4">{t.booking.contactDetails}</h3>
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center shrink-0">
                     <Phone className="w-6 h-6 text-teal-700" />
@@ -238,7 +238,7 @@ export default function ElaqePage() {
                     <MapPin className="w-6 h-6 text-teal-700" />
                   </div>
                   <div>
-                    <h4 className="font-medium text-slate-900">Ünvan</h4>
+                    <h4 className="font-medium text-slate-900">{t.booking.address}</h4>
                     <p className="text-slate-600">{t.data.contact.address ?? contactInfo.address}</p>
                   </div>
                 </div>
@@ -247,7 +247,7 @@ export default function ElaqePage() {
                     <Clock className="w-6 h-6 text-teal-700" />
                   </div>
                   <div>
-                    <h4 className="font-medium text-slate-900">İş Vaxtı</h4>
+                    <h4 className="font-medium text-slate-900">{t.booking.workingHours}</h4>
                     <p className="text-slate-600">{t.data.contact.workingHours ?? contactInfo.workingHours}</p>
                   </div>
                 </div>
@@ -256,7 +256,7 @@ export default function ElaqePage() {
 
             <Card className="border-0 shadow-lg">
               <CardContent className="p-6">
-                <h3 className="font-bold text-slate-900 text-lg mb-4">Sosial Şəbəkələr</h3>
+                <h3 className="font-bold text-slate-900 text-lg mb-4">{t.booking.socialNetworks}</h3>
                 <div className="flex gap-3">
                   <a
                     href="https://api.whatsapp.com/send?phone=994557101050"
@@ -272,7 +272,7 @@ export default function ElaqePage() {
                     className="flex items-center gap-2 px-4 py-2 bg-teal-100 text-teal-700 rounded-lg hover:bg-teal-200 transition-colors"
                   >
                     <Phone className="w-5 h-5" />
-                    Zəng Edin
+                    {t.booking.callUs}
                   </a>
                 </div>
               </CardContent>

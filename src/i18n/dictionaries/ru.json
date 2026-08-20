@@ -355,7 +355,9 @@
     "callUs": "Позвоните нам",
     "messageTooShort": "Сообщение должно содержать не менее 10 символов",
     "messageTooLong": "Сообщение не может превышать 2000 символов",
-    "writeToUsInline": "напишите нам"
+    "writeToUsInline": "напишите нам",
+    "cardNoRequired": "Введите STRIX / номер карты",
+    "cardNoFormat": "Формат: 00000000-0000000000"
   },
   "data": {
     "departments": {

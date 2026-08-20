@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useState } from "react"
+import { useCallback, useState, useMemo } from "react"
 import Link from "next/link"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -25,26 +25,32 @@ import {
   lookupResults,
   type ResultOrder,
 } from "@/lib/results"
+import { useT } from "@/i18n/client"
 
-const schema = z.object({
-  // One field, exactly as the report prints it.
-  cardNo: z
-    .string()
-    .min(1, "STRIX / KART NO daxil edin")
-    .regex(CARD_NO_PATTERN, "Format: 00000000-0000000000"),
-  birthDate: z
-    .string()
-    .min(1, "Doğum tarixini seçin")
-    .refine((v) => {
-      const d = new Date(v)
-      return !Number.isNaN(d.valueOf()) && d < new Date()
-    }, "Doğum tarixi düzgün deyil"),
-  securityCode: z.string().min(1, "Təhlükəsizlik kodunu daxil edin"),
-})
+/* Built from the dictionary: zod bakes messages in at construction, so a
+   module-level schema could only ever speak one language. */
+const buildSchema = (t: ReturnType<typeof useT>) =>
+  z.object({
+    // One field, exactly as the report prints it.
+    cardNo: z
+      .string()
+      .min(1, t.booking.cardNoRequired)
+      .regex(CARD_NO_PATTERN, t.booking.cardNoFormat),
+    birthDate: z
+      .string()
+      .min(1, t.booking.selectBirthDate)
+      .refine((v) => {
+        const d = new Date(v)
+        return !Number.isNaN(d.valueOf()) && d < new Date()
+      }, t.booking.invalidBirthDate),
+    securityCode: z.string().min(1, t.booking.enterSecurityCode),
+  })
 
-type FormData = z.infer<typeof schema>
+type FormData = z.infer<ReturnType<typeof buildSchema>>
 
 export default function NeticelerPage() {
+  const t = useT()
+  const schema = useMemo(() => buildSchema(t), [t])
   /*
    * This lookup exists for visitors who have no account: it proves identity
    * with the card number, date of birth and security code printed on the
@@ -81,7 +87,7 @@ export default function NeticelerPage() {
     if (!captcha?.verify(data.securityCode)) {
       captcha?.refresh()
       setValue("securityCode", "")
-      setError("Təhlükəsizlik kodu düzgün deyil. Yeni kodu daxil edin.")
+      setError(t.booking.wrongSecurityCode)
       return
     }
 
@@ -102,7 +108,7 @@ export default function NeticelerPage() {
   if (isLoading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center" role="status">
-        <span className="text-[var(--ink-muted)]">Yüklənir...</span>
+        <span className="text-[var(--ink-muted)]">{t.common.loading}</span>
       </div>
     )
   }
@@ -118,14 +124,13 @@ export default function NeticelerPage() {
             <FileText className="h-8 w-8 text-primary" />
           </div>
           <h1 className="font-display text-step-2 text-[var(--ink)]">
-            Nəticələriniz hesabınıza bağlıdır
+            {t.booking.resultsLinkedTitle}
           </h1>
           <p className="mt-3 text-[var(--ink-muted)]">
-            Daxil olduğunuz üçün kart nömrəsi və təhlükəsizlik koduna ehtiyac
-            yoxdur. Nəticələr profilinizin “Nəticələrim” bölməsindədir.
+{t.booking.resultsLinkedBody}
           </p>
           <Button variant="cta" size="lg" className="mt-6" asChild>
-            <Link href="/profil?tab=results">Nəticələrim</Link>
+            <Link href="/profil?tab=results">{t.booking.myResults}</Link>
           </Button>
         </div>
       </div>
@@ -145,10 +150,10 @@ export default function NeticelerPage() {
                 <FileText className="h-8 w-8 text-primary" />
               </div>
               <h1 className="font-display text-step-2 text-[var(--ink)]">
-                Nəticələrimə bax
+                {t.booking.resultsTitle}
               </h1>
               <p className="mt-2 text-sm text-[var(--ink-muted)]">
-                Analiz cavabınızı görmək üçün sifariş məlumatlarınızı daxil edin.
+                {t.booking.resultsSubtitle}
               </p>
             </CardHeader>
 
@@ -174,7 +179,7 @@ export default function NeticelerPage() {
                 <Field
                   label="STRIX / KART NO"
                   required
-                  hint="Nəticə vərəqinizin yuxarı hissəsində göstərilir."
+                  hint={t.booking.cardNoHint}
                   error={errors.cardNo?.message}
                 >
                   {(field) => (
@@ -190,7 +195,7 @@ export default function NeticelerPage() {
                 </Field>
 
                 <Field
-                  label="Doğum tarixi"
+                  label={t.booking.birthDate}
                   required
                   error={errors.birthDate?.message}
                 >
@@ -205,7 +210,7 @@ export default function NeticelerPage() {
                 </Field>
 
                 <Field
-                  label="Təhlükəsizlik kodu"
+                  label={t.booking.securityCode}
                   required
                   error={errors.securityCode?.message}
                 >
@@ -220,7 +225,7 @@ export default function NeticelerPage() {
                           {...field}
                           autoComplete="off"
                           spellCheck={false}
-                          placeholder="Təhlükəsizlik kodunu daxil edin"
+                          placeholder={t.booking.enterSecurityCode}
                           {...register("securityCode")}
                           className={`pl-10 uppercase ${errors.securityCode ? "border-red-500" : ""}`}
                         />
@@ -242,7 +247,7 @@ export default function NeticelerPage() {
                   ) : (
                     <FileText className="h-5 w-5" aria-hidden="true" />
                   )}
-                  {isSubmitting ? "Yoxlanılır..." : "Nəticəni göstər"}
+                  {isSubmitting ? "{t.booking.checking}" : "{t.booking.showResult}"}
                 </Button>
 
                 <p className="flex items-start gap-2 text-xs text-[var(--ink-muted)]">
@@ -306,7 +311,7 @@ export default function NeticelerPage() {
               </a>{" "}
               nömrəsinə zəng edin və ya{" "}
               <Link href="/elaqe" className="font-semibold text-primary hover:underline">
-                bizə yazın
+                {t.home.faqWriteToUs}
               </Link>
               .
             </p>
@@ -314,7 +319,7 @@ export default function NeticelerPage() {
 
           <p className="mt-4 flex items-start gap-2 text-center text-xs text-[var(--ink-muted)]">
             <Phone className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-            Nəticələr hazır olduqda telefon nömrənizə bildiriş göndərilir.
+            {t.booking.resultsNotifyNote}
           </p>
         </div>
       </div>
