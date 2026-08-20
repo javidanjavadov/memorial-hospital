@@ -357,7 +357,26 @@
   },
   "data": {
     "departments": {},
-    "branches": {},
+    "branches": {
+      "nrimanov": {
+        "address": "",
+        "workingHours": "",
+        "name": "",
+        "short": ""
+      },
+      "qarayev": {
+        "address": "",
+        "workingHours": "",
+        "name": "",
+        "short": ""
+      },
+      "ganca": {
+        "address": "",
+        "workingHours": "",
+        "name": "",
+        "short": ""
+      }
+    },
     "groups": {},
     "categories": {},
     "faq": [

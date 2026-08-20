@@ -127,7 +127,7 @@ export default function FindDoctorSection() {
 
             <Button type="submit" variant="cta" size="lg" className="md:w-auto">
               <Search className="h-5 w-5" aria-hidden="true" />
-              Axtar
+              {t.common.search}
             </Button>
           </div>
         </form>

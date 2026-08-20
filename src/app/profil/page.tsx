@@ -277,7 +277,7 @@ function ProfilPageInner() {
             onClick={() => setActiveTab("profile")}
           >
             <User className="w-4 h-4" aria-hidden="true" />
-            Profilim
+            {t.profile.title}
           </Button>
           <Button
             role="tab"
@@ -288,7 +288,7 @@ function ProfilPageInner() {
             onClick={() => setActiveTab("appointments")}
           >
             <Calendar className="w-4 h-4" aria-hidden="true" />
-            Qəbullarım ({appointments.length})
+            {t.profile.myAppointments} ({appointments.length})
           </Button>
           <Button
             role="tab"
@@ -299,7 +299,7 @@ function ProfilPageInner() {
             onClick={() => setActiveTab("orders")}
           >
             <ShoppingBag className="w-4 h-4" aria-hidden="true" />
-            Sifarişlərim ({orders.length})
+            {t.profile.myOrders} ({orders.length})
           </Button>
           <Button
             role="tab"
@@ -743,7 +743,7 @@ function ProfilPageInner() {
                   </div>
                   <div className="rounded-lg border border-[var(--line)] p-3">
                     <dt className="text-xs text-[var(--ink-muted)]">
-                      Doğum tarixi
+                      {t.profile.birthDate}
                     </dt>
                     <dd className="text-sm text-[var(--ink)]">
                       {user.birthDate ? formatDate(user.birthDate) : "-"}

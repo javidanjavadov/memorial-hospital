@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { branches, contactInfo, telHref } from "@/data"
 import { useT } from "@/i18n/client"
+import { localizeBranch } from "@/i18n/data"
 import { cn } from "@/lib/utils"
 import type { PublicResult } from "@/lib/results-store"
 
@@ -108,7 +109,8 @@ export default function ResultsPanel({ patientName }: { patientName: string }) {
   return (
     <div className="space-y-6">
       {results.map((result) => {
-        const branch = branches.find((b) => b.id === result.branch)
+        const raw = branches.find((b) => b.id === result.branch)
+        const branch = raw ? localizeBranch(raw, t.data) : undefined
 
         return (
           <article
@@ -189,7 +191,7 @@ export default function ResultsPanel({ patientName }: { patientName: string }) {
                         {t.results.doctor}
                       </dt>
                       <dd className="font-medium text-[var(--ink)]">
-                        {result.doctor}
+                        {t.data.doctorNames?.[result.doctor] ?? result.doctor}
                       </dd>
                     </span>
                   </div>

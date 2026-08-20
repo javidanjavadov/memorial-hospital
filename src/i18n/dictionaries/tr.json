@@ -436,19 +436,22 @@
     },
     "branches": {
       "nrimanov": {
-        "name": "Nərimanov şubesi",
+        "name": "Nerimanov şubesi",
         "address": "Zaur Nudiraliyev 79 (7 numaralı ASAN xidmət karşısı)",
-        "workingHours": "Pzt – Cmt: 08:30 – 18:00 · Pazar: Kapalı"
+        "workingHours": "Pzt – Cmt: 08:30 – 18:00 · Pazar: Kapalı",
+        "short": "Nerimanov"
       },
       "qarayev": {
-        "name": "Qarayev şubesi",
+        "name": "Karayev şubesi",
         "address": "G.Garayev prospekti 38A",
-        "workingHours": "Pzt – Cmt: 07:30 – 18:00 · Pazar: 08:30 – 15:00"
+        "workingHours": "Pzt – Cmt: 07:30 – 18:00 · Pazar: 08:30 – 15:00",
+        "short": "Karayev"
       },
       "ganca": {
         "name": "Gence Memorial Hospital",
         "address": "Gence şehri, Şah İsmail Hatai prospekti 550A",
-        "workingHours": "Haftanın 7 günü — 24 saat"
+        "workingHours": "Haftanın 7 günü — 24 saat",
+        "short": "Gence"
       }
     },
     "groups": {

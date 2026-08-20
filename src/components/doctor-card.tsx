@@ -6,7 +6,7 @@ import { ArrowRight, MapPin } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { Doctor } from "@/data"
 import { useT } from "@/i18n/client"
-import { localizeDoctor } from "@/i18n/data"
+import { branchShortName, localizeDoctor } from "@/i18n/data"
 
 /**
  * Single doctor card, shared by the homepage strip and the /hekimler grid so
@@ -75,9 +75,9 @@ export default function DoctorCard({
 
         <dl className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-[var(--ink-muted)]">
           <div className="flex items-center gap-1.5">
-            <dt className="sr-only">Filial</dt>
+            <dt className="sr-only">{t.doctors.branch}</dt>
             <MapPin className="h-4 w-4 opacity-60" aria-hidden="true" />
-            <dd>{doctor.branch}</dd>
+            <dd>{branchShortName(doctor.branchId, doctor.branch, t.data)}</dd>
           </div>
           <div>
             <dt className="sr-only">{t.doctors.experience}</dt>

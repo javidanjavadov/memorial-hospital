@@ -29,6 +29,15 @@ export function localizeDepartment(
   }
 }
 
+/** The short label a doctor card shows, e.g. "Нариманов". */
+export function branchShortName(
+  branchId: string,
+  fallback: string,
+  data: DataDictionary
+) {
+  return data?.branches?.[branchId]?.short || fallback
+}
+
 export function localizeBranch(branch: Branch, data: DataDictionary): Branch {
   const translated = data?.branches?.[branch.id]
   if (!translated) return branch

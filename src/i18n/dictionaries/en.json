@@ -448,19 +448,22 @@
     },
     "branches": {
       "nrimanov": {
-        "name": "Nərimanov branch",
+        "name": "Narimanov branch",
         "address": "Zaur Nudiraliyev 79 (opposite ASAN service centre No. 7)",
-        "workingHours": "Mon – Sat: 08:30 – 18:00 · Sun: Closed"
+        "workingHours": "Mon – Sat: 08:30 – 18:00 · Sun: Closed",
+        "short": "Narimanov"
       },
       "qarayev": {
-        "name": "Qarayev branch",
+        "name": "Garayev branch",
         "address": "G.Garayev avenue 38A",
-        "workingHours": "Mon – Sat: 07:30 – 18:00 · Sun: 08:30 – 15:00"
+        "workingHours": "Mon – Sat: 07:30 – 18:00 · Sun: 08:30 – 15:00",
+        "short": "Garayev"
       },
       "ganca": {
         "name": "Ganja Memorial Hospital",
         "address": "Ganja city, Shah Ismail Khatai avenue 550A",
-        "workingHours": "7 days a week — 24 hours"
+        "workingHours": "7 days a week — 24 hours",
+        "short": "Ganja"
       }
     },
     "groups": {

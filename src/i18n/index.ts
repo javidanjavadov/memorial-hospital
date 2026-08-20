@@ -19,7 +19,13 @@ export interface DataTranslations {
   departments: Record<string, { name: string; description: string }>
   branches: Record<
     string,
-    { name: string; address: string; workingHours: string }
+    {
+      name: string
+      /** The label a card uses, without the word "branch". */
+      short: string
+      address: string
+      workingHours: string
+    }
   >
   groups: Record<string, { name: string; blurb: string }>
   /** Generated category labels, matched on their Azerbaijani text. */
