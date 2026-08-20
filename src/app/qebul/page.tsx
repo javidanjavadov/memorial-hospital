@@ -40,7 +40,7 @@ import {
   phoneNumber,
 } from "@/lib/validation"
 import { missingProfileFields } from "@/lib/profile-complete"
-import ProfileRequiredNotice from "@/components/profile-required-notice"
+import ProfileCompletionCard from "@/components/profile-completion-card"
 import { useAuthStore } from "@/lib/auth-store"
 import Link from "next/link"
 
@@ -704,7 +704,7 @@ function QebulContent() {
                   /* Signed in but incomplete. A guest is not stopped here —
                      the form collects a name and a phone number itself — but
                      an account the appointment is filed under must be usable. */
-                  <ProfileRequiredNotice
+                  <ProfileCompletionCard compact
                     missing={missing}
                     next="/qebul"
                     reason="Qəbul hesabınıza yazılır, ona görə profil məlumatları tamamlanmalıdır."

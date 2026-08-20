@@ -27,7 +27,7 @@ import type { PaymentMethod } from "@/lib/basket-store"
 import { useCurrentUser } from "@/lib/use-current-user"
 import PatientHeader from "@/components/patient-header"
 import { missingProfileFields } from "@/lib/profile-complete"
-import ProfileRequiredNotice from "@/components/profile-required-notice"
+import ProfileCompletionCard from "@/components/profile-completion-card"
 import { shortServiceName } from "@/lib/service-name"
 import { controlClass } from "@/components/ui/field"
 
@@ -370,7 +370,7 @@ export default function SebetPage() {
 
               {user && missing.length > 0 ? (
                 <div className="mt-5">
-                  <ProfileRequiredNotice
+                  <ProfileCompletionCard compact
                     missing={missing}
                     next="/sebet"
                     reason="Nümunə sizin adınıza qeydə alınır, ona görə sifarişdən əvvəl bu məlumatlar tamamlanmalıdır."

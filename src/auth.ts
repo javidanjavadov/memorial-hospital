@@ -1,5 +1,6 @@
 import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
+import { buildFullName, profileSchema } from "@/lib/profile-schema"
 
 /**
  * Google sign-in is optional at build time: the site has to keep building and
@@ -30,7 +31,7 @@ export interface SessionProfile {
   fullName: string
 }
 
-export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
+export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: googleConfigured
     ? [
         Google({
@@ -61,16 +62,27 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
       if (profile?.sub) token.googleId = profile.sub
 
       /*
-       * The only way patient details enter the token. `trigger === "update"`
-       * fires from unstable_update(), which is reachable only from the server —
-       * /api/profile, after the fields have been validated there. A client
-       * calling update() directly cannot inject anything, because nothing here
-       * reads the client's payload.
+       * The only way patient details enter the token — and the validation is
+       * here, in the callback, rather than in a route handler.
+       *
+       * That is deliberate. This callback runs on the server and is what
+       * actually writes the cookie, so a client calling update() can submit a
+       * payload but cannot decide what is stored: anything that fails the
+       * schema is dropped on the floor. Doing the check in a route handler and
+       * then calling unstable_update() looked equivalent but did not persist —
+       * the rewritten cookie never reached the browser, so the details were
+       * gone on the next request and the visitor was asked for them again.
        */
-      const incoming = (session as { user?: { profile?: SessionProfile } })?.user
-        ?.profile
-      if (trigger === "update" && incoming) {
-        token.profile = incoming
+      if (trigger === "update") {
+        const incoming = (session as { user?: { profile?: unknown } })?.user
+          ?.profile
+        const parsed = profileSchema.safeParse(incoming)
+        if (parsed.success) {
+          token.profile = {
+            ...parsed.data,
+            fullName: buildFullName(parsed.data),
+          }
+        }
       }
 
       return token

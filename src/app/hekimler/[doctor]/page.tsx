@@ -23,6 +23,7 @@ import {
   type Doctor,
 } from "@/data"
 import { pageMetadata, siteUrl } from "@/lib/site"
+import { cn } from "@/lib/utils"
 
 type Props = { params: Promise<{ doctor: string }> }
 
@@ -108,92 +109,120 @@ export default async function DoctorPage({ params }: Props) {
             Bütün həkimlər
           </Link>
 
-          <div className="mt-6 grid gap-8 md:grid-cols-[240px_1fr] md:items-start">
-            <div className="relative mx-auto aspect-square w-48 overflow-hidden rounded-2xl bg-[var(--secondary)] md:mx-0 md:w-full">
+          {/*
+            Three columns on a wide screen: portrait, who they are, and the
+            booking card. The price used to sit loose between two buttons, which
+            read as a caption on the phone number next to it — the one number on
+            the page a patient is actually deciding on.
+          */}
+          <div className="mt-6 grid gap-8 lg:grid-cols-[220px_1fr_18rem] lg:items-start">
+            <div className="relative mx-auto aspect-[4/5] w-44 overflow-hidden rounded-2xl bg-[var(--secondary)] ring-1 ring-[var(--line)] sm:w-52 lg:mx-0 lg:w-full">
               <Image
                 src={doctor.image}
                 alt={`${doctor.name}, ${doctor.specialty}`}
                 fill
-                sizes="(max-width: 768px) 12rem, 240px"
+                sizes="(max-width: 640px) 11rem, (max-width: 1024px) 13rem, 220px"
                 priority
                 className="object-cover object-top"
               />
             </div>
 
-            <div>
-              <p className="text-sm tracking-[0.14em] text-[var(--ink-muted)] uppercase">
+            <div className="min-w-0">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium tracking-wide text-primary uppercase">
+                <Stethoscope className="h-3.5 w-3.5" aria-hidden="true" />
                 {doctor.specialty}
-              </p>
-              <h1 className="font-display text-step-3 mt-2 text-[var(--ink)]">
+              </span>
+
+              <h1 className="font-display text-step-3 mt-3 text-[var(--ink)]">
                 {doctor.name}
               </h1>
+
               {doctor.title && (
-                <p className="mt-3 max-w-2xl leading-relaxed text-[var(--ink-muted)]">
+                <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--ink-muted)]">
                   {doctor.title}
                 </p>
               )}
 
-              <dl className="mt-6 grid gap-4 sm:grid-cols-2">
-                {facts.map((fact) => (
-                  <div key={fact.label} className="flex items-start gap-3">
-                    <fact.icon
-                      className="mt-0.5 h-5 w-5 shrink-0 text-primary"
+              {/* Boxed and divided rather than four floating icon rows, which
+                  left the block looking unfinished against the portrait. */}
+              <dl className="mt-6 grid divide-y divide-[var(--line)] overflow-hidden rounded-xl border border-[var(--line)] sm:grid-cols-2 sm:divide-y-0">
+                {facts.map((fact, index) => (
+                  <div
+                    key={fact.label}
+                    className={cn(
+                      "flex items-center gap-3 p-4",
+                      index % 2 === 0 && "sm:border-r sm:border-[var(--line)]",
+                      index < 2 && "sm:border-b sm:border-[var(--line)]"
+                    )}
+                  >
+                    <span
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--secondary)]"
                       aria-hidden="true"
-                    />
-                    <div>
+                    >
+                      <fact.icon className="h-4.5 w-4.5 text-primary" />
+                    </span>
+                    <div className="min-w-0">
                       <dt className="text-xs text-[var(--ink-muted)]">
                         {fact.label}
                       </dt>
-                      <dd className="text-sm font-medium text-[var(--ink)]">
+                      <dd className="truncate text-sm font-medium text-[var(--ink)]">
                         {fact.value}
                       </dd>
                     </div>
                   </div>
                 ))}
               </dl>
-
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-                {bookable ? (
-                  <>
-                    <Button variant="cta" size="lg" asChild>
-                      <Link href={`/qebul?doctor=${doctor.id}`}>
-                        <CalendarCheck className="h-5 w-5" aria-hidden="true" />
-                        Qəbula yazıl
-                      </Link>
-                    </Button>
-                    <p className="text-sm text-[var(--ink-muted)]">
-                      Konsultasiya:{" "}
-                      <span className="font-display text-step-1 text-primary">
-                        {doctor.price} AZN
-                      </span>
-                    </p>
-                  </>
-                ) : (
-                  /*
-                    Laboratory and imaging staff take no direct bookings. A
-                    button here would lead to a form whose doctor list cannot
-                    contain them.
-                  */
-                  <div className="rounded-lg border border-[var(--line)] bg-[var(--secondary)] p-4">
-                    <p className="text-sm text-[var(--ink)]">
-                      {doctor.available
-                        ? "Bu həkim üçün onlayn qəbul mövcud deyil."
-                        : "Hazırda qəbul aparmır."}
-                    </p>
-                    <p className="mt-1 text-xs text-[var(--ink-muted)]">
-                      Ətraflı məlumat üçün çağrı mərkəzimizlə əlaqə saxlayın.
-                    </p>
-                  </div>
-                )}
-
-                <Button variant="outline" size="lg" asChild>
-                  <a href={telHref(branch?.phone ?? contactInfo.phone)}>
-                    <Phone className="h-4 w-4" aria-hidden="true" />
-                    {branch?.phone ?? contactInfo.phone}
-                  </a>
-                </Button>
-              </div>
             </div>
+
+            <aside className="rounded-2xl border border-[var(--line)] bg-[var(--paper)] p-5 lg:sticky lg:top-24">
+              {bookable ? (
+                <>
+                  <p className="text-xs tracking-wide text-[var(--ink-muted)] uppercase">
+                    Konsultasiya
+                  </p>
+                  <p className="font-display mt-1 text-step-2 text-[var(--ink)]">
+                    {doctor.price}{" "}
+                    <span className="text-step-0 text-[var(--ink-muted)]">AZN</span>
+                  </p>
+                  <Button variant="cta" size="lg" className="mt-4 w-full" asChild>
+                    <Link href={`/qebul?doctor=${doctor.id}`}>
+                      <CalendarCheck className="h-5 w-5" aria-hidden="true" />
+                      Qəbula yazıl
+                    </Link>
+                  </Button>
+                </>
+              ) : (
+                /*
+                  Laboratory and imaging staff take no direct bookings — the
+                  booking form's doctor list cannot contain them, so a button
+                  here would lead nowhere.
+                */
+                <>
+                  <p className="text-sm font-medium text-[var(--ink)]">
+                    {doctor.available
+                      ? "Onlayn qəbul mövcud deyil"
+                      : "Hazırda qəbul aparmır"}
+                  </p>
+                  <p className="mt-1 text-xs leading-relaxed text-[var(--ink-muted)]">
+                    Ətraflı məlumat üçün çağrı mərkəzimizlə əlaqə saxlayın.
+                  </p>
+                </>
+              )}
+
+              <Button variant="outline" className="mt-2 w-full" asChild>
+                <a href={telHref(branch?.phone ?? contactInfo.phone)}>
+                  <Phone className="h-4 w-4" aria-hidden="true" />
+                  {branch?.phone ?? contactInfo.phone}
+                </a>
+              </Button>
+
+              {branch && (
+                <p className="mt-3 flex items-start gap-1.5 text-xs leading-relaxed text-[var(--ink-muted)]">
+                  <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                  {branch.address}
+                </p>
+              )}
+            </aside>
           </div>
         </div>
       </div>

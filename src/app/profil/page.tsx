@@ -30,6 +30,7 @@ import {
   Loader2,
 } from "lucide-react"
 import { missingProfileFields } from "@/lib/profile-complete"
+import ProfileCompletionCard from "@/components/profile-completion-card"
 import { useAuthStore } from "@/lib/auth-store"
 import { ordersFor, useBasketStore } from "@/lib/basket-store"
 import { shortServiceName } from "@/lib/service-name"
@@ -179,35 +180,41 @@ function ProfilPageInner() {
    * authoritative copy — that was the whole bug — so this posts and then asks
    * next-auth to re-read the session.
    */
+  /**
+   * Saves by updating the session itself.
+   *
+   * next-auth's update() round-trips to the server, where the jwt callback
+   * validates the fields and rewrites the signed cookie — so the browser never
+   * holds the authoritative copy, and the value survives a reload. Posting to a
+   * route handler and calling unstable_update() there did not: the new cookie
+   * never reached the browser, so everything typed here vanished on refresh.
+   */
   const onSubmit = async (data: ProfileData) => {
     setSaveError("")
     setSaved(false)
 
     try {
-      const response = await fetch("/api/profile", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          firstName: data.firstName,
-          lastName: data.lastName,
-          fatherName: data.fatherName,
-          gender: data.gender,
-          birthDate: data.birthDate,
-          phone: data.phone,
-          finCode: data.finCode,
-        }),
+      const updated = await updateSession({
+        user: {
+          profile: {
+            firstName: data.firstName,
+            lastName: data.lastName,
+            fatherName: data.fatherName,
+            gender: data.gender,
+            birthDate: data.birthDate,
+            phone: data.phone,
+            finCode: data.finCode,
+          },
+        },
       })
 
-      const payload = await response.json().catch(() => null)
-
-      if (!response.ok) {
-        setSaveError(payload?.error ?? "Məlumatlar yadda saxlanılmadı")
+      // The server drops anything that fails validation, so an unchanged
+      // profile means it was rejected — never report success on that.
+      if (!updated?.user?.profile) {
+        setSaveError("Məlumatlar yadda saxlanılmadı. Sahələri yoxlayın.")
         return
       }
 
-      // Pulls the rewritten cookie into this tab, so the header, the gate and
-      // the basket all see the completed profile without a reload.
-      await updateSession()
       reset(data)
       setSaved(true)
     } catch {
@@ -251,32 +258,7 @@ function ProfilPageInner() {
           </div>
         </div>
 
-        {missing.length > 0 && (
-          <div
-            role="status"
-            className="mb-6 rounded-xl border border-amber-300 bg-amber-50 p-5"
-          >
-            <p className="flex items-center gap-2 font-medium text-amber-900">
-              <AlertCircle className="h-5 w-5 shrink-0" aria-hidden="true" />
-              Profiliniz tamamlanmayıb
-            </p>
-            <p className="mt-1 text-sm text-amber-900/80">
-              Sifariş vermək və qəbula yazılmaq üçün aşağıdakı məlumatlar
-              tələb olunur — laboratoriya nümunəni bu məlumatlarla sizin adınıza
-              qeyd edir.
-            </p>
-            <ul className="mt-3 flex flex-wrap gap-2">
-              {missing.map((field) => (
-                <li
-                  key={field.key}
-                  className="rounded-md bg-amber-100 px-2 py-1 text-xs font-medium text-amber-900"
-                >
-                  {field.label}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        {missing.length > 0 && <ProfileCompletionCard missing={missing} className="mb-6" />}
 
         {/* Tabs */}
         <div className="flex flex-wrap gap-2 mb-6" role="tablist" aria-label="Profil bölmələri">
