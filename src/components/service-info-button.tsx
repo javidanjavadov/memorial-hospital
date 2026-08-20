@@ -58,7 +58,7 @@ export default function ServiceInfoButton({ service }: { service: ServiceInfo })
             <div className="min-w-0">
               {service.code && (
                 <p className="font-mono text-xs text-[var(--ink-muted)]">
-                  Kod: {service.code}
+                  {t.catalog.code}: {service.code}
                 </p>
               )}
               <h2 className="font-display mt-1 text-step-1 text-[var(--ink)]">
@@ -89,7 +89,7 @@ export default function ServiceInfoButton({ service }: { service: ServiceInfo })
           {service.prep && (
             <p className="mt-4 inline-flex items-center gap-2 rounded-lg bg-[var(--secondary)] px-3 py-2 text-sm text-[var(--ink)]">
               <Clock className="h-4 w-4 text-primary" aria-hidden="true" />
-              Hazırlanma müddəti: {service.prep}
+              {t.catalog.preparationTime}: {service.prep}
             </p>
           )}
 
@@ -139,7 +139,7 @@ export default function ServiceInfoButton({ service }: { service: ServiceInfo })
             className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
           >
             <Phone className="h-4 w-4" aria-hidden="true" />
-            Hazırlıq qaydaları üçün {contactInfo.phone}
+            {t.catalog.preparationRules} {contactInfo.phone}
           </a>
         </div>
       </dialog>

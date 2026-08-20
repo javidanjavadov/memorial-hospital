@@ -6,6 +6,7 @@ import { Search, Stethoscope, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { branches, departments } from "@/data"
 import { useT } from "@/i18n/client"
+import { localizeBranch, localizeDepartment } from "@/i18n/data"
 
 /**
  * Doctor search, lifted out of the hero.
@@ -82,7 +83,7 @@ export default function FindDoctorSection() {
 
             <div>
               <label htmlFor={departmentId} className="sr-only">
-                İxtisas
+                {t.home.specialty}
               </label>
               <select
                 id={departmentId}
@@ -91,11 +92,14 @@ export default function FindDoctorSection() {
                 className={field}
               >
                 <option value="">{t.home.allSpecialties}</option>
-                {departments.map((d) => (
-                  <option key={d.id} value={d.id}>
-                    {d.name}
-                  </option>
-                ))}
+                {departments.map((raw) => {
+                  const d = localizeDepartment(raw, t.data)
+                  return (
+                    <option key={d.id} value={d.id}>
+                      {d.name}
+                    </option>
+                  )
+                })}
               </select>
             </div>
 
@@ -110,11 +114,14 @@ export default function FindDoctorSection() {
                 className={field}
               >
                 <option value="">{t.home.allBranches}</option>
-                {branches.map((b) => (
-                  <option key={b.id} value={b.id}>
-                    {b.name}
-                  </option>
-                ))}
+                {branches.map((raw) => {
+                  const b = localizeBranch(raw, t.data)
+                  return (
+                    <option key={b.id} value={b.id}>
+                      {b.name}
+                    </option>
+                  )
+                })}
               </select>
             </div>
 

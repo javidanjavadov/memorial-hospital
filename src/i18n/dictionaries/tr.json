@@ -149,7 +149,7 @@
     "noOnlineBooking": "Bu doktor için online randevu mevcut değil",
     "notAccepting": "Şu anda hasta kabul etmiyor",
     "callCentreNote": "Ayrıntılı bilgi için çağrı merkezimizle iletişime geçin",
-    "otherDoctorsIn": "{name} alanındaki diğer doktorlar",
+    "otherDoctorsIn": "{name} bölümündeki diğer doktorlar",
     "labStaff": "Laboratuvar ekibi"
   },
   "auth": {
@@ -275,7 +275,8 @@
     "inNumbers": "Rakamlarla Memorial",
     "moreAboutUs": "Hakkımızda daha fazlası",
     "faqCallLine": "numaralı çağrı merkezimizi arayın veya",
-    "doctorsHeading": "{doctors} doktor, {departments} branş"
+    "doctorsHeading": "{doctors} doktor, {departments} branş",
+    "noAnswerFound": "Sorunuzun cevabını bulamadınız mı?"
   },
   "booking": {
     "bookTitle": "Randevu Alın",
@@ -543,7 +544,8 @@
     },
     "doctorTitles": {
       "Respublikanın Əməkdar Həkimi — I dərəcəli həkim mama-ginekoloq": "Cumhuriyetin Onurlu Doktoru — I. Kategori Kadın Doğum Uzmanı"
-    }
+    },
+    "doctorNames": {}
   },
   "pages": {
     "aboutTitle": "Hakkımızda",

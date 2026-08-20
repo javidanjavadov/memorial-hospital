@@ -10,13 +10,16 @@ import {
   formatAzn,
   getCategory,
   getCategoryItems,
+  localizeCategoryName,
+  localizeItem,
   getGroupCategories,
   GROUP_ORDER,
   priceOf,
   promotedPriceOf,
 } from "@/lib/catalog"
 import { pageMetadata } from "@/lib/site"
-import { getDictionary } from "@/i18n"
+import { getDictionary, getLocale } from "@/i18n"
+import { fill, plural } from "@/i18n/format"
 import { localizeGroup } from "@/i18n/data"
 import ServiceInfoButton from "@/components/service-info-button"
 import AddToBasketButton from "@/components/add-to-basket-button"
@@ -41,14 +44,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const category = getCategory(slug)
   if (!category) return {}
 
+  const locale = await getLocale()
+  const t = await getDictionary(locale)
   const items = getCategoryItems(slug)
+  const categoryName = localizeCategoryName(category.name, locale)
   const from = items.length ? formatAzn(priceOf(items[0])) : ""
 
   return pageMetadata({
-    title: `${category.name} — qiymətlər`,
-    description: `Memorial Hospital ${category.name.toLowerCase()} — ${
-      items.length
-    } xidmət${from ? `, ${from}-dən başlayan qiymətlərlə` : ""}.`,
+    title: `${categoryName} — ${t.catalog.title}`,
+    description: `Memorial Hospital ${categoryName} — ${items.length}${
+      from ? `, ${from}+` : ""
+    }.`,
     path: `/xidmetler/${slug}`,
   })
 }
@@ -59,7 +65,9 @@ export default async function CategoryPage({ params }: Props) {
   const category = getCategory(slug)
   if (!category) notFound()
 
-  const items = getCategoryItems(slug)
+  const locale = await getLocale()
+  const items = getCategoryItems(slug).map((item) => localizeItem(item, locale))
+  const categoryName = localizeCategoryName(category.name, locale)
   const group = GROUP_ORDER.find((g) => g.slug === category.group)
   const siblings = getGroupCategories(category.group)
 
@@ -89,10 +97,15 @@ export default async function CategoryPage({ params }: Props) {
             {localizeGroup(group ?? { slug: "", name: t.nav.services, blurb: "" }, t.data).name}
           </p>
           <h1 className="font-display text-step-3 mt-2 text-[var(--ink)]">
-            {category.name}
+            {categoryName}
           </h1>
           <p className="mt-3 text-[var(--ink-muted)]">
-            {items.length} xidmət · qiymətlər {getBranchName(DEFAULT_BRANCH)} üzrə
+            {plural(t.common.serviceCount, items.length, locale)} ·{" "}
+            {fill(t.catalog.pricesForBranch, {
+              branch:
+                t.data.branches?.[DEFAULT_BRANCH]?.name ??
+                getBranchName(DEFAULT_BRANCH),
+            })}
           </p>
         </div>
       </div>
@@ -121,7 +134,7 @@ export default async function CategoryPage({ params }: Props) {
                       }`}
                     >
                       <span className="min-w-0 flex-1 truncate">
-                        {sibling.name}
+                        {localizeCategoryName(sibling.name, locale)}
                       </span>
                       <span className="shrink-0 text-xs opacity-70">
                         {sibling.count}
@@ -161,7 +174,7 @@ export default async function CategoryPage({ params }: Props) {
                         which have no laboratory code — the label is skipped for
                         them rather than printed with an empty value. */}
                     <p className="font-mono text-[0.65rem] text-[var(--ink-muted)]">
-                      {item.code ? `Kod: ${item.code}` : ""}
+                      {item.code ? `${t.catalog.code}: ${item.code}` : ""}
                     </p>
                     <ServiceInfoButton
                       service={{

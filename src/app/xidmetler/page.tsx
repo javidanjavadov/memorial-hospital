@@ -6,7 +6,7 @@ import { contactInfo, telHref } from "@/data"
 import { catalogTotals, pickerGroups } from "@/lib/catalog"
 import { pageMetadata } from "@/lib/site"
 import ServicePicker from "@/components/service-picker"
-import { getDictionary } from "@/i18n"
+import { getDictionary, getLocale } from "@/i18n"
 import { fill } from "@/i18n/format"
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -22,7 +22,7 @@ export default async function XidmetlerPage() {
   const t = await getDictionary()
   // Built on the server from the same catalogue the JSON files come from, so
   // the strip renders with the page instead of after a round trip.
-  const groups = pickerGroups()
+  const groups = pickerGroups(await getLocale())
 
   return (
     <div className="min-h-screen bg-[var(--paper)]">

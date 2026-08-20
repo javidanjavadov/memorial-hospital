@@ -25,7 +25,12 @@ import {
 import { pageMetadata, siteUrl } from "@/lib/site"
 import { cn } from "@/lib/utils"
 import { getDictionary } from "@/i18n"
-import { localizeDoctor } from "@/i18n/data"
+import { fill } from "@/i18n/format"
+import {
+  localizeBranch,
+  localizeDepartment,
+  localizeDoctor,
+} from "@/i18n/data"
 
 type Props = { params: Promise<{ doctor: string }> }
 
@@ -70,8 +75,11 @@ export default async function DoctorPage({ params }: Props) {
   if (!found) notFound()
 
   const doctor = localizeDoctor(found, t.data)
-  const branch = getBranch(doctor.branchId)
+  const branch = localizeBranch(getBranch(doctor.branchId)!, t.data)
   const department = getDepartment(doctor.department)
+  const departmentName = department
+    ? localizeDepartment(department, t.data).name
+    : doctor.department
   const bookable = doctor.available && doctor.price !== null
 
   /*
@@ -93,7 +101,7 @@ export default async function DoctorPage({ params }: Props) {
     {
       icon: BriefcaseMedical,
       label: t.doctors.department,
-      value: department?.name ?? doctor.department,
+      value: departmentName,
     },
     { icon: MapPin, label: t.doctors.branch, value: branch?.name ?? doctor.branch },
     { icon: Clock, label: t.doctors.experience, value: `${doctor.experience} il` },
@@ -255,9 +263,13 @@ export default async function DoctorPage({ params }: Props) {
           <section className="mt-12">
             <h2 className="font-display text-step-2 text-[var(--ink)]">
               {relatedByDepartment
-                ? `${department?.name ?? t.doctors.department} üzrə digər həkimlər`
+                ? fill(t.doctors.otherDoctorsIn, {
+                    name: departmentName,
+                  })
                 : // The branch name already ends in "filialı", so no second one.
-                  `${branch?.name ?? doctor.branch} üzrə digər həkimlər`}
+                  fill(t.doctors.otherDoctorsIn, {
+                    name: branch?.name ?? doctor.branch,
+                  })}
             </h2>
             <ul className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {colleagues.map((colleague) => (

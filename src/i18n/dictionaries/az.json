@@ -275,7 +275,8 @@
     "inNumbers": "Rəqəmlərlə Memorial",
     "moreAboutUs": "Haqqımızda daha ətraflı",
     "faqCallLine": "nömrəsi ilə çağrı mərkəzimizə zəng edin və ya",
-    "doctorsHeading": "{doctors} həkim, {departments} ixtisas"
+    "doctorsHeading": "{doctors} həkim, {departments} ixtisas",
+    "noAnswerFound": "Sualınıza cavab tapmadınız?"
   },
   "booking": {
     "bookTitle": "Qəbula Yazıl",
@@ -392,7 +393,8 @@
     "contact": {},
     "accreditations": {},
     "specialties": {},
-    "doctorTitles": {}
+    "doctorTitles": {},
+    "doctorNames": {}
   },
   "pages": {
     "aboutTitle": "Haqqımızda",

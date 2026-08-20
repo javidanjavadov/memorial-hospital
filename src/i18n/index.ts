@@ -29,6 +29,14 @@ export interface DataTranslations {
   /** Doctor specialties and honorifics, keyed by their Azerbaijani text. */
   specialties: Record<string, string>
   doctorTitles: Record<string, string>
+  /**
+   * Doctor names, transliterated for Russian only.
+   *
+   * A name is not translated — it is written in the reader's script. Russian
+   * patients read Cyrillic, so "Tofiq Şıxəliyev" is written "Тофиг Шихалиев";
+   * English and Turkish keep the Latin spelling, so they have no entries here.
+   */
+  doctorNames: Record<string, string>
   accreditations: Record<
     string,
     { label?: string; title?: string; markNote?: string; body?: string }

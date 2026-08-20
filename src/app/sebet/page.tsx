@@ -221,7 +221,7 @@ export default function SebetPage() {
                     <div className="min-w-0">
                       {line.code && (
                         <p className="font-mono text-xs text-[var(--ink-muted)]">
-                          Kod: {line.code}
+                          {t.catalog.code}: {line.code}
                         </p>
                       )}
                       <p

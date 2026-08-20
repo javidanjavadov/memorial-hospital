@@ -287,7 +287,8 @@
     "inNumbers": "Memorial in numbers",
     "moreAboutUs": "More about us",
     "faqCallLine": "call our contact centre on this number, or",
-    "doctorsHeading": "{doctors} doctors, {departments} specialties"
+    "doctorsHeading": "{doctors} doctors, {departments} specialties",
+    "noAnswerFound": "Did not find an answer to your question?"
   },
   "booking": {
     "bookTitle": "Book an Appointment",
@@ -555,7 +556,8 @@
     },
     "doctorTitles": {
       "Respublikanın Əməkdar Həkimi — I dərəcəli həkim mama-ginekoloq": "Honoured Doctor of the Republic — Obstetrician-Gynaecologist, First Category"
-    }
+    },
+    "doctorNames": {}
   },
   "pages": {
     "aboutTitle": "About Us",

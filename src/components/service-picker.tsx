@@ -26,7 +26,6 @@ import { shortServiceName } from "@/lib/service-name"
 import { useCurrentUser } from "@/lib/use-current-user"
 import { useT } from "@/i18n/client"
 import { cn } from "@/lib/utils"
-import { localizeCategoryName, localizeGroup } from "@/i18n/data"
 
 const DEFAULT_BRANCH = "nrimanov"
 
@@ -132,7 +131,8 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
   useEffect(() => {
     if (!categorySlug) return
 
-    const cached = cache.current.get(categorySlug)
+    const cacheKey = `${t.locale}:${categorySlug}`
+    const cached = cache.current.get(cacheKey)
     if (cached) {
       setItems(cached)
       setLoadedSlug(categorySlug)
@@ -147,13 +147,15 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
     setLoading(true)
     setFailed(false)
 
-    fetch(`/catalog/${categorySlug}.json`, { signal: controller.signal })
+    fetch(`/catalog/${t.locale}/${categorySlug}.json`, {
+      signal: controller.signal,
+    })
       .then((response) => {
         if (!response.ok) throw new Error(String(response.status))
         return response.json()
       })
       .then((data: PickerItem[]) => {
-        cache.current.set(categorySlug, data)
+        cache.current.set(cacheKey, data)
         setItems(data)
         setLoadedSlug(categorySlug)
         setLoading(false)
@@ -165,7 +167,9 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
       })
 
     return () => controller.abort()
-  }, [categorySlug])
+    // t.locale is a dependency: switching language must refetch, not reuse the
+    // list already on screen.
+  }, [categorySlug, t.locale])
 
   const selectGroup = useCallback(
     (slug: string) => {
@@ -227,7 +231,7 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
             {/* Groups */}
             <div className="grid gap-3 sm:grid-cols-3">
               {groups.map((raw) => {
-                const entry = { ...raw, ...localizeGroup(raw, t.data) }
+                const entry = raw
                 const Icon = GROUP_ICONS[entry.slug] ?? FlaskConical
                 const active = entry.slug === group?.slug
                 return (
@@ -474,7 +478,7 @@ function CategoryStrip({
                   aria-hidden="true"
                 />
               )}
-              {localizeCategoryName(category.name, t.data)}
+              {category.name}
               <span className={cn("ml-1.5 text-xs", active ? "text-white/75" : "opacity-60")}>
                 {category.count}
               </span>

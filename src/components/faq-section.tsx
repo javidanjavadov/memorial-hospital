@@ -60,7 +60,7 @@ export default function FaqSection() {
         <AnimateOnScroll delay={200}>
           <div className="mx-auto mt-10 max-w-3xl rounded-xl border border-slate-200 bg-white p-6 text-center">
             <p className="text-slate-600">
-              Sualınıza cavab tapmadınız?{" "}
+              {t.home.noAnswerFound}{" "}
               <a
                 href={telHref(contactInfo.phone)}
                 className="font-semibold text-primary hover:underline"

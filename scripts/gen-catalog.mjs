@@ -45,6 +45,24 @@ const popular = JSON.parse(
   await readFile(join(root, "src", "data", "popular.json"), "utf8")
 ).groups
 
+/**
+ * Catalogue translations, produced once and committed: test names, their
+ * descriptions, category names and turnaround times in ru/en/tr.
+ *
+ * A catalogue of 1168 tests cannot be translated at render time, and it does
+ * not change between builds, so each locale gets its own set of files and the
+ * picker fetches the one it needs. A missing translation falls back to the
+ * Azerbaijani, which is the name the laboratory actually prints.
+ */
+const i18n = JSON.parse(
+  await readFile(join(root, "src", "data", "catalog-i18n.json"), "utf8")
+)
+
+const LOCALES = ["az", "ru", "en", "tr"]
+
+const translate = (table, value, locale) =>
+  locale === "az" ? value : (table?.[value]?.[locale] ?? value)
+
 const byCategory = new Map()
 for (const item of data.items) {
   const list = byCategory.get(item.category)
@@ -58,17 +76,22 @@ await rm(OUT, { recursive: true, force: true })
 await mkdir(OUT, { recursive: true })
 
 /** Only the fields a card and its dialog render — the rest never leaves here. */
-const trim = (item) => ({
+const trim = (item, locale) => ({
   slug: item.slug,
-  name: item.name,
+  name: translate(i18n.names, item.name, locale),
   code: item.code,
-  description: item.description,
-  prep: item.prep,
-  categoryName: item.categoryName,
+  description: translate(i18n.descriptions, item.description, locale),
+  prep: translate(i18n.preps, item.prep, locale),
+  categoryName: translate(i18n.categories, item.categoryName, locale),
   prices: item.prices,
 })
 
+/* The Azerbaijani index, kept for the closing summary line. */
+let summary = []
+
+for (const locale of LOCALES) {
 const index = []
+await mkdir(join(OUT, locale), { recursive: true })
 
 for (const group of GROUPS) {
   const source = data.groups.find((g) => g.slug === group.slug)
@@ -90,13 +113,13 @@ for (const group of GROUPS) {
     if (items.length === 0) continue
 
     await writeFile(
-      join(OUT, `${category.slug}.json`),
-      JSON.stringify(items.map(trim))
+      join(OUT, locale, `${category.slug}.json`),
+      JSON.stringify(items.map((item) => trim(item, locale)))
     )
 
     categories.push({
       slug: category.slug,
-      name: category.name,
+      name: translate(i18n.categories, category.name, locale),
       count: items.length,
       from: priceOf(items[0]),
     })
@@ -122,11 +145,14 @@ for (const group of GROUPS) {
     : data.items.filter((item) => item.group === group.slug)
 
   const popularSlug = `populyar-${group.slug}`
-  await writeFile(join(OUT, `${popularSlug}.json`), JSON.stringify(featured.map(trim)))
+  await writeFile(
+    join(OUT, locale, `${popularSlug}.json`),
+    JSON.stringify(featured.map((item) => trim(item, locale)))
+  )
 
   categories.unshift({
     slug: popularSlug,
-    name: popular[group.slug]?.label ?? "Populyar",
+    name: translate(i18n.labels, popular[group.slug]?.label ?? "Populyar", locale),
     count: featured.length,
     from: Math.min(...featured.map(priceOf)),
     featured: true,
@@ -135,17 +161,27 @@ for (const group of GROUPS) {
   // counted again in the group total.
   index.push({
     ...group,
+    name: translate(i18n.groups, group.name, locale),
+    blurb: translate(i18n.groups, group.blurb, locale),
     count: categories.reduce((n, c) => n + (c.featured ? 0 : c.count), 0),
     categories,
   })
 }
 
-await writeFile(join(OUT, "index.json"), JSON.stringify(index))
+await writeFile(join(OUT, locale, "index.json"), JSON.stringify(index))
+if (locale === "az") summary = index
+if (locale === "az") {
+  // The picker asks for /catalog/index.json before it knows the locale on a
+  // first paint; keeping the Azerbaijani copy at the old path means that
+  // request still answers instead of 404ing.
+  await writeFile(join(OUT, "index.json"), JSON.stringify(index))
+}
+}
 
 console.log(
-  `catalog: ${index.reduce(
+  `catalog: ${summary.reduce(
     (n, g) => n + g.categories.filter((c) => !c.featured).length,
     0
   )} categories, ` +
-    `${index.reduce((n, g) => n + g.count, 0)} services`
+    `${summary.reduce((n, g) => n + g.count, 0)} services`
 )

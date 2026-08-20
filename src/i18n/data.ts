@@ -69,10 +69,11 @@ export function localizeServiceCategory<
  * rather than a blank.
  */
 export function localizeDoctor<
-  T extends { specialty: string; title: string | null },
+  T extends { name: string; specialty: string; title: string | null },
 >(doctor: T, data: DataDictionary): T {
   return {
     ...doctor,
+    name: data?.doctorNames?.[doctor.name] ?? doctor.name,
     specialty: data?.specialties?.[doctor.specialty] ?? doctor.specialty,
     title: doctor.title
       ? (data?.doctorTitles?.[doctor.title] ?? doctor.title)

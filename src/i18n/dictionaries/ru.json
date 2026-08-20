@@ -169,7 +169,7 @@
     "noOnlineBooking": "Онлайн-запись к этому врачу недоступна",
     "notAccepting": "Сейчас не ведёт приём",
     "callCentreNote": "За подробной информацией обратитесь в наш call-центр",
-    "otherDoctorsIn": "Другие врачи по направлению {name}",
+    "otherDoctorsIn": "Другие врачи — {name}",
     "labStaff": "Персонал лаборатории"
   },
   "auth": {
@@ -295,7 +295,8 @@
     "inNumbers": "Memorial в цифрах",
     "moreAboutUs": "Подробнее о нас",
     "faqCallLine": "позвоните в наш колл-центр по номеру или",
-    "doctorsHeading": "{doctors} врачей, {departments} специальностей"
+    "doctorsHeading": "{doctors} врачей, {departments} специальностей",
+    "noAnswerFound": "Не нашли ответ на свой вопрос?"
   },
   "booking": {
     "bookTitle": "Запись на приём",
@@ -563,6 +564,33 @@
     },
     "doctorTitles": {
       "Respublikanın Əməkdar Həkimi — I dərəcəli həkim mama-ginekoloq": "Заслуженный врач Республики — врач акушер-гинеколог первой категории"
+    },
+    "doctorNames": {
+      "Tofiq Şıxəliyev": "Тофиг Шихалиев",
+      "Azirə Əliyeva": "Азиря Алиева",
+      "Kəramət Həsənov": "Керамет Гасанов",
+      "İnayət Hacıyev": "Инает Гаджиев",
+      "İlqar Ağamalıyev": "Ильгар Агамалиев",
+      "Fəxrəddin Məstəliyev": "Фахреддин Масталиев",
+      "Elvin Məlikov": "Эльвин Меликов",
+      "Rəşad Xamedov": "Рашад Хамедов",
+      "Pərviz Həsizadə": "Первиз Хасизаде",
+      "Kənan Yediyarov": "Кенан Едияров",
+      "Çiçək Məhərrəmova": "Чичек Магеррамова",
+      "Yunis Həsənov": "Юнис Гасанов",
+      "Aişə Kərimova": "Аише Керимова",
+      "Qaya Dosiyev": "Гая Досиев",
+      "Nərmin Əliyeva": "Нармин Алиева",
+      "İlqar Əlizadə": "Ильгар Ализаде",
+      "Nigar Qarayeva": "Нигяр Караева",
+      "Kəmalə Bəbirova": "Камаля Бабирова",
+      "Səbinə İbrahimova": "Сабина Ибрагимова",
+      "Tural Tanrıverdizadə": "Турал Танрывердизаде",
+      "Asif Şərifov": "Асиф Шарифов",
+      "Vüqar Mirzəliyev": "Вугар Мирзалиев",
+      "Əfqan Əlixanov": "Афган Алиханов",
+      "Namiq İsgəndərov": "Намиг Искендеров",
+      "Məryəm Qarəhmədova": "Марьям Гарахмедова"
     }
   },
   "pages": {
