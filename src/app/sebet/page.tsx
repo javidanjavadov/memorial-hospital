@@ -19,6 +19,7 @@ import { branches, contactInfo, telHref } from "@/data"
 import {
   basketSubtotal,
   HOME_COLLECTION_FEE,
+  ordersFor,
   useBasketStore,
 } from "@/lib/basket-store"
 import type { BranchKey } from "@/lib/catalog"
@@ -28,6 +29,13 @@ import { missingProfileFields } from "@/lib/profile-complete"
 import ProfileRequiredNotice from "@/components/profile-required-notice"
 import { shortServiceName } from "@/lib/service-name"
 import { controlClass } from "@/components/ui/field"
+
+/** dd.MM.yyyy — see the note in src/app/profil/page.tsx on az-AZ formatting. */
+const formatDate = (iso: string) => {
+  const d = new Date(iso)
+  const pad = (n: number) => String(n).padStart(2, "0")
+  return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()}`
+}
 
 const formatAzn = (value: number) =>
   `${Number.isInteger(value) ? value : value.toFixed(2)} AZN`
@@ -51,6 +59,9 @@ export default function SebetPage() {
   const missing = missingProfileFields(user)
 
   const [sent, setSent] = useState(false)
+
+  const orders = useBasketStore((s) => s.orders)
+  const orderCount = ordersFor(orders, user?.id).length
 
   const subtotal = basketSubtotal(lines)
   const total = subtotal + (homeCollection ? HOME_COLLECTION_FEE : 0)
@@ -114,6 +125,67 @@ export default function SebetPage() {
         <p className="mt-2 text-[var(--ink-muted)]">
           {lines.length} xidmət · qiymətlər {branchName} üzrə
         </p>
+
+        {/*
+          Who the order is being placed for, the way the hospital's own panel
+          heads an order with the patient. On a shared computer — a family, a
+          reception desk — the only thing separating one patient's tests from
+          another's was an avatar in the corner.
+        */}
+        {user && (
+          <div className="mt-6 flex flex-wrap items-center gap-4 rounded-xl border border-[var(--line)] bg-[var(--paper-raised)] p-4">
+            <span
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[var(--ink)] text-sm font-bold text-white"
+              aria-hidden="true"
+            >
+              {user.fullName
+                .split(" ")
+                .filter(Boolean)
+                .map((part) => part[0])
+                .slice(0, 2)
+                .join("")}
+            </span>
+            <div className="min-w-0">
+              <p className="font-medium uppercase text-[var(--ink)]">
+                {user.fullName}
+              </p>
+              <dl className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[var(--ink-muted)]">
+                {user.birthDate && (
+                  <div className="flex gap-1">
+                    <dt>Doğum tarixi:</dt>
+                    <dd className="font-medium text-[var(--ink)]">
+                      {formatDate(user.birthDate)}
+                    </dd>
+                  </div>
+                )}
+                <div className="flex gap-1">
+                  <dt className="sr-only">Cins</dt>
+                  <dd>{user.gender === "FEMALE" ? "Qadın" : "Kişi"}</dd>
+                </div>
+                {user.finCode && (
+                  <div className="flex gap-1">
+                    <dt>FIN:</dt>
+                    <dd className="font-mono font-medium text-[var(--ink)]">
+                      {user.finCode}
+                    </dd>
+                  </div>
+                )}
+                <div className="flex gap-1">
+                  <dt>Sifariş sayı:</dt>
+                  <dd className="font-medium text-[var(--ink)]">
+                    {orderCount}
+                  </dd>
+                </div>
+              </dl>
+            </div>
+            <Link
+              href="/profil"
+              className="ml-auto text-sm font-medium text-primary hover:underline"
+            >
+              Profil
+            </Link>
+          </div>
+        )}
 
         {lines.length === 0 ? (
           <div className="mt-10 rounded-2xl border border-[var(--line)] bg-[var(--paper-raised)] p-10 text-center">

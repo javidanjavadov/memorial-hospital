@@ -3,10 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import {
-  ArrowRight,
   ChevronLeft,
   ChevronRight,
-  Clock,
   FlaskConical,
   History,
   ListPlus,
@@ -14,21 +12,14 @@ import {
   RotateCcw,
   Search,
   Star,
-  ShoppingCart,
   Stethoscope,
-  Trash2,
   UserRound,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import ServiceInfoButton from "@/components/service-info-button"
 import AddToBasketButton from "@/components/add-to-basket-button"
 import { branches } from "@/data"
-import {
-  basketSubtotal,
-  ordersFor,
-  useBasketStore,
-  type BasketLine,
-} from "@/lib/basket-store"
+import { ordersFor, useBasketStore, type BasketLine } from "@/lib/basket-store"
 import { shortServiceName } from "@/lib/service-name"
 import { useCurrentUser } from "@/lib/use-current-user"
 import { cn } from "@/lib/utils"
@@ -167,8 +158,7 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
     : items
 
   return (
-    <div className="grid gap-6 xl:grid-cols-[1fr_20rem] xl:items-start">
-      <div className="min-w-0">
+    <div className="min-w-0">
         <div
           role="tablist"
           aria-label="Kataloq görünüşü"
@@ -328,9 +318,6 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
             <PastOrders onReorder={() => setTab("services")} />
           </div>
         )}
-      </div>
-
-      <BasketColumn />
     </div>
   )
 }
@@ -455,43 +442,41 @@ function ServiceCard({ item, index }: { item: PickerItem; index: number }) {
          arriving. Past the cap they land together, which is what a full
          screen looks like anyway. */
       style={{ "--card-index": Math.min(index, 24) } as React.CSSProperties}
-      className="card-in flex h-full flex-col rounded-xl border border-[var(--line)] bg-[var(--paper-raised)] p-3 transition-shadow duration-200 hover:shadow-md"
+      className="card-in flex h-full flex-col rounded-xl border border-[var(--line)] bg-[var(--paper-raised)] p-3.5 transition-shadow duration-200 hover:shadow-md"
     >
-      <div className="flex items-start justify-between gap-1">
-        <p className="font-mono text-[0.65rem] text-[var(--ink-muted)]">
-          {item.code ? `Kod: ${item.code}` : ""}
-        </p>
+      <div className="flex items-start justify-between gap-2">
+        <h3
+          title={item.name}
+          className="line-clamp-2 text-[0.8rem] font-medium leading-snug text-[var(--ink)]"
+        >
+          {shortServiceName(item.name)}
+        </h3>
         <ServiceInfoButton service={item} />
       </div>
 
-      <h3
-        title={item.name}
-        className="mt-0.5 line-clamp-3 text-sm font-medium leading-snug text-[var(--ink)]"
-      >
-        {shortServiceName(item.name)}
-      </h3>
+      {/*
+        Where the hospital's panel prints "Sample: Sidik". The catalogue has no
+        sample-type field, so this shows the turnaround instead rather than an
+        empty label — see the note in README about pulling `materials`.
+      */}
+      <p className="mt-2 text-[0.7rem] leading-tight text-[var(--ink-muted)]">
+        {item.prep ? `Hazır: ${item.prep}` : item.categoryName}
+      </p>
 
       <div className="flex-1" />
 
-      {item.prep && (
-        <p className="mt-2 inline-flex items-start gap-1 text-[0.65rem] leading-tight text-[var(--ink-muted)]">
-          <Clock className="mt-px h-3 w-3 shrink-0" aria-hidden="true" />
-          {item.prep}
-        </p>
-      )}
-
-      <div className="mt-2 flex items-center justify-between gap-2 border-t border-[var(--line)] pt-2">
-        <span className="flex items-baseline gap-1.5">
-          <span className="font-display text-base text-primary">
-            {formatAzn(discounted ? (promoted as number) : price)}
-          </span>
+      <div className="mt-3 flex items-end justify-between gap-2">
+        <span className="flex flex-col">
           {discounted && (
-            <span className="text-[0.65rem] text-[var(--ink-muted)] line-through">
+            <span className="text-[0.65rem] leading-none text-[var(--ink-muted)] line-through">
               {formatAzn(price)}
             </span>
           )}
+          <span className="font-display text-[0.95rem] text-[var(--ink)]">
+            {formatAzn(discounted ? (promoted as number) : price)}
+          </span>
         </span>
-        <AddToBasketButton line={line} />
+        <AddToBasketButton line={line} variant="icon" />
       </div>
     </li>
   )
@@ -572,132 +557,5 @@ function PastOrders({ onReorder }: { onReorder: () => void }) {
         </li>
       ))}
     </ul>
-  )
-}
-
-/**
- * Basket: a sticky column from xl up, a bar pinned to the bottom of the screen
- * below it.
- *
- * On a phone the column would sit under a thousand services where nobody would
- * find it, so what is selected and what it costs stays pinned instead — the one
- * arrangement that survives both layouts.
- */
-function BasketColumn() {
-  const lines = useBasketStore((s) => s.lines)
-  const hasHydrated = useBasketStore((s) => s.hasHydrated)
-  const remove = useBasketStore((s) => s.remove)
-  const clear = useBasketStore((s) => s.clear)
-
-  const total = basketSubtotal(lines)
-  const empty = !hasHydrated || lines.length === 0
-
-  return (
-    <>
-      <aside className="sticky top-24 hidden rounded-xl border border-[var(--line)] bg-[var(--paper-raised)] xl:block">
-        <div className="flex items-center justify-between border-b border-[var(--line)] px-4 py-3">
-          <h2 className="font-display text-[var(--ink)]">Səbətim</h2>
-          {!empty && (
-            <button
-              type="button"
-              onClick={clear}
-              className="text-xs text-[var(--ink-muted)] underline-offset-4 hover:text-red-600 hover:underline"
-            >
-              Təmizlə
-            </button>
-          )}
-        </div>
-
-        {empty ? (
-          <div className="px-4 py-10 text-center">
-            <span
-              className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-[var(--secondary)]"
-              aria-hidden="true"
-            >
-              <ShoppingCart className="h-6 w-6 text-[var(--ink-muted)]" />
-            </span>
-            <p className="text-sm font-medium text-[var(--ink)]">
-              Səbətiniz boşdur
-            </p>
-            <p className="mt-1 text-xs text-[var(--ink-muted)]">
-              Başlamaq üçün soldakı siyahıdan xidmət əlavə edin.
-            </p>
-          </div>
-        ) : (
-          <>
-            <ul className="max-h-[22rem] divide-y divide-[var(--line)] overflow-y-auto">
-              {lines.map((line) => (
-                <li
-                  key={line.slug}
-                  className="line-in flex items-start gap-2 px-4 py-3"
-                >
-                  <span className="min-w-0 flex-1">
-                    <span
-                      title={line.name}
-                      className="block text-sm leading-snug text-[var(--ink)]"
-                    >
-                      {shortServiceName(line.name)}
-                    </span>
-                    <span className="mt-0.5 block text-xs text-[var(--ink-muted)]">
-                      {formatAzn(
-                        line.promoted != null && line.promoted < line.price
-                          ? line.promoted
-                          : line.price
-                      )}
-                    </span>
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => remove(line.slug)}
-                    aria-label={`${line.name} səbətdən çıxar`}
-                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-[var(--ink-muted)] transition-colors hover:bg-red-50 hover:text-red-600"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
-                  </button>
-                </li>
-              ))}
-            </ul>
-
-            <div className="border-t border-[var(--line)] px-4 py-4">
-              <div className="flex items-baseline justify-between">
-                <span className="text-sm text-[var(--ink-muted)]">
-                  {lines.length} xidmət
-                </span>
-                <span className="font-display text-step-1 text-primary">
-                  {formatAzn(total)}
-                </span>
-              </div>
-              <Button variant="cta" className="mt-3 w-full" asChild>
-                <Link href="/sebet">
-                  Səbətə keç
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </Link>
-              </Button>
-            </div>
-          </>
-        )}
-      </aside>
-
-      {!empty && (
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[var(--line)] bg-[var(--paper-raised)] p-3 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] xl:hidden">
-          <div className="container mx-auto flex items-center justify-between gap-3 px-1">
-            <span className="min-w-0">
-              <span className="block text-sm font-medium text-[var(--ink)]">
-                {lines.length} xidmət
-              </span>
-              <span className="block text-xs text-[var(--ink-muted)]">
-                {formatAzn(total)}
-              </span>
-            </span>
-            <Button variant="cta" asChild>
-              <Link href="/sebet">
-                Səbətə keç
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-      )}
-    </>
   )
 }

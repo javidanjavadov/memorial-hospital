@@ -15,9 +15,12 @@ import { cn } from "@/lib/utils"
 export default function AddToBasketButton({
   line,
   className,
+  variant = "label",
 }: {
   line: BasketLine
   className?: string
+  /** "icon" is the round +, matching the hospital's own service cards. */
+  variant?: "label" | "icon"
 }) {
   const lines = useBasketStore((s) => s.lines)
   const hasHydrated = useBasketStore((s) => s.hasHydrated)
@@ -60,15 +63,24 @@ export default function AddToBasketButton({
         added ? `${line.name} səbətdən çıxar` : `${line.name} səbətə əlavə et`
       }
       className={cn(
-        "inline-flex items-center justify-center gap-1 rounded-lg border px-2 py-1 text-[0.7rem] font-medium transition-colors duration-200 active:scale-95",
+        "inline-flex shrink-0 items-center justify-center gap-1 border font-medium transition-colors duration-200 active:scale-95",
+        variant === "icon"
+          ? "h-8 w-8 rounded-lg"
+          : "rounded-lg px-2 py-1 text-[0.7rem]",
         popping && "basket-pop",
         added
           ? "border-primary bg-primary text-white"
-          : "border-[var(--line)] text-[var(--ink-muted)] hover:border-primary/50 hover:text-primary",
+          : "border-[var(--line)] text-[var(--ink-muted)] hover:border-primary hover:text-primary",
         className
       )}
     >
-      {added ? (
+      {variant === "icon" ? (
+        added ? (
+          <Check className="h-4 w-4" aria-hidden="true" />
+        ) : (
+          <Plus className="h-4 w-4" aria-hidden="true" />
+        )
+      ) : added ? (
         <>
           <Check className="h-3 w-3" aria-hidden="true" />
           Səbətdə

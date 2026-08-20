@@ -19,7 +19,6 @@ import { pageMetadata } from "@/lib/site"
 import ServiceInfoButton from "@/components/service-info-button"
 import AddToBasketButton from "@/components/add-to-basket-button"
 import { shortServiceName } from "@/lib/service-name"
-import BasketPanel from "@/components/basket-panel"
 import CatalogTabs from "@/components/catalog-tabs"
 
 /**
@@ -97,7 +96,7 @@ export default async function CategoryPage({ params }: Props) {
 
       {/* Categories, catalogue, basket — the arrangement of the hospital's own
           order-entry panel, so what is selected stays in view while browsing. */}
-      <div className="container mx-auto grid gap-8 px-4 py-10 md:py-14 lg:grid-cols-[220px_1fr] xl:grid-cols-[220px_1fr_300px]">
+      <div className="container mx-auto grid gap-8 px-4 py-10 md:py-14 lg:grid-cols-[220px_1fr]">
         {/* Sibling categories — the sidebar from the hospital's own catalogue */}
         <aside className="lg:sticky lg:top-24 lg:self-start">
           <h2 className="mb-3 text-sm font-semibold text-[var(--ink)]">
@@ -248,7 +247,6 @@ export default async function CategoryPage({ params }: Props) {
         {/* Hidden below xl: at narrower widths the third column would squeeze
             the catalogue itself. The navbar badge and /sebet still reach it. */}
         <aside className="hidden xl:block">
-          <BasketPanel />
         </aside>
       </div>
     </div>

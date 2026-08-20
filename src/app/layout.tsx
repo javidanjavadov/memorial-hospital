@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import ProfileGate from "@/components/profile-gate";
+import FloatingBasket from "@/components/floating-basket";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import PageTransition from "@/components/page-transition";
@@ -131,6 +132,7 @@ export default function RootLayout({
             </ProfileGate>
           </main>
           <Footer />
+          <FloatingBasket />
         </AuthSessionProvider>
       </body>
     </html>

@@ -23,7 +23,6 @@ import { missingProfileFields } from "@/lib/profile-complete"
 import { useCurrentUser } from "@/lib/use-current-user"
 import { signOut } from "next-auth/react"
 import { smoothScrollToElement } from "@/lib/smooth-scroll"
-import BasketLink from "@/components/basket-link"
 
 const navItems = [
   { label: "Ana Səhifə", href: "#hero" },
@@ -187,7 +186,6 @@ export default function Navbar() {
                 Təcili Zəng
               </a>
             </Button>
-            <BasketLink overHero={overHero} />
             <Button
               variant="outline"
               size="sm"
