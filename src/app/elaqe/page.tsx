@@ -58,9 +58,9 @@ export default function ElaqePage() {
   const onSubmit = (data: FormData) => {
     const subject = t.f(t.booking.contactSubject, { name: data.name })
     const body = [
-      `Ad: ${data.name}`,
-      `Email: ${data.email}`,
-      `Telefon: ${data.phone}`,
+      `${t.common.fullName}: ${data.name}`,
+      `${t.common.email}: ${data.email}`,
+      `${t.common.phone}: ${data.phone}`,
       "",
       data.message,
     ].join("\n")
@@ -134,7 +134,7 @@ export default function ElaqePage() {
                   className="space-y-4"
                   noValidate
                 >
-                  <Field label="Ad Soyad" required error={errors.name?.message}>
+                  <Field label={t.common.fullName} required error={errors.name?.message}>
                     {(field) => (
                       <Input
                         {...field}

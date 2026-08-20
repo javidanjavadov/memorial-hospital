@@ -128,7 +128,7 @@ export default function Captcha({
         <button
           type="button"
           onClick={refresh}
-          aria-label="Yeni kod yarat"
+          aria-label={t.ui.newCaptcha}
           className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--line)] text-[var(--ink-muted)] transition-colors hover:border-primary/40 hover:text-primary"
         >
           <RefreshCw className="h-4 w-4" aria-hidden="true" />

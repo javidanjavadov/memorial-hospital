@@ -369,7 +369,7 @@ function QebulContent() {
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Field label="Ad Soyad" required error={errors.fullName?.message}>
+                    <Field label={t.common.fullName} required error={errors.fullName?.message}>
                       {(field) => (
                         <Input
                           {...field}
@@ -418,14 +418,14 @@ function QebulContent() {
                     </Field>
 
                     <Field
-                      label="FIN Kod"
+                      label={t.profile.finCode}
                       hint="{t.booking.optionalFin}"
                       error={errors.finCode?.message}
                     >
                       {(field) => (
                         <Input
                           {...field}
-                          placeholder="7 simvol"
+                          placeholder={t.profile.finCodeHint}
                           maxLength={7}
                           {...register("finCode")}
                           className={errors.finCode ? "border-red-500" : ""}
@@ -619,7 +619,11 @@ function QebulContent() {
                   )}
 
                   <dl className="bg-slate-50 rounded-xl p-6 space-y-4">
-                    <SummaryRow icon={User} label="Ad Soyad" value={values.fullName} />
+                    <SummaryRow
+                      icon={User}
+                      label={t.common.fullName}
+                      value={values.fullName}
+                    />
                     <SummaryRow icon={Phone} label="Telefon" value={values.phone} />
                     {values.email && (
                       <SummaryRow icon={Mail} label="Email" value={values.email} />

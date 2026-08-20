@@ -178,7 +178,7 @@ export default function NeticelerPage() {
                 )}
 
                 <Field
-                  label="STRIX / KART NO"
+                  label={t.results.cardNo}
                   required
                   hint={t.booking.cardNoHint}
                   error={errors.cardNo?.message}

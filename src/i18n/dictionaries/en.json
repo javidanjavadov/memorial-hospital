@@ -48,7 +48,8 @@
     "callAction": "Call",
     "directions": "Directions",
     "tryAgain": "Try again",
-    "home": "Home"
+    "home": "Home",
+    "fullName": "Full name"
   },
   "basket": {
     "title": "My basket",
@@ -151,8 +152,7 @@
     "profileSections": "Profile sections",
     "phone": "Phone",
     "confirmCancel": "Are you sure you want to cancel the {label} appointment?",
-    "ordersLocalNote": "Orders are currently saved only in this browser and are not sent to the clinic automatically. To confirm, please call",
-    "ordersLocalNoteEnd": ".",
+    "ordersLocalNote": "Orders are currently saved only in this browser and are not sent to the clinic automatically. To confirm, please call:",
     "save": "Save",
     "email": "Email",
     "finCodeHint": "7 characters"
@@ -827,7 +827,8 @@
     "mailFallback": "If the program did not open, write to us directly:",
     "orCall": "or call",
     "emergencyCall": "In an emergency, call us:",
-    "errorCode": "Error code"
+    "errorCode": "Error code",
+    "newCaptcha": "Generate a new code"
   },
   "meta": {
     "contact": {

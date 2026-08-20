@@ -39,7 +39,8 @@
     "callAction": "Ara",
     "directions": "Yol tarifi",
     "tryAgain": "Tekrar dene",
-    "home": "Ana Sayfa"
+    "home": "Ana Sayfa",
+    "fullName": "Ad Soyad"
   },
   "basket": {
     "title": "Sepetim",
@@ -143,7 +144,6 @@
     "phone": "Telefon",
     "confirmCancel": "{label} randevusunu iptal etmek istediğinize emin misiniz?",
     "ordersLocalNote": "Siparişler şu anda yalnızca bu tarayıcıda saklanır ve kliniğe otomatik olarak gönderilmez. Onay için lütfen arayın:",
-    "ordersLocalNoteEnd": ".",
     "save": "Kaydet",
     "email": "E-posta",
     "finCodeHint": "7 karakter"
@@ -815,7 +815,8 @@
     "mailFallback": "Program açılmadıysa bize doğrudan yazın:",
     "orCall": "veya arayın",
     "emergencyCall": "Acil durumlarda bizi arayın:",
-    "errorCode": "Hata kodu"
+    "errorCode": "Hata kodu",
+    "newCaptcha": "Yeni kod oluştur"
   },
   "meta": {
     "contact": {

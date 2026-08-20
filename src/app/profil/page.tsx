@@ -43,6 +43,7 @@ import {
   contactInfo,
   getBranchName,
   getDepartmentName,
+  getDoctor,
   getDoctorName,
   telHref,
 } from "@/data"
@@ -336,7 +337,7 @@ function ProfilPageInner() {
                       worse than keeping them here. */}
                   {saved && next && missing.length === 0 && (
                     <Button variant="cta" className="w-full" asChild>
-                      <Link href={next}>Davam et</Link>
+                      <Link href={next}>{t.common.continue}</Link>
                     </Button>
                   )}
                   {saveError && (
@@ -575,7 +576,13 @@ function ProfilPageInner() {
                           </Badge>
                         </div>
                         <div className="flex flex-wrap gap-4 text-sm text-slate-600">
-                          {apt.doctor && (
+                          {/*
+                            Only when the id resolves to a doctor on the roster.
+                            getDoctorName hands back the id itself otherwise, and
+                            a slug like "ilqar-lizad" printed where a name belongs
+                            reads as a broken record, not as a missing one.
+                          */}
+                          {getDoctor(apt.doctor) && (
                             <div className="flex items-center gap-1">
                               <Stethoscope
                                 className="w-4 h-4 text-teal-600"
@@ -715,8 +722,7 @@ function ProfilPageInner() {
                     className="font-medium text-primary hover:underline"
                   >
                     {contactInfo.phone}
-                  </a>{" "}
-                  {t.profile.ordersLocalNoteEnd}
+                  </a>
                 </p>
               </div>
             )}
@@ -739,7 +745,9 @@ function ProfilPageInner() {
                 */}
                 <dl className="grid gap-3 sm:grid-cols-2">
                   <div className="rounded-lg border border-[var(--line)] p-3">
-                    <dt className="text-xs text-[var(--ink-muted)]">FIN kod</dt>
+                    <dt className="text-xs text-[var(--ink-muted)]">
+                      {t.profile.finCode}
+                    </dt>
                     <dd className="font-mono text-sm text-[var(--ink)]">
                       {user.finCode}
                     </dd>

@@ -423,7 +423,7 @@ export default function SebetPage() {
                   <Button variant="cta" size="lg" className="mt-3 w-full" asChild>
                     <Link href="/giris?next=/sebet">
                       <LogIn className="h-4 w-4" aria-hidden="true" />
-                      Daxil ol
+                      {t.nav.signIn}
                     </Link>
                   </Button>
                   <Button variant="outline" className="mt-2 w-full" asChild>

@@ -39,7 +39,8 @@
     "callAction": "Zəng et",
     "directions": "Yol göstər",
     "tryAgain": "Yenidən cəhd et",
-    "home": "Ana Səhifə"
+    "home": "Ana Səhifə",
+    "fullName": "Ad Soyad"
   },
   "basket": {
     "title": "Səbətim",
@@ -142,8 +143,7 @@
     "profileSections": "Profil bölmələri",
     "phone": "Telefon",
     "confirmCancel": "{label} qəbulunu ləğv etmək istədiyinizə əminsiniz?",
-    "ordersLocalNote": "Sifarişlər hazırda yalnız bu brauzerdə saxlanılır və klinikaya avtomatik göndərilmir. Təsdiq üçün",
-    "ordersLocalNoteEnd": "nömrəsi ilə əlaqə saxlayın.",
+    "ordersLocalNote": "Sifarişlər hazırda yalnız bu brauzerdə saxlanılır və klinikaya avtomatik göndərilmir. Təsdiq üçün bu nömrə ilə əlaqə saxlayın:",
     "save": "Yadda saxla",
     "email": "Email",
     "finCodeHint": "7 simvol"
@@ -680,7 +680,8 @@
     "mailFallback": "Proqram açılmadısa, bizə birbaşa yazın:",
     "orCall": "və ya zəng edin",
     "emergencyCall": "Təcili hallarda bizə zəng edin:",
-    "errorCode": "Xəta kodu"
+    "errorCode": "Xəta kodu",
+    "newCaptcha": "Yeni kod yarat"
   },
   "meta": {
     "contact": {

@@ -30,7 +30,7 @@ const AZERBAIJANI = /[əƏ]|[ğıışşçöüĞİŞÇÖÜ]/u
  * enough; these words are.
  */
 const AZERBAIJANI_ASCII =
-  /(yadda|saxla|saxlanilir|simvol|soyad|cins|xidmet|hekim|qebul|netice|sifaris|imtina|legv|daxil|cixis|gonder|axtar|redakte|melumat|butun|secin|yukle|bagla|davam|duzelis|nomre|kecid|elave|tesdiq|giris|odenis|filial|sehife)/iu
+  /\b(yadda|saxla|saxlanilir|simvol|soyad|cins|xidmet|hekim|qebul|netice|sifaris|imtina|legv|daxil|cixis|gonder|axtar|redakte|melumat|butun|secin|yukle|bagla|davam|duzelis|nomre|kecid|elave|tesdiq|giris|odenis|filial|sehife|kod|kodu|kart|nagd|tarix|geri|ad)\b/iu
 
 /*
  * Not text a patient reads.
@@ -67,8 +67,15 @@ const offendersIn = (source: string) => {
   const code = withoutComments(source)
   const found: string[] = []
 
-  /* String literals, template literals, and text between JSX tags. */
+  /*
+   * Attribute values are matched on their own, anchored to the attribute name.
+   * Scanning for bare quote pairs walks the file two quotes at a time, so one
+   * unpaired quote anywhere above shifts every pair after it and a label like
+   * label="Ad Soyad" falls between them — which is exactly how three hardcoded
+   * labels on the booking form passed a green run.
+   */
   const patterns = [
+    /\w+="([^"\n]{2,})"/g,
     /"([^"\n]{3,})"/g,
     /'([^'\n]{3,})'/g,
     /`([^`]{3,})`/g,
@@ -80,6 +87,12 @@ const offendersIn = (source: string) => {
       const text = match[1].trim()
       if (!text) continue
       if (!AZERBAIJANI.test(text) && !AZERBAIJANI_ASCII.test(text)) continue
+      /*
+       * Route slugs are Azerbaijani too — "/qebul", "xidmetler", "#hekimler" —
+       * and they are addresses, not text anyone reads. A single token with no
+       * space in it is one of those, unless it carries a letter only prose has.
+       */
+      if (!/\s/.test(text) && !AZERBAIJANI.test(text)) continue
       if (ALLOWED.some((allowed) => allowed.test(text))) continue
       found.push(text.slice(0, 70))
     }

@@ -44,7 +44,7 @@ export default async function PrivacyPolicyPage() {
             <ul className="list-disc list-inside text-slate-600 space-y-2 ml-4">
               <li>{t.legal.privacy[8]}</li>
               <li>{t.legal.privacy[9]}</li>
-              <li>FIN kodu</li>
+              <li>{t.profile.finCode}</li>
               <li>{t.legal.privacy[10]}</li>
               <li>{t.legal.privacy[11]}</li>
               <li>{t.legal.privacy[12]}</li>
