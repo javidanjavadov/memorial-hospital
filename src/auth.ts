@@ -11,7 +11,26 @@ export const googleConfigured = Boolean(
   process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET
 )
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+/**
+ * The patient details Google does not supply, carried in the session token.
+ *
+ * The token is signed with AUTH_SECRET and sent as an httpOnly cookie, so the
+ * browser cannot read or forge it — which is the whole point. The previous
+ * store was localStorage, where editing one object in devtools made you any
+ * patient you liked.
+ */
+export interface SessionProfile {
+  firstName: string
+  lastName: string
+  fatherName: string
+  gender: "MALE" | "FEMALE"
+  birthDate: string
+  phone: string
+  finCode: string
+  fullName: string
+}
+
+export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
   providers: googleConfigured
     ? [
         Google({
@@ -37,14 +56,29 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
 
   callbacks: {
-    jwt({ token, profile }) {
+    jwt({ token, profile, trigger, session }) {
       // Google's `sub` is the stable account id; email can change.
       if (profile?.sub) token.googleId = profile.sub
+
+      /*
+       * The only way patient details enter the token. `trigger === "update"`
+       * fires from unstable_update(), which is reachable only from the server —
+       * /api/profile, after the fields have been validated there. A client
+       * calling update() directly cannot inject anything, because nothing here
+       * reads the client's payload.
+       */
+      const incoming = (session as { user?: { profile?: SessionProfile } })?.user
+        ?.profile
+      if (trigger === "update" && incoming) {
+        token.profile = incoming
+      }
+
       return token
     },
     session({ session, token }) {
       if (session.user) {
         session.user.id = (token.googleId as string) ?? token.sub ?? ""
+        session.user.profile = (token.profile as SessionProfile) ?? null
       }
       return session
     },

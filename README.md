@@ -86,24 +86,31 @@ Bütün məlumatlar `src/data/index.ts` faylındadır. Həkimlərin filialı
 
 ## Known limitations
 
-**Bu build-də backend yoxdur.** Qeydiyyat, giriş və qəbullar yalnız brauzerin
-`localStorage` yaddaşında saxlanılır. Bunun praktiki nəticələri:
+**Autentifikasiya server tərəflidir.** Giriş yalnız Google ilə mümkündür:
+sessiya `AUTH_SECRET` ilə imzalanmış JWT-dir və httpOnly cookie ilə saxlanılır —
+brauzer onu nə oxuya, nə də dəyişə bilər. Pasiyent məlumatları (ad, soyad, ata
+adı, cins, doğum tarixi, FIN, telefon) yalnız `POST /api/profile` vasitəsilə,
+serverdə yoxlanıldıqdan sonra sessiyaya yazılır. `middleware.ts` həm girişi, həm
+də profilin tamamlanmasını sorğu səviyyəsində tələb edir.
 
-- **Google ilə giriş** server tərəfindən Auth.js ilə yoxlanılır və httpOnly
-  sessiya cookie-si istifadə edir — bu yol təhlükəsizdir.
-- **Email/şifrə ilə giriş** hələ də köhnə client-only yoldur: şifrələr PBKDF2
-  (100k iterasiya, SHA-256) ilə heşlənsə də, yoxlama brauzerdə getdiyi üçün
-  `localStorage`-ı dəyişməklə keçilə bilər. Bu yolun tamamilə Google (və ya
-  server tərəfli email/şifrə) ilə əvəzlənməsi planlaşdırılır.
-- **Qəbullar heç kimə göndərilmir.** Reqistratura onları görmür; forma bunu
-  açıq şəkildə bildirir və heç bir SMS/email göndərildiyini iddia etmir.
-- **Əlaqə forması** məlumatı serverə yox, istifadəçinin e-poçt proqramına
-  ötürür (`mailto:`).
-- Sağlamlıq məlumatları şifrələnməmiş formada cihazda qalır.
+Əvvəlki email/şifrə girişi ləğv edilib. O, şifrəni brauzerdə `localStorage`-dakı
+heş ilə müqayisə edirdi, yəni devtools ilə istənilən pasiyent kimi daxil olmaq
+mümkün idi.
 
-Real pasiyent məlumatları ilə istifadədən əvvəl bunlar mütləqdir: server tərəfli
-autentifikasiya (httpOnly sessiya cookie-ləri), şifrələnmiş baza, qəbul
-sorğularının serverdə saxlanması və audit jurnalı.
+Qalan məhdudiyyətlər:
+
+- **Baza yoxdur.** Sessiya cookie-dədir; server tərəfli ləğvetmə (revocation)
+  yoxdur və profil cookie ilə birlikdə (7 gün) yaşayır. Cookie silinərsə,
+  məlumatlar yenidən doldurulmalıdır.
+- **Sifarişlər və qəbullar heç kimə göndərilmir** — yalnız brauzerdə saxlanılır.
+  Formalar bunu açıq şəkildə bildirir.
+- **Analiz nəticələri** laboratoriya sistemindədir; sayt onlara çıxış əldə etmir.
+- **Onlayn ödəniş yoxdur.**
+- **Əlaqə forması** `mailto:` istifadə edir.
+
+Real pasiyent məlumatları ilə istifadədən əvvəl lazımdır: şifrələnmiş baza,
+sifarişləri qəbul edən server endpoint-i, audit jurnalı və sessiyaların server
+tərəfdən ləğvi.
 
 ## Deployment
 

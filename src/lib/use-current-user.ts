@@ -1,83 +1,70 @@
 "use client"
 
-import { useMemo } from "react"
 import { useSession } from "next-auth/react"
-import { useAuthStore, type User } from "@/lib/auth-store"
 
-export type AuthSource = "google" | "local"
-
-export interface CurrentUser extends User {
-  source: AuthSource
+export interface CurrentUser {
+  id: string
+  firstName: string
+  lastName: string
+  fatherName: string
+  gender: "MALE" | "FEMALE"
+  fullName: string
+  email: string
+  phone: string
+  finCode: string
+  birthDate: string
   image?: string | null
+  /** Retained so existing call sites keep compiling; always "google" now. */
+  source: "google"
 }
 
 /**
- * Single view of "who is signed in", across both login methods.
+ * Who is signed in, according to the server.
  *
- * Two systems coexist deliberately: Google users are authenticated server-side
- * by Auth.js (httpOnly cookie), while the older email/password accounts still
- * live in localStorage. Components should not care which — they read from here.
+ * Everything here comes from the Auth.js session — a JWT signed with
+ * AUTH_SECRET and delivered as an httpOnly cookie. Nothing is read from
+ * localStorage any more.
  *
- * A Google session wins when both are present, because it is the one that was
- * actually verified.
+ * That change is the point. The old email/password path verified the password
+ * in the browser against a hash in localStorage, so editing one object in
+ * devtools made you any patient in that browser — and once the profile held a
+ * FIN, a date of birth and a list of ordered tests, that stopped being an
+ * acceptable shortcut.
+ *
+ * `user` is non-null only when the profile has been completed through
+ * /api/profile; middleware holds an incomplete session on /profil.
  */
 export function useCurrentUser(): {
   user: CurrentUser | null
   isLoading: boolean
-  source: AuthSource | null
+  source: "google" | null
 } {
   const { data: session, status } = useSession()
-  const localUser = useAuthStore((s) => s.user)
-  const hasHydrated = useAuthStore((s) => s.hasHydrated)
-  const linkedProfile = useAuthStore((s) => s.linkedProfile)
-  // linkedProfile reads localStorage directly, so nothing would re-render after
-  // the Google visitor fills their details in. The revision counter is the
-  // subscription that makes the saved profile appear.
-  const profileRevision = useAuthStore((s) => s.profileRevision)
-  const sessionEmail = session?.user?.email
-  const linked = useMemo(
-    () => (sessionEmail ? linkedProfile(sessionEmail) : null),
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- profileRevision is the invalidation signal
-    [sessionEmail, linkedProfile, profileRevision]
-  )
+  const isLoading = status === "loading"
 
-  const isLoading = status === "loading" || !hasHydrated
+  const account = session?.user
+  if (!account?.email) return { user: null, isLoading, source: null }
 
-  if (session?.user?.email) {
-    /*
-     * Account linking: if an email/password account already exists with this
-     * address, reuse its id so the person keeps their appointment history
-     * instead of landing in an empty profile.
-     */
-    return {
-      isLoading,
+  const profile = account.profile
+
+  return {
+    isLoading,
+    source: "google",
+    user: {
+      id: account.id,
+      email: account.email,
+      image: account.image,
       source: "google",
-      user: {
-        id: linked?.id ?? session.user.id,
-        /*
-         * Google only supplies a display name, so the parts stay empty until
-         * the visitor fills them in. FIN in particular cannot be inferred, and
-         * the results lookup needs it — /profil prompts for what is missing.
-         */
-        firstName: linked?.firstName ?? "",
-        lastName: linked?.lastName ?? "",
-        fatherName: linked?.fatherName ?? "",
-        gender: linked?.gender ?? "FEMALE",
-        fullName: linked?.fullName || session.user.name || session.user.email,
-        email: session.user.email,
-        phone: linked?.phone ?? "",
-        finCode: linked?.finCode ?? "",
-        birthDate: linked?.birthDate ?? "",
-        createdAt: linked?.createdAt ?? new Date(0).toISOString(),
-        image: session.user.image,
-        source: "google",
-      },
-    }
+      firstName: profile?.firstName ?? "",
+      lastName: profile?.lastName ?? "",
+      fatherName: profile?.fatherName ?? "",
+      gender: profile?.gender ?? "MALE",
+      // Falls back to Google's display name so the header has something to show
+      // while the details are still being filled in.
+      fullName: profile?.fullName || account.name || account.email,
+      phone: profile?.phone ?? "",
+      finCode: profile?.finCode ?? "",
+      birthDate: profile?.birthDate ?? "",
+    },
   }
-
-  if (localUser) {
-    return { user: { ...localUser, source: "local" }, isLoading, source: "local" }
-  }
-
-  return { user: null, isLoading, source: null }
 }

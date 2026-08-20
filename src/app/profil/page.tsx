@@ -33,6 +33,7 @@ import { missingProfileFields } from "@/lib/profile-complete"
 import { useAuthStore } from "@/lib/auth-store"
 import { ordersFor, useBasketStore } from "@/lib/basket-store"
 import { shortServiceName } from "@/lib/service-name"
+import { useSession } from "next-auth/react"
 import { useCurrentUser } from "@/lib/use-current-user"
 import {
   contactInfo,
@@ -98,9 +99,8 @@ function ProfilPageInner() {
   const router = useRouter()
   // Either login method resolves to the same shape here.
   const { user, isLoading, source } = useCurrentUser()
+  const { update: updateSession } = useSession()
   const hasHydrated = !isLoading
-  const updateProfile = useAuthStore((s) => s.updateProfile)
-  const saveGoogleProfile = useAuthStore((s) => s.saveGoogleProfile)
   const appointments = useAuthStore((s) => s.appointments)
   const cancelAppointment = useAuthStore((s) => s.cancelAppointment)
   const allOrders = useBasketStore((s) => s.orders)
@@ -173,33 +173,46 @@ function ProfilPageInner() {
    * Saves on submit. Previously every keystroke wrote straight to the store,
    * so a half-typed email was persisted immediately and the button was inert.
    */
-  const onSubmit = (data: ProfileData) => {
+  /**
+   * Saves through /api/profile, which validates the fields again on the server
+   * and writes them into the signed session cookie. The browser never holds the
+   * authoritative copy — that was the whole bug — so this posts and then asks
+   * next-auth to re-read the session.
+   */
+  const onSubmit = async (data: ProfileData) => {
     setSaveError("")
     setSaved(false)
-    /*
-     * A Google session has no local account behind it until this runs. Blocking
-     * the save here — as this did — left those visitors permanently without the
-     * FIN, patronymic and date of birth every other part of the site asks for,
-     * with no way to supply them.
-     */
-    const result =
-      source === "google"
-        ? saveGoogleProfile(user.email, {
-            firstName: data.firstName,
-            lastName: data.lastName,
-            fatherName: data.fatherName,
-            gender: data.gender,
-            birthDate: data.birthDate,
-            phone: data.phone,
-            finCode: data.finCode,
-          })
-        : updateProfile(data)
-    if (!result.ok) {
-      setSaveError(result.error)
-      return
+
+    try {
+      const response = await fetch("/api/profile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName: data.firstName,
+          lastName: data.lastName,
+          fatherName: data.fatherName,
+          gender: data.gender,
+          birthDate: data.birthDate,
+          phone: data.phone,
+          finCode: data.finCode,
+        }),
+      })
+
+      const payload = await response.json().catch(() => null)
+
+      if (!response.ok) {
+        setSaveError(payload?.error ?? "Məlumatlar yadda saxlanılmadı")
+        return
+      }
+
+      // Pulls the rewritten cookie into this tab, so the header, the gate and
+      // the basket all see the completed profile without a reload.
+      await updateSession()
+      reset(data)
+      setSaved(true)
+    } catch {
+      setSaveError("Şəbəkə xətası. Yenidən cəhd edin.")
     }
-    reset(data)
-    setSaved(true)
   }
 
   const onCancelAppointment = (id: string, label: string) => {

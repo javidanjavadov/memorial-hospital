@@ -18,7 +18,6 @@ import {
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { contactInfo, telHref } from "@/data"
-import { useAuthStore } from "@/lib/auth-store"
 import { missingProfileFields } from "@/lib/profile-complete"
 import { useCurrentUser } from "@/lib/use-current-user"
 import { signOut } from "next-auth/react"
@@ -46,18 +45,12 @@ export default function Navbar() {
   const { user } = useCurrentUser()
   const missingCount = missingProfileFields(user).length
   const profileIncomplete = !!user && missingCount > 0
-  const localLogout = useAuthStore((s) => s.logout)
 
   const handleLogout = useCallback(() => {
-    localLogout()
-    if (user?.source === "google") {
-      // Clears the httpOnly session cookie server-side; a client-only reset
-      // would leave the visitor still signed in on the next request.
-      void signOut({ callbackUrl: "/" })
-    } else {
-      router.push("/")
-    }
-  }, [localLogout, user?.source, router])
+    // Clears the httpOnly session cookie server-side. There is nothing to
+    // clear in the browser any more — the session is the cookie.
+    void signOut({ callbackUrl: "/" })
+  }, [])
 
 
   const scrollToSection = useCallback((href: string) => {

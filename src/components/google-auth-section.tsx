@@ -15,25 +15,33 @@ import GoogleSignInButton from "@/components/google-sign-in-button"
 export default function GoogleAuthSection({
   enabled,
   label,
+  callbackUrl,
+  divider = false,
 }: {
   enabled: boolean
   label?: string
+  /** Same-site path to return to after Google sends the visitor back. */
+  callbackUrl?: string
+  /** The "və ya" rule, for pages that still have a second option below it. */
+  divider?: boolean
 }) {
   if (!enabled) return null
 
   return (
     <>
-      <GoogleSignInButton label={label} />
-      <div className="relative py-1">
-        <div className="absolute inset-0 flex items-center" aria-hidden="true">
-          <span className="w-full border-t border-slate-200" />
+      <GoogleSignInButton label={label} callbackUrl={callbackUrl} />
+      {divider && (
+        <div className="relative py-1">
+          <div className="absolute inset-0 flex items-center" aria-hidden="true">
+            <span className="w-full border-t border-slate-200" />
+          </div>
+          <div className="relative flex justify-center">
+            <span className="bg-card px-3 text-xs uppercase tracking-wide text-slate-400">
+              və ya
+            </span>
+          </div>
         </div>
-        <div className="relative flex justify-center">
-          <span className="bg-card px-3 text-xs uppercase tracking-wide text-slate-400">
-            və ya
-          </span>
-        </div>
-      </div>
+      )}
     </>
   )
 }
