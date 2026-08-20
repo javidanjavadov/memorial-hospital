@@ -13,6 +13,7 @@ import {
   Loader2,
   RotateCcw,
   Search,
+  Star,
   ShoppingCart,
   Stethoscope,
   Trash2,
@@ -39,6 +40,8 @@ export interface PickerCategory {
   name: string
   count: number
   from: number
+  /** The leading "Populyar" chip, which repeats items from real categories. */
+  featured?: boolean
 }
 
 export interface PickerGroup {
@@ -285,11 +288,13 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
                   <p className="text-sm text-[var(--ink)]">
                     Xidmətlər yüklənmədi.
                   </p>
-                  <Button variant="outline" className="mt-3" asChild>
-                    <Link href={`/xidmetler/${categorySlug}`}>
-                      Kateqoriya səhifəsini aç
-                    </Link>
-                  </Button>
+                  {!category?.featured && (
+                    <Button variant="outline" className="mt-3" asChild>
+                      <Link href={`/xidmetler/${categorySlug}`}>
+                        Kateqoriya səhifəsini aç
+                      </Link>
+                    </Button>
+                  )}
                 </div>
               ) : visible.length === 0 ? (
                 <p className="py-12 text-center text-sm text-[var(--ink-muted)]">
@@ -350,14 +355,30 @@ function CategoryStrip({
         type="button"
         onClick={() => scrollBy(-1)}
         aria-label="Geri sürüşdür"
-        className="absolute -left-3 top-1/2 z-10 hidden h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-[var(--line)] bg-white shadow-sm hover:border-primary md:flex"
+        className="absolute left-0 top-1/2 z-10 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[var(--line)] bg-white shadow-sm transition-colors hover:border-primary hover:text-primary md:flex"
       >
         <ChevronLeft className="h-4 w-4" aria-hidden="true" />
       </button>
 
+      {/*
+        The clearance for the arrows is a wrapper, not padding on the scroller:
+        a flex scroll container does not reliably honour its own start padding
+        once the content overflows, and the first chip ended up underneath the
+        left arrow.
+      */}
+      <div className="md:px-12">
       <div
         ref={ref}
-        className="scrollbar-none flex snap-x gap-2 overflow-x-auto scroll-smooth pb-1"
+        /*
+          `safe center`: centred while the chips fit, and left-aligned once they
+          overflow. Plain `center` would push the first chips out of reach —
+          overflow spills off both ends and the left one cannot be scrolled to.
+
+          The horizontal padding is the gap for the arrows, which sit over the
+          ends of the strip; without it the first and last chip run underneath
+          them.
+        */
+        className="scrollbar-none flex snap-x gap-2 overflow-x-auto scroll-smooth pb-1 [justify-content:safe_center]"
       >
         {categories.map((category) => {
           const active = category.slug === selected
@@ -374,6 +395,15 @@ function CategoryStrip({
                   : "border-[var(--line)] bg-[var(--paper-raised)] text-[var(--ink-muted)] hover:border-primary/40 hover:text-[var(--ink)]"
               )}
             >
+              {category.featured && (
+                <Star
+                  className={cn(
+                    "mr-1.5 inline h-3.5 w-3.5 align-[-2px]",
+                    active ? "text-white" : "text-primary"
+                  )}
+                  aria-hidden="true"
+                />
+              )}
               {category.name}
               <span className={cn("ml-1.5 text-xs", active ? "text-white/75" : "opacity-60")}>
                 {category.count}
@@ -382,12 +412,13 @@ function CategoryStrip({
           )
         })}
       </div>
+      </div>
 
       <button
         type="button"
         onClick={() => scrollBy(1)}
         aria-label="İrəli sürüşdür"
-        className="absolute -right-3 top-1/2 z-10 hidden h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-[var(--line)] bg-white shadow-sm hover:border-primary md:flex"
+        className="absolute right-0 top-1/2 z-10 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[var(--line)] bg-white shadow-sm transition-colors hover:border-primary hover:text-primary md:flex"
       >
         <ChevronRight className="h-4 w-4" aria-hidden="true" />
       </button>

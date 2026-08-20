@@ -1,0 +1,53 @@
+{
+  "_note": "EDITORIAL SELECTION, NOT USAGE DATA. The catalogue carries no order counts and no popularity flag - all 1168 items are marked promoted, so there is nothing in it to rank by. These are the routine, frequently requested tests, chosen by name. Replace with what the hospital's own system reports as most ordered. scripts/gen-catalog.mjs fails the build if a slug here stops matching, so a renamed test breaks loudly instead of vanishing from the first chip everyone sees.",
+  "groups": {
+    "laboratory-catalog": {
+      "label": "Populyar",
+      "slugs": [
+        "sidiyin-umumi-analizi",
+        "qlukoza",
+        "qlukohemoqlobin",
+        "hemoqlobin-fraksiyalar-qann-klinik-analizi-25-parametr",
+        "alanin-transaminaza-alt",
+        "aspartat-transaminaza-ast",
+        "kreatinin",
+        "sidik-covhri",
+        "umumi-xolesterol-total-cholesterol",
+        "xolestrol-yslp-hdl-cholesterol",
+        "xolesterol-aslp-ldl-cholesterol",
+        "ferritin",
+        "c-reaktiv-zulal-crz",
+        "tireotrop-hormon-tsh",
+        "srbst-tiroksin-free-t4",
+        "25-oh-d2-25-oh-d3",
+        "vitamin-12",
+        "qan-qrupu-v-rezus-amilinin-tyini",
+        "d-dimer",
+        "hiv-total-hiv-aganti-hiv-12",
+        "hepatit-c-keyfiyyt-hcv-rna",
+        "hepatit-b-keyfiyyt-hbv-dna"
+      ]
+    },
+    "polyclinic-catalog": {
+      "label": "Populyar",
+      "slugs": [
+        "ekq",
+        "ekq-thlil",
+        "exo",
+        "stress-test",
+        "24-saatlq-ritm-holteri",
+        "24-saatlq-tzyiq-holteri",
+        "dos-q-f-si-a-p-rentgenoqrafiyasi",
+        "qarin-boslugu-rentgenoskopiyasi",
+        "boyun",
+        "tam-qarin-boslugu-kt-butun-abdomen",
+        "dos-q-f-si-toraks"
+      ]
+    },
+    "doctor-appointment": {
+      "label": "Bütün həkimlər",
+      "_why": "17 named doctors, not services. Calling some of them popular without usage data would invent an endorsement of real people, so this group leads with all of them - and at 17 that is a usable first screen.",
+      "slugs": []
+    }
+  }
+}

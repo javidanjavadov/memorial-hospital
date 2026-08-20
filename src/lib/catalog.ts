@@ -1,4 +1,5 @@
 import catalogData from "@/data/catalog.json"
+import popularData from "@/data/popular.json"
 
 /**
  * The hospital's real service catalogue — 1168 lab tests, imaging studies and
@@ -159,10 +160,35 @@ export const pickerGroups = () =>
       name: category.name,
       count: category.count,
       from: priceOf(getCategoryItems(category.slug)[0]),
+      featured: false,
     }))
+
+    // Mirrors scripts/gen-catalog.mjs, which writes the matching JSON file.
+    // Both read src/data/popular.json, so the chip rendered with the page and
+    // the list it fetches cannot disagree.
+    const entry = (popularData.groups as Record<string, PopularGroup>)[group.slug]
+    const featured = entry?.slugs.length
+      ? entry.slugs
+          .map((slug) => catalogItems.find((item) => item.slug === slug))
+          .filter((item): item is CatalogItem => Boolean(item))
+      : catalogItems.filter((item) => item.group === group.slug)
+
+    categories.unshift({
+      slug: `populyar-${group.slug}`,
+      name: entry?.label ?? "Populyar",
+      count: featured.length,
+      from: Math.min(...featured.map((item) => priceOf(item))),
+      featured: true,
+    })
+
     return {
       ...group,
-      count: categories.reduce((n, c) => n + c.count, 0),
+      count: categories.reduce((n, c) => n + (c.featured ? 0 : c.count), 0),
       categories,
     }
   })
+
+interface PopularGroup {
+  label: string
+  slugs: string[]
+}
