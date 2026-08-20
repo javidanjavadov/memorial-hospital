@@ -56,7 +56,7 @@ export default function ElaqePage() {
    * the form hands the composed message to the visitor's mail client.
    */
   const onSubmit = (data: FormData) => {
-    const subject = `Sayt müraciəti — ${data.name}`
+    const subject = t.f(t.booking.contactSubject, { name: data.name })
     const body = [
       `Ad: ${data.name}`,
       `Email: ${data.email}`,

@@ -134,7 +134,8 @@
     "homeCollectionShort": "evde numune alma",
     "saveFailedFields": "Bilgiler kaydedilemedi. Lütfen alanları kontrol edin.",
     "profileSections": "Profil bölümleri",
-    "phone": "Telefon"
+    "phone": "Telefon",
+    "confirmCancel": "{label} randevusunu iptal etmek istediğinize emin misiniz?"
   },
   "doctors": {
     "allDoctors": "Tüm doktorlar",
@@ -150,7 +151,8 @@
     "notAccepting": "Şu anda hasta kabul etmiyor",
     "callCentreNote": "Ayrıntılı bilgi için çağrı merkezimizle iletişime geçin",
     "otherDoctorsIn": "{name} bölümündeki diğer doktorlar",
-    "labStaff": "Laboratuvar ekibi"
+    "labStaff": "Laboratuvar ekibi",
+    "metaSuffix": "{years} yıllık deneyim, {branch}"
   },
   "auth": {
     "signInWithGoogle": "Google ile devam et",
@@ -353,7 +355,8 @@
     "writeToUsInline": "bize yazın",
     "cardNoRequired": "STRIX / kart numarasını girin",
     "cardNoFormat": "Biçim: 00000000-0000000000",
-    "requestRegistered": "Talebiniz kaydedildi. Onay için"
+    "requestRegistered": "Talebiniz kaydedildi. Onay için",
+    "contactSubject": "Web sitesi başvurusu — {name}"
   },
   "data": {
     "departments": {

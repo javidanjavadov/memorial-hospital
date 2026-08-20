@@ -229,7 +229,7 @@ function ProfilPageInner() {
 
   const onCancelAppointment = (id: string, label: string) => {
     setCancelError("")
-    if (!window.confirm(`${label} qəbulunu ləğv etmək istədiyinizə əminsiniz?`)) {
+    if (!window.confirm(t.f(t.profile.confirmCancel, { label }))) {
       return
     }
     const result = cancelAppointment(id)

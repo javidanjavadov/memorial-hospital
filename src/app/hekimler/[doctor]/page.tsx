@@ -24,7 +24,7 @@ import {
 } from "@/data"
 import { pageMetadata, siteUrl } from "@/lib/site"
 import { cn } from "@/lib/utils"
-import { getDictionary } from "@/i18n"
+import { getDictionary, getLocale } from "@/i18n"
 import { fill } from "@/i18n/format"
 import {
   localizeBranch,
@@ -40,18 +40,22 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { doctor: id } = await params
-  const doctor = doctors.find((d) => d.id === id)
-  if (!doctor) return {}
+  const found = doctors.find((d) => d.id === id)
+  if (!found) return {}
 
+  const locale = await getLocale()
+  const t = await getDictionary(locale)
+  const doctor = localizeDoctor(found, t.data)
   const branch = getBranch(doctor.branchId)
 
   return pageMetadata({
     title: `${doctor.name} — ${doctor.specialty}`,
     description: `${doctor.name}, ${doctor.specialty}${
       doctor.title ? `, ${doctor.title}` : ""
-    }. ${doctor.experience} il təcrübə, ${
-      branch?.name ?? doctor.branch
-    }. Onlayn qəbula yazılın.`,
+    }. ${fill(t.doctors.metaSuffix, {
+      years: doctor.experience,
+      branch: branch ? localizeBranch(branch, t.data).name : doctor.branch,
+    })} ${t.home.heroBook}.`,
     path: `/hekimler/${doctor.id}`,
   })
 }

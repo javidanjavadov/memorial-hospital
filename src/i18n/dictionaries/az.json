@@ -134,7 +134,8 @@
     "homeCollectionShort": "evdə qanalma",
     "saveFailedFields": "Məlumatlar yadda saxlanılmadı. Sahələri yoxlayın.",
     "profileSections": "Profil bölmələri",
-    "phone": "Telefon"
+    "phone": "Telefon",
+    "confirmCancel": "{label} qəbulunu ləğv etmək istədiyinizə əminsiniz?"
   },
   "doctors": {
     "allDoctors": "Bütün həkimlər",
@@ -150,7 +151,8 @@
     "notAccepting": "Hazırda qəbul aparmır",
     "callCentreNote": "Ətraflı məlumat üçün çağrı mərkəzimizlə əlaqə saxlayın",
     "otherDoctorsIn": "{name} üzrə digər həkimlər",
-    "labStaff": "Laboratoriya heyəti"
+    "labStaff": "Laboratoriya heyəti",
+    "metaSuffix": "{years} il təcrübə, {branch}"
   },
   "auth": {
     "signInWithGoogle": "Google ilə davam et",
@@ -353,7 +355,8 @@
     "writeToUsInline": "bizə yazın",
     "cardNoRequired": "STRIX / KART NO daxil edin",
     "cardNoFormat": "Format: 00000000-0000000000",
-    "requestRegistered": "Sorğunuz qeydiyyata alındı. Təsdiq üçün"
+    "requestRegistered": "Sorğunuz qeydiyyata alındı. Təsdiq üçün",
+    "contactSubject": "Sayt müraciəti — {name}"
   },
   "data": {
     "departments": {},

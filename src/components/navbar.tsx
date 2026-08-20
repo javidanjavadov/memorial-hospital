@@ -145,7 +145,7 @@ export default function Navbar() {
           >
             <Image
               src="/logo.svg"
-              alt="Memorial Hospital — ana səhifə"
+              alt={t.ui.homeAriaLabel}
               width={144}
               height={50}
               className={cn(

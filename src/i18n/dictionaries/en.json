@@ -143,7 +143,8 @@
     "homeCollectionShort": "home collection",
     "saveFailedFields": "Details could not be saved. Please check the fields.",
     "profileSections": "Profile sections",
-    "phone": "Phone"
+    "phone": "Phone",
+    "confirmCancel": "Are you sure you want to cancel the {label} appointment?"
   },
   "doctors": {
     "allDoctors": "All doctors",
@@ -162,7 +163,8 @@
     "notAccepting": "Not seeing patients at present",
     "callCentreNote": "Please contact our call centre for more information",
     "otherDoctorsIn": "Other doctors in {name}",
-    "labStaff": "Laboratory staff"
+    "labStaff": "Laboratory staff",
+    "metaSuffix": "{years} years of experience, {branch}"
   },
   "auth": {
     "signInWithGoogle": "Continue with Google",
@@ -365,7 +367,8 @@
     "writeToUsInline": "write to us",
     "cardNoRequired": "Enter your STRIX / card number",
     "cardNoFormat": "Format: 00000000-0000000000",
-    "requestRegistered": "Your request has been registered. To confirm it,"
+    "requestRegistered": "Your request has been registered. To confirm it,",
+    "contactSubject": "Website enquiry — {name}"
   },
   "data": {
     "departments": {

@@ -149,7 +149,8 @@
     "homeCollectionShort": "забор на дому",
     "saveFailedFields": "Не удалось сохранить данные. Проверьте поля.",
     "profileSections": "Разделы профиля",
-    "phone": "Телефон"
+    "phone": "Телефон",
+    "confirmCancel": "Вы уверены, что хотите отменить запись «{label}»?"
   },
   "doctors": {
     "allDoctors": "Все врачи",
@@ -170,7 +171,8 @@
     "notAccepting": "Сейчас не ведёт приём",
     "callCentreNote": "За подробной информацией обратитесь в наш call-центр",
     "otherDoctorsIn": "Другие врачи — {name}",
-    "labStaff": "Персонал лаборатории"
+    "labStaff": "Персонал лаборатории",
+    "metaSuffix": "{years} лет опыта, {branch}"
   },
   "auth": {
     "signInWithGoogle": "Продолжить с Google",
@@ -373,7 +375,8 @@
     "writeToUsInline": "напишите нам",
     "cardNoRequired": "Введите STRIX / номер карты",
     "cardNoFormat": "Формат: 00000000-0000000000",
-    "requestRegistered": "Ваша заявка зарегистрирована. Для подтверждения"
+    "requestRegistered": "Ваша заявка зарегистрирована. Для подтверждения",
+    "contactSubject": "Обращение с сайта — {name}"
   },
   "data": {
     "departments": {
