@@ -26,6 +26,7 @@ import { shortServiceName } from "@/lib/service-name"
 import { useCurrentUser } from "@/lib/use-current-user"
 import { useT } from "@/i18n/client"
 import { cn } from "@/lib/utils"
+import { localizeCategoryName, localizeGroup } from "@/i18n/data"
 
 const DEFAULT_BRANCH = "nrimanov"
 
@@ -225,7 +226,8 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
           <div key="services" className="panel-in">
             {/* Groups */}
             <div className="grid gap-3 sm:grid-cols-3">
-              {groups.map((entry) => {
+              {groups.map((raw) => {
+                const entry = { ...raw, ...localizeGroup(raw, t.data) }
                 const Icon = GROUP_ICONS[entry.slug] ?? FlaskConical
                 const active = entry.slug === group?.slug
                 return (
@@ -472,7 +474,7 @@ function CategoryStrip({
                   aria-hidden="true"
                 />
               )}
-              {category.name}
+              {localizeCategoryName(category.name, t.data)}
               <span className={cn("ml-1.5 text-xs", active ? "text-white/75" : "opacity-60")}>
                 {category.count}
               </span>

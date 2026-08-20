@@ -19,6 +19,7 @@ import { branches, telHref } from "@/data"
 import { AnimateOnScroll } from "@/components/animations"
 import { cn } from "@/lib/utils"
 import { useT } from "@/i18n/client"
+import { localizeBranch } from "@/i18n/data"
 
 // Leaflet reaches for `window` at import time, so it cannot be server-rendered.
 const BranchesMap = dynamic(() => import("@/components/branches-map"), {
@@ -97,7 +98,9 @@ export default function BranchesSection() {
             view !== "grid" && "hidden"
           )}
         >
-          {branches.map((branch, i) => (
+          {branches.map((raw, i) => {
+            const branch = localizeBranch(raw, t.data)
+            return (
             <AnimateOnScroll key={branch.id} delay={i * 100}>
             <Card
               id={branch.id}
@@ -169,7 +172,8 @@ export default function BranchesSection() {
               </CardContent>
             </Card>
             </AnimateOnScroll>
-          ))}
+            )
+          })}
         </div>
       </div>
     </section>

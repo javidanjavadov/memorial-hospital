@@ -19,6 +19,7 @@ import {
 } from "lucide-react"
 import { contactInfo, telHref } from "@/data"
 import { fullName, phoneNumber, requiredEmail } from "@/lib/validation"
+import { useT } from "@/i18n/client"
 
 const schema = z.object({
   name: fullName,
@@ -33,6 +34,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>
 
 export default function ElaqePage() {
+  const t = useT()
   const [sent, setSent] = useState(false)
 
   const {
@@ -233,7 +235,7 @@ export default function ElaqePage() {
                   </div>
                   <div>
                     <h4 className="font-medium text-slate-900">Ünvan</h4>
-                    <p className="text-slate-600">{contactInfo.address}</p>
+                    <p className="text-slate-600">{t.data.contact.address ?? contactInfo.address}</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
@@ -242,7 +244,7 @@ export default function ElaqePage() {
                   </div>
                   <div>
                     <h4 className="font-medium text-slate-900">İş Vaxtı</h4>
-                    <p className="text-slate-600">{contactInfo.workingHours}</p>
+                    <p className="text-slate-600">{t.data.contact.workingHours ?? contactInfo.workingHours}</p>
                   </div>
                 </div>
               </CardContent>

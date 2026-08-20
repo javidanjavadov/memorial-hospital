@@ -8,6 +8,7 @@ import { AnimateOnScroll } from "@/components/animations"
 import { departments, doctorsByDepartment } from "@/data"
 import { cn } from "@/lib/utils"
 import { useT } from "@/i18n/client"
+import { localizeDepartment } from "@/i18n/data"
 
 /**
  * Specialty directory. Each entry links straight into the filtered doctor
@@ -55,7 +56,9 @@ export default function DepartmentsSection() {
   }
 
   const visible =
-    expanded || closing ? departments : departments.slice(0, INITIAL_COUNT)
+    (expanded || closing ? departments : departments.slice(0, INITIAL_COUNT)).map(
+      (department) => localizeDepartment(department, t.data)
+    )
   const remaining = extraCount
 
   return (

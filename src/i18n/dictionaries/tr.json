@@ -333,5 +333,169 @@
     "messageTooShort": "Mesaj en az 10 karakter olmalıdır",
     "messageTooLong": "Mesaj en fazla 2000 karakter olabilir",
     "writeToUsInline": "bize yazın"
+  },
+  "data": {
+    "departments": {
+      "terapiya": {
+        "name": "Dahiliye",
+        "description": "Genel dahiliye muayenesi ve tedavisi"
+      },
+      "kardiologiya": {
+        "name": "Kardiyoloji",
+        "description": "Kalp ve damar hastalıklarının teşhisi"
+      },
+      "nevrologiya": {
+        "name": "Nöroloji",
+        "description": "Sinir sistemi hastalıklarının tedavisi"
+      },
+      "neyrocerrahiyye": {
+        "name": "Beyin ve Sinir Cerrahisi",
+        "description": "Beyin ve omurilik cerrahisi"
+      },
+      "pediatriya": {
+        "name": "Pediatri (Çocuk Sağlığı)",
+        "description": "Çocuk sağlığı ve gelişiminin takibi"
+      },
+      "ginekologiya": {
+        "name": "Kadın Hastalıkları ve Doğum",
+        "description": "Kadın hastalıkları, doğum ve kadın sağlığı"
+      },
+      "endokrinologiya": {
+        "name": "Endokrinoloji",
+        "description": "Hormonal bozukluklar ve metabolizma"
+      },
+      "qastroenterologiya": {
+        "name": "Gastroenteroloji",
+        "description": "Sindirim sistemi hastalıklarının tedavisi"
+      },
+      "oftalmologiya": {
+        "name": "Göz Hastalıkları",
+        "description": "Göz hastalıkları ve görme düzeltmesi"
+      },
+      "travmatologiya": {
+        "name": "Travmatoloji",
+        "description": "Kemik, eklem ve kas yaralanmaları"
+      },
+      "urologiya": {
+        "name": "Üroloji",
+        "description": "İdrar-üreme sistemi ve androloji"
+      },
+      "stomatologiya": {
+        "name": "Diş Hekimliği",
+        "description": "Diş tedavisi ve ağız sağlığı"
+      },
+      "radiologiya": {
+        "name": "Radyoloji",
+        "description": "Görüntüleme tanısı — USG, röntgen, BT"
+      },
+      "laboratoriya": {
+        "name": "Laboratuvar",
+        "description": "Klinik, biyokimyasal, hormonal ve genetik tahliller"
+      },
+      "algologiya": {
+        "name": "Algoloji (Ağrı Tedavisi)",
+        "description": "Ağrı sendromlarının teşhisi ve tedavisi"
+      },
+      "poliklinika": {
+        "name": "Poliklinik",
+        "description": "Ayakta muayene, tanı ve takip"
+      },
+      "hekim-qebulu": {
+        "name": "Doktor Randevusu",
+        "description": "33 doktor, 15 branşta online randevu"
+      },
+      "checkup": {
+        "name": "Check-up Muayenesi",
+        "description": "Tam sağlık taraması — check-up paketleri"
+      },
+      "evde-xidmet": {
+        "name": "Evde Hizmet",
+        "description": "Kan alma ve muayene için evinize geliyoruz"
+      }
+    },
+    "branches": {
+      "nrimanov": {
+        "name": "Nərimanov şubesi",
+        "address": "Zaur Nudiraliyev 79 (7 numaralı ASAN xidmət karşısı)",
+        "workingHours": "Pzt – Cmt: 08:30 – 18:00 · Pazar: Kapalı"
+      },
+      "qarayev": {
+        "name": "Qarayev şubesi",
+        "address": "G.Garayev prospekti 38A",
+        "workingHours": "Pzt – Cmt: 07:30 – 18:00 · Pazar: 08:30 – 15:00"
+      },
+      "ganca": {
+        "name": "Gence Memorial Hospital",
+        "address": "Gence şehri, Şah İsmail Hatai prospekti 550A",
+        "workingHours": "Haftanın 7 günü — 24 saat"
+      }
+    },
+    "groups": {
+      "laboratory-catalog": {
+        "name": "Laboratuvar",
+        "blurb": "Kan, idrar, hormonal, genetik ve mikrobiyolojik tahliller"
+      },
+      "polyclinic-catalog": {
+        "name": "Poliklinik",
+        "blurb": "USG, röntgen, tomografi, EKG ve diğer enstrümantal muayeneler"
+      },
+      "doctor-appointment": {
+        "name": "Doktor randevusu",
+        "blurb": "Uzman hekim konsültasyonları"
+      }
+    },
+    "categories": {
+      "Populyar": "Popüler",
+      "Bütün həkimlər": "Tüm doktorlar"
+    },
+    "faq": [
+      {
+        "question": "Online sonuçlar nasıl alınır?",
+        "answer": "Tahlil vermeden önce resepsiyonda kişisel bilgileriniz kaydedilir. Sonucunuz hazır olduğunda cep telefonunuza SMS bildirimi gönderilir. Ayrıca sonuçlar belirttiğiniz e-posta adresine veya doktorunuzun e-posta adresine de gönderilir."
+      },
+      {
+        "question": "Bir tahlil birden fazla yöntemle yapılabiliyorsa hangisini seçmeliyim?",
+        "answer": "Her tahlil hakkında web sitemizin açıklama bölümünde ayrıntılı bilgi verilmiştir. Her yöntemin avantajları ve sınırlamaları ayrı ayrı belirtilmiştir. Bu bilgilere dayanarak, tanı amacınıza en uygun yöntemi seçebilirsiniz. Seçim konusunda zorlanırsanız, doktorunuz veya laboratuvar uzmanlarımız size yol gösterebilir."
+      },
+      {
+        "question": "Doktor randevusu nasıl alınır?",
+        "answer": "Bu hizmet yakında kullanımınıza sunulacaktır. Daha fazla bilgi için bizi takip etmeye devam edin veya iletişim bölümünden bize ulaşın."
+      },
+      {
+        "question": "XXX tahlilini vermek istiyorum. Aç karnına mı gelmeliyim? Ücreti ne kadar?",
+        "answer": "İstediğiniz tahlili sitenin \"arama\" bölümünden veya ait olduğu kategoriden seçebilirsiniz. Tahlilin fiyatı ilgili sayfada belirtilmiştir. \"Tahlile Hazırlık\" bölümünde ise testin aç karnına mı yoksa başka koşullarla mı verilmesi gerektiği hakkında ayrıntılı bilgi yer almaktadır."
+      },
+      {
+        "question": "Online kayıt nasıl yapılır?",
+        "answer": "Online kayıt için memorialhospital.az sitesine girin ve \"Kayıt\" bölümünden kayıt sürecini başlatın. Kişisel bilgilerinizi girerek hem kendiniz hem de aile üyeleriniz için kayıt yaptırabilirsiniz. Ardından \"Laboratuvar Tahlilleri\" bölümünden istediğiniz testleri seçip sepete ekleyebilirsiniz. Ödemeyi online olarak kartla veya klinikte yerinde yapabilirsiniz."
+      },
+      {
+        "question": "Kliniğe gelmeden evde tahlil verebilir miyim?",
+        "answer": "Evet, evde tahlil alma hizmetimiz mevcuttur. Bunun için çağrı merkezimizi arayarak operatörlere adresinizi ve gerekli diğer bilgileri iletmeniz yeterlidir. En kısa sürede tıbbi ekibimiz evinize veya ofisinize gönderilir ve tahliller profesyonelce alınır."
+      },
+      {
+        "question": "Şirketimizin çalışanlarını düzenli olarak check-up'tan geçirmek istiyoruz. İndirim var mı? Muayene ve tahlilleri kliniğe gelmeden yerinde yapmak mümkün mü?",
+        "answer": "Evet, kurumsal müşteriler için özel indirimli check-up paketlerimiz mevcuttur. Ayrıca gerektiğinde tıbbi ekibimiz çalışanlarınızın bulunduğu adrese — ofise veya diğer çalışma alanına — giderek ilgili muayene ve tahlilleri yerinde gerçekleştirebilir. Ayrıntılı bilgi ve iş birliği için doğrudan bizimle iletişime geçebilirsiniz."
+      }
+    ],
+    "contact": {
+      "workingHours": "Pzt – Cmt: 08:30 – 18:00",
+      "address": "Zaur Nudiraliyev 79, Nərimanov r., Bakü"
+    },
+    "accreditations": {
+      "IAS": {
+        "label": "IAS Akreditasyonu",
+        "title": "Uluslararası akreditasyon",
+        "markNote": "Akreditasyon"
+      },
+      "RIQAS": {
+        "title": "Uluslararası kalite programı",
+        "markNote": "Katılımcı"
+      },
+      "QCMD": {
+        "title": "Moleküler tanı",
+        "markNote": "Katılımcı"
+      }
+    }
   }
 }

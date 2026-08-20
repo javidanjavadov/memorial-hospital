@@ -342,5 +342,169 @@
     "messageTooShort": "Message must be at least 10 characters",
     "messageTooLong": "Message cannot exceed 2000 characters",
     "writeToUsInline": "write to us"
+  },
+  "data": {
+    "departments": {
+      "terapiya": {
+        "name": "Internal Medicine",
+        "description": "General medical examination and treatment"
+      },
+      "kardiologiya": {
+        "name": "Cardiology",
+        "description": "Diagnosis of heart and vascular diseases"
+      },
+      "nevrologiya": {
+        "name": "Neurology",
+        "description": "Treatment of nervous system disorders"
+      },
+      "neyrocerrahiyye": {
+        "name": "Neurosurgery",
+        "description": "Brain and spinal cord surgery"
+      },
+      "pediatriya": {
+        "name": "Pediatrics",
+        "description": "Monitoring children's health and development"
+      },
+      "ginekologiya": {
+        "name": "Gynecology",
+        "description": "Obstetrics-gynecology and women's health"
+      },
+      "endokrinologiya": {
+        "name": "Endocrinology",
+        "description": "Hormonal disorders and metabolism"
+      },
+      "qastroenterologiya": {
+        "name": "Gastroenterology",
+        "description": "Treatment of digestive system diseases"
+      },
+      "oftalmologiya": {
+        "name": "Ophthalmology",
+        "description": "Eye diseases and vision correction"
+      },
+      "travmatologiya": {
+        "name": "Traumatology",
+        "description": "Bone, joint, and muscle injuries"
+      },
+      "urologiya": {
+        "name": "Urology",
+        "description": "Urogenital system and andrology"
+      },
+      "stomatologiya": {
+        "name": "Dentistry",
+        "description": "Dental treatment and oral health"
+      },
+      "radiologiya": {
+        "name": "Radiology",
+        "description": "Imaging diagnostics — USM, X-ray, CT"
+      },
+      "laboratoriya": {
+        "name": "Laboratory",
+        "description": "Clinical, biochemical, hormonal, and genetic tests"
+      },
+      "algologiya": {
+        "name": "Pain Management",
+        "description": "Diagnosis and treatment of pain syndromes"
+      },
+      "poliklinika": {
+        "name": "Polyclinic",
+        "description": "Outpatient examination, diagnostics, and monitoring"
+      },
+      "hekim-qebulu": {
+        "name": "Doctor Appointments",
+        "description": "33 doctors, online appointments across 15 specialties"
+      },
+      "checkup": {
+        "name": "Check-up Examination",
+        "description": "Complete health screening — check-up packages"
+      },
+      "evde-xidmet": {
+        "name": "Home Service",
+        "description": "We come to your home for blood draws and examinations"
+      }
+    },
+    "branches": {
+      "nrimanov": {
+        "name": "Nərimanov branch",
+        "address": "Zaur Nudiraliyev 79 (opposite ASAN service centre No. 7)",
+        "workingHours": "Mon – Sat: 08:30 – 18:00 · Sun: Closed"
+      },
+      "qarayev": {
+        "name": "Qarayev branch",
+        "address": "G.Garayev avenue 38A",
+        "workingHours": "Mon – Sat: 07:30 – 18:00 · Sun: 08:30 – 15:00"
+      },
+      "ganca": {
+        "name": "Ganja Memorial Hospital",
+        "address": "Ganja city, Shah Ismail Khatai avenue 550A",
+        "workingHours": "7 days a week — 24 hours"
+      }
+    },
+    "groups": {
+      "laboratory-catalog": {
+        "name": "Laboratory",
+        "blurb": "Blood, urine, hormonal, genetic and microbiological tests"
+      },
+      "polyclinic-catalog": {
+        "name": "Polyclinic",
+        "blurb": "Ultrasound, X-ray, tomography, ECG and other instrumental examinations"
+      },
+      "doctor-appointment": {
+        "name": "Doctor appointment",
+        "blurb": "Consultations with specialist doctors"
+      }
+    },
+    "categories": {
+      "Populyar": "Popular",
+      "Bütün həkimlər": "All doctors"
+    },
+    "faq": [
+      {
+        "question": "How do I get results online?",
+        "answer": "Before your test, your personal details are recorded at reception. As soon as your results are ready, you'll receive an SMS notification on your mobile phone. Results are also sent to the email address you provided or to your doctor's email."
+      },
+      {
+        "question": "If a test can be done using several methods, which one should I choose?",
+        "answer": "Detailed information about each test is available in the description section of our website. The advantages and limitations of each method are listed separately. Based on this information, you can choose the method best suited to your diagnostic needs. If you find it hard to decide, your doctor or our laboratory specialists can guide you."
+      },
+      {
+        "question": "How do I book a doctor's appointment?",
+        "answer": "This service will be available soon. Please keep following us or contact us through the contact section for more information."
+      },
+      {
+        "question": "I want to take the XXX test. Do I need to come on an empty stomach? How much does it cost?",
+        "answer": "You can find the test you need through the site's \"search\" section or its relevant category. The price of the test is listed on its page. The \"Test Preparation\" section provides detailed information on whether the test requires fasting or any other conditions."
+      },
+      {
+        "question": "How do I register online?",
+        "answer": "To register online, go to memorialhospital.az and start the process in the \"Registration\" section. By entering your personal details, you can register both yourself and your family members. Then, in the \"Laboratory Tests\" section, choose the tests you need and add them to your cart. You can pay online by card or in person at the clinic."
+      },
+      {
+        "question": "Can I have my tests taken at home without coming to the clinic?",
+        "answer": "Yes, we offer a home sample collection service. Simply call our call center and give the operator your address and other necessary details. Our medical team will be sent to your home or office as soon as possible to collect the samples professionally."
+      },
+      {
+        "question": "We would like to have our company's employees undergo regular check-ups. Are there any discounts? Can the examinations and tests be carried out on-site without visiting the clinic?",
+        "answer": "Yes, we offer special discounted check-up packages for corporate clients. When needed, our medical team can also travel to your employees' location — your office or other workplace — to carry out the relevant examinations and tests on-site. Please contact us directly for more information and cooperation."
+      }
+    ],
+    "contact": {
+      "workingHours": "Mon – Sat: 08:30 – 18:00",
+      "address": "Zaur Nudiraliyev 79, Nərimanov district, Baku"
+    },
+    "accreditations": {
+      "IAS": {
+        "label": "IAS Accreditation",
+        "title": "International accreditation",
+        "markNote": "Accreditation"
+      },
+      "RIQAS": {
+        "title": "International quality programme",
+        "markNote": "Participant"
+      },
+      "QCMD": {
+        "title": "Molecular diagnostics",
+        "markNote": "Participant"
+      }
+    }
   }
 }

@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { ChevronDown, MessageCircleQuestion } from "lucide-react"
 import { AnimateOnScroll } from "@/components/animations"
-import { contactInfo, faqs, telHref } from "@/data"
+import { contactInfo, telHref } from "@/data"
 import { useT } from "@/i18n/client"
 
 /**
@@ -35,7 +35,7 @@ export default function FaqSection() {
         </AnimateOnScroll>
 
         <div className="max-w-3xl mx-auto space-y-3">
-          {faqs.map((faq, index) => (
+          {t.data.faq.map((faq, index) => (
             <AnimateOnScroll key={faq.question} delay={index * 60}>
               <details className="group rounded-xl border border-slate-200 bg-white transition-colors hover:border-primary/40 open:border-primary/40">
                 <summary className="flex cursor-pointer items-start gap-3 p-5 font-medium text-slate-900 [&::-webkit-details-marker]:hidden">

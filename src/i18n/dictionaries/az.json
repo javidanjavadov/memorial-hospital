@@ -333,5 +333,43 @@
     "messageTooShort": "Mesaj minimum 10 simvol olmalıdır",
     "messageTooLong": "Mesaj maksimum 2000 simvol ola bilər",
     "writeToUsInline": "bizə yazın"
+  },
+  "data": {
+    "departments": {},
+    "branches": {},
+    "groups": {},
+    "categories": {},
+    "faq": [
+      {
+        "question": "Online nəticələr necə əldə edilir?",
+        "answer": "Analiz verməzdən əvvəl resepsionda şəxsi məlumatlarınız qeyd olunur. Cavab hazır olduqda, mobil telefonunuza SMS bildirişi göndərilir. Əlavə olaraq, nəticələr qeyd etdiyiniz e-poçt ünvanına və ya həkiminizin e-poçt ünvanına göndərilir."
+      },
+      {
+        "question": "Bir testin bir neçə metodla təyini mümkündürsə, hansını seçməliyəm?",
+        "answer": "Testlərin hər biri haqqında saytımızın təsvir bölməsində ətraflı məlumat verilmişdir. Hər metodun üstünlükləri və məhdudiyyətləri ayrıca qeyd olunub. Bu məlumatlara əsaslanaraq, diaqnostika məqsədinizə ən uyğun olan üsulu seçə bilərsiniz. Əgər seçimdə çətinlik çəkirsinizsə, həkiminiz və ya laboratoriya mütəxəssislərimiz sizə istiqam't verə bilər."
+      },
+      {
+        "question": "Həkim qəbuluna necə yazılım?",
+        "answer": "Bu xidmət yaxın zamanda istifadənizə təqdim ediləcək. Əlavə məlumat üçün bizi izləməyə davam edin və ya əlaqə bölməsindən bizimlə əlaqə saxlayın"
+      },
+      {
+        "question": "XXX analizini vermək istəyirəm. Analizə acqarına gəlməliyəm? Ödənişi nə qədərdir?",
+        "answer": "İstədiyiniz analizi saytın “axtarış” bölməsindən və ya aid olduğu kateqoriyadan seçə bilərsiniz. Analizin qiyməti  həmin səhifədə qeyd olunub. “Analizə hazırlıq” bölməsində isə testin acqarına və ya digər şərtlərlə verilib-verilməməsi barədə ətraflı məlumat təqdim edilir."
+      },
+      {
+        "question": "Onlayn qeydiyyatdan necə keçə bilərəm?",
+        "answer": "Onlayn qeydiyyat üçün memorialhospital.az saytına daxil olun və “Qeydiyyat” bölməsindən qeydiyyat prosesini başlayın. Şəxsi məlumatlarınızı daxil edərək həm özünüz, həm də ailə üzvləriniz üçün qeydiyyat apara bilərsiniz. Daha sonra “Laborator analizlər” bölməsindən istədiyiniz testləri seçərək səbətə əlavə edin. Ödənişi onlayn şəkildə kartla və ya klinikada yerində ödəmə yolu ilə həyata keçirə bilərsiniz."
+      },
+      {
+        "question": "Klinikaya gəlmədən evdə analiz verə bilərəmmi?",
+        "answer": "Bəli, evdə analiz götürülməsi xidmətimiz mövcuddur. Bunun üçün çağrı mərkəzimizə zəng edərək operatorlara ünvanınızı və digər zəruri məlumatları təqdim etməyiniz kifayətdir. Ən qısa zamanda tibbi briqadamız evinizə və ya ofisinizə göndərilir və analizlər peşəkar şəkildə götürülür."
+      },
+      {
+        "question": "Şirkətimizin işçilərini davamlı olaraq check-up-lardan keçirmək istəyirik. Güzəştlər varmı? Müayinə və analizləri klinikaya gəlmədən yerindəcə aparmaq mümkündürmü?",
+        "answer": "Bəli, korporativ müştərilər üçün xüsusi endirimli check-up paketlərimiz mövcuddur. Eyni zamanda, ehtiyac olduğu halda tibbi briqadamız əməkdaşlarınızın olduğu ünvana – ofisə və ya digər iş yerlərinə göndərilərək, müvafiq müayinə və analizləri yerindəcə həyata keçirə bilir. Ətraflı məlumat və əməkdaşlıq üçün bizimlə birbaşa əlaqə saxlaya bilərsiniz."
+      }
+    ],
+    "contact": {},
+    "accreditations": {}
   }
 }

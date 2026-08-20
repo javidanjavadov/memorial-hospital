@@ -13,8 +13,12 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { MapPin, Phone, Clock, ArrowRight, Navigation } from "lucide-react"
 import { branches, telHref } from "@/data"
+import { getDictionary } from "@/i18n"
+import { localizeBranch } from "@/i18n/data"
 
-export default function FiliallarPage() {
+export default async function FiliallarPage() {
+  const t = await getDictionary()
+
   return (
     <div className="min-h-screen bg-[var(--paper)] py-12 px-4">
       <div className="container mx-auto">
@@ -23,12 +27,14 @@ export default function FiliallarPage() {
             Filiallarımız
           </h1>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Sizinə ən yaxın filialı seçin
+            {t.home.branchesSubtitle}
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          {branches.map((branch) => (
+          {branches.map((raw) => {
+            const branch = localizeBranch(raw, t.data)
+            return (
             <Card key={branch.id} id={branch.id} className="group border-0 shadow-lg hover:shadow-xl transition-all overflow-hidden">
               <div className="h-48 bg-[var(--secondary)] relative">
                 <div className="absolute inset-0 flex items-center justify-center">
@@ -82,7 +88,8 @@ export default function FiliallarPage() {
                 </div>
               </CardContent>
             </Card>
-          ))}
+            )
+          })}
         </div>
       </div>
     </div>

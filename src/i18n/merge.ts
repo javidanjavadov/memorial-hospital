@@ -20,8 +20,33 @@ export function mergeWithFallback(
 ): Record<string, unknown> {
   const out: Record<string, unknown> = {}
 
-  for (const [key, value] of Object.entries(fallback)) {
+  /*
+   * The union of both sides, not just the fallback's keys.
+   *
+   * Iterating the fallback alone works for UI copy, where Azerbaijani has every
+   * key — but not for the data maps (departments, branches, groups), which are
+   * EMPTY in Azerbaijani because Azerbaijani is the source text in src/data.
+   * Every translated department was being dropped on the way through here, and
+   * the page rendered Azerbaijani inside an English layout without any error.
+   */
+  const keys = new Set([...Object.keys(fallback), ...Object.keys(translated ?? {})])
+
+  for (const key of keys) {
+    const value = fallback[key]
     const other = translated?.[key]
+
+    // Present only in the translation (a data map entry): take it as it is.
+    if (value === undefined) {
+      out[key] = other
+      continue
+    }
+
+    // An array — FAQ entries, ordered lists — is replaced wholesale rather than
+    // merged index by index, which would splice two languages together.
+    if (Array.isArray(value)) {
+      out[key] = Array.isArray(other) && other.length > 0 ? other : value
+      continue
+    }
 
     // A nested namespace: recurse, so a missing key inside it still falls back.
     if (value && typeof value === "object" && !Array.isArray(value)) {

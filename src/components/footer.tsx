@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { useT } from "@/i18n/client"
 import { YEARS_OF_EXPERIENCE, branches, contactInfo, departments, telHref } from "@/data"
+import { localizeBranch, localizeDepartment } from "@/i18n/data"
 
 export default function Footer() {
   const t = useT()
@@ -115,7 +116,9 @@ export default function Footer() {
           <div>
             <h4 className="text-lg font-semibold mb-6">{t.footer.departments}</h4>
             <ul className="space-y-3">
-              {departments.slice(0, 6).map((dept) => (
+              {departments.slice(0, 6).map((raw) => {
+                const dept = localizeDepartment(raw, t.data)
+                return (
                 <li key={dept.id}>
                   <Link
                     href={`/xidmetler#${dept.id}`}
@@ -125,7 +128,8 @@ export default function Footer() {
                     {dept.name}
                   </Link>
                 </li>
-              ))}
+                )
+              })}
             </ul>
           </div>
 
@@ -133,7 +137,9 @@ export default function Footer() {
           <div>
             <h4 className="text-lg font-semibold mb-6">{t.footer.ourBranches}</h4>
             <ul className="space-y-4">
-              {branches.map((branch) => (
+              {branches.map((raw) => {
+                const branch = localizeBranch(raw, t.data)
+                return (
                 <li key={branch.id}>
                   <Link
                     href={`/filiallar#${branch.id}`}
@@ -149,7 +155,8 @@ export default function Footer() {
                     </p>
                   </Link>
                 </li>
-              ))}
+                )
+              })}
             </ul>
           </div>
 
@@ -180,11 +187,11 @@ export default function Footer() {
               </li>
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-primary mt-0.5 shrink-0" />
-                <span className="text-sm text-slate-400">{contactInfo.address}</span>
+                <span className="text-sm text-slate-400">{t.data.contact.address ?? contactInfo.address}</span>
               </li>
               <li className="flex items-start gap-3">
                 <Clock className="w-5 h-5 text-primary mt-0.5 shrink-0" />
-                <span className="text-sm text-slate-400">{contactInfo.workingHours}</span>
+                <span className="text-sm text-slate-400">{t.data.contact.workingHours ?? contactInfo.workingHours}</span>
               </li>
             </ul>
           </div>

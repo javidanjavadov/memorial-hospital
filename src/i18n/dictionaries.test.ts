@@ -42,16 +42,29 @@ describe("dictionaries", () => {
     }
   })
 
-  it.each(["ru", "en", "tr"])("%s has every key Azerbaijani has", (locale) => {
+  /*
+   * Parity is required for UI copy, where Azerbaijani is authored first and
+   * every other language is a translation of it.
+   *
+   * The `data` namespace is deliberately exempt: it holds the hospital's own
+   * content — departments, branches, groups — whose Azerbaijani lives in
+   * src/data rather than the dictionary, so its maps are empty here and the
+   * translations legitimately carry keys Azerbaijani does not.
+   */
+  const uiKeys = (node: Node) =>
+    Object.keys(flatten(node)).filter((key) => !key.startsWith("data."))
+
+  it.each(["ru", "en", "tr"])("%s has every UI key Azerbaijani has", (locale) => {
     const translated = flatten(dictionaries[locale])
-    const missing = Object.keys(source).filter((key) => !(key in translated))
+    const missing = uiKeys(az as unknown as Node).filter(
+      (key) => !(key in translated)
+    )
     expect(missing).toEqual([])
   })
 
-  it.each(["ru", "en", "tr"])("%s adds no key Azerbaijani lacks", (locale) => {
-    const translated = flatten(dictionaries[locale])
-    const extra = Object.keys(translated).filter((key) => !(key in source))
-    expect(extra).toEqual([])
+  it.each(["ru", "en", "tr"])("%s adds no UI key Azerbaijani lacks", (locale) => {
+    const missing = uiKeys(dictionaries[locale]).filter((key) => !(key in source))
+    expect(missing).toEqual([])
   })
 
   /*
@@ -177,5 +190,50 @@ describe("plural phrases survive the fallback merge", () => {
   it("leaves Turkish counts as plain strings", () => {
     const merged = merge(tr as unknown as Node)
     expect(typeof merged.common.serviceCount).toBe("string")
+  })
+})
+
+describe("data maps survive the merge", () => {
+  /*
+   * Azerbaijani is the source text in src/data, so its data maps are empty.
+   * A merge that walks only the fallback's keys therefore deletes every
+   * translated department, branch and group — and nothing errors: the page
+   * renders Azerbaijani content inside an English layout.
+   */
+  it.each([
+    ["ru", ru],
+    ["en", en],
+    ["tr", tr],
+  ] as const)("keeps %s departments, branches and groups", (_name, dict) => {
+    const merged = mergeWithFallback(az as unknown as Node, dict as unknown as Node) as {
+      data: {
+        departments: Record<string, unknown>
+        branches: Record<string, unknown>
+        groups: Record<string, unknown>
+        faq: unknown[]
+      }
+    }
+
+    expect(Object.keys(merged.data.departments).length).toBeGreaterThan(10)
+    expect(Object.keys(merged.data.branches)).toEqual([
+      "nrimanov",
+      "qarayev",
+      "ganca",
+    ])
+    expect(Object.keys(merged.data.groups).length).toBe(3)
+    expect(merged.data.faq.length).toBeGreaterThan(0)
+  })
+
+  it("replaces an array wholesale rather than splicing two languages", () => {
+    const merged = mergeWithFallback(
+      { list: ["az one", "az two"] },
+      { list: ["en one"] }
+    ) as { list: string[] }
+    expect(merged.list).toEqual(["en one"])
+  })
+
+  it("keeps the fallback array when the translation has none", () => {
+    const merged = mergeWithFallback({ list: ["az one"] }, {}) as { list: string[] }
+    expect(merged.list).toEqual(["az one"])
   })
 })

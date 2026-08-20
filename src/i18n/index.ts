@@ -15,7 +15,30 @@ type Source = typeof az
  * Turkish take no plural suffix after a numeral, so they stay strings, and the
  * type allows either.
  */
-export type Dictionary = Omit<Source, "common" | "doctors"> & {
+export interface DataTranslations {
+  departments: Record<string, { name: string; description: string }>
+  branches: Record<
+    string,
+    { name: string; address: string; workingHours: string }
+  >
+  groups: Record<string, { name: string; blurb: string }>
+  /** Generated category labels, matched on their Azerbaijani text. */
+  categories: Record<string, string>
+  faq: { question: string; answer: string }[]
+  contact: { workingHours?: string; address?: string }
+  accreditations: Record<
+    string,
+    { label?: string; title?: string; markNote?: string }
+  >
+}
+
+export type Dictionary = Omit<Source, "common" | "doctors" | "data"> & {
+  /**
+   * The hospital's own content, keyed by id. Empty in Azerbaijani, which is the
+   * source: a lookup that finds nothing falls back to the text in src/data.
+   */
+  data: DataTranslations
+} & {
   common: Omit<Source["common"], "serviceCount" | "categoryCount"> & {
     serviceCount: Phrase
     categoryCount: Phrase
