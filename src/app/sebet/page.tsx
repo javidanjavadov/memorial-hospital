@@ -1,9 +1,10 @@
 "use client"
 
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import Link from "next/link"
 import {
   AlertCircle,
+  ArrowLeft,
   ArrowRight,
   Banknote,
   CheckCircle,
@@ -22,10 +23,13 @@ import {
   HOME_COLLECTION_FEE,
   useBasketStore,
   lineName,
+  linePatientId,
+  groupLinesByPatient,
 } from "@/lib/basket-store"
 import type { BranchKey } from "@/lib/catalog"
 import type { PaymentMethod } from "@/lib/basket-store"
 import { useCurrentUser } from "@/lib/use-current-user"
+import { usePatients } from "@/lib/patients"
 import PatientHeader from "@/components/patient-header"
 import { missingProfileFields } from "@/lib/profile-complete"
 import ProfileCompletionCard from "@/components/profile-completion-card"
@@ -33,6 +37,16 @@ import { shortServiceName } from "@/lib/service-name"
 import { controlClass } from "@/components/ui/field"
 import { useT } from "@/i18n/client"
 import { localizeBranch } from "@/i18n/data"
+
+/** Two letters from a name, for the chip that says who a line is for. */
+const initialsOf = (fullName: string) =>
+  fullName
+    .split(" ")
+    .filter(Boolean)
+    .map((part) => part[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase()
 
 const formatAzn = (value: number) =>
   `${Number.isInteger(value) ? value : value.toFixed(2)} AZN`
@@ -55,6 +69,25 @@ export default function SebetPage() {
   // sample it is, and the results have to reach someone.
   const { user, isLoading } = useCurrentUser()
   const missing = missingProfileFields(user)
+  const { patients } = usePatients()
+
+  const patientGroups = useMemo(() => groupLinesByPatient(lines), [lines])
+  /* Chips and the per-person breakdown only once there is more than one person
+     to tell apart — on a basket for one they would all say the same thing. */
+  const showPatients = patientGroups.length > 1
+
+  /**
+   * The name to show for a patient.
+   *
+   * Prefers the family list, so a relative renamed on the profile reads
+   * correctly here too, and falls back to the name stored on the line — which
+   * is all that is left once a relative has been removed from the family.
+   */
+  const patientNameOf = (group: { patientId: string; patientName: string }) =>
+    patients.find((p) => p.id === group.patientId)?.fullName ||
+    group.patientName ||
+    user?.fullName ||
+    t.family.self
 
   /*
    * The outcome of the submit, not merely "the button was pressed". `delivered`
@@ -188,6 +221,19 @@ export default function SebetPage() {
   return (
     <div className="min-h-screen bg-[var(--paper)] py-12 md:py-16">
       <div className="container mx-auto px-4">
+        {/*
+          A way back to the catalogue. The basket is reached from the middle of
+          building an order, and browser Back is not always that — arriving from
+          the header's basket button leaves nothing useful behind it.
+        */}
+        <Link
+          href="/xidmetler#laboratory-catalog"
+          className="mb-4 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--ink-muted)] transition-colors hover:text-primary"
+        >
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          {t.basket.backToServices}
+        </Link>
+
         <h1 className="font-display text-step-3 text-[var(--ink)]">{t.basket.title}</h1>
         <p className="mt-2 text-[var(--ink-muted)]">
           {t.n(t.common.serviceCount, lines.length)} ·{" "}
@@ -212,46 +258,83 @@ export default function SebetPage() {
           </div>
         ) : (
           <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_22rem]">
-            <ul className="space-y-3">
-              {lines.map((line) => {
-                const effective =
-                  line.promoted != null && line.promoted < line.price
-                    ? line.promoted
-                    : line.price
-                return (
-                  <li
-                    key={line.slug}
-                    className="line-in flex items-start justify-between gap-4 rounded-xl border border-[var(--line)] bg-[var(--paper-raised)] p-4"
-                  >
-                    <div className="min-w-0">
-                      {line.code && (
-                        <p className="font-mono text-xs text-[var(--ink-muted)]">
-                          {t.catalog.code}: {line.code}
-                        </p>
-                      )}
-                      <p
-                        title={lineName(line, t.locale)}
-                        className="mt-0.5 font-medium text-[var(--ink)]"
+            <ul className="space-y-6">
+              {/*
+                Each person's tests under their own name.
+
+                Quietly, though: a thin rule and a small label rather than the
+                shouted heading this had at first. The name has to be there —
+                the same test can appear for two people and the one thing a
+                patient checks before the sample is taken is whose is whose —
+                but it is a label on a group, not a title for a page.
+              */}
+              {patientGroups.map((group) => (
+                <li key={group.patientId || "unassigned"}>
+                  {showPatients && (
+                    <div className="mb-3 flex items-center gap-2 first:mt-0">
+                      <span
+                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--secondary)] text-[0.625rem] font-semibold text-[var(--ink)]"
+                        aria-hidden="true"
                       >
-                        {shortServiceName(lineName(line, t.locale))}
-                      </p>
-                    </div>
-                    <div className="flex shrink-0 items-center gap-3">
-                      <span className="font-display text-[var(--ink)]">
-                        {formatAzn(effective)}
+                        {initialsOf(patientNameOf(group))}
                       </span>
-                      <button
-                        type="button"
-                        onClick={() => remove(line.slug)}
-                        aria-label={t.f(t.basket.removeFrom, { name: lineName(line, t.locale) })}
-                        className="flex h-8 w-8 items-center justify-center rounded-lg text-[var(--ink-muted)] transition-colors hover:bg-red-50 hover:text-red-600"
-                      >
-                        <Trash2 className="h-4 w-4" aria-hidden="true" />
-                      </button>
+                      <h2 className="text-sm font-medium text-[var(--ink)]">
+                        {patientNameOf(group)}
+                      </h2>
+                      <span
+                        className="h-px flex-1 bg-[var(--line)]"
+                        aria-hidden="true"
+                      />
+                      <span className="text-xs text-[var(--ink-muted)]">
+                        {formatAzn(basketSubtotal(group.lines))}
+                      </span>
                     </div>
-                  </li>
-                )
-              })}
+                  )}
+
+                  <ul className="space-y-3">
+                    {group.lines.map((line) => {
+                      const effective =
+                        line.promoted != null && line.promoted < line.price
+                          ? line.promoted
+                          : line.price
+                      return (
+                        <li
+                          key={`${linePatientId(line)}:${line.slug}`}
+                          className="line-in flex items-center gap-3 rounded-xl border border-[var(--line)] bg-[var(--paper-raised)] p-4"
+                        >
+                          <div className="min-w-0 flex-1">
+                            {line.code && (
+                              <p className="font-mono text-xs text-[var(--ink-muted)]">
+                                {t.catalog.code}: {line.code}
+                              </p>
+                            )}
+                            <p
+                              title={lineName(line, t.locale)}
+                              className="mt-0.5 font-medium text-[var(--ink)]"
+                            >
+                              {shortServiceName(lineName(line, t.locale))}
+                            </p>
+                          </div>
+
+                          <div className="flex shrink-0 items-center gap-3">
+                            <span className="font-display text-[var(--ink)]">
+                              {formatAzn(effective)}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => remove(line.slug, linePatientId(line))}
+                              aria-label={t.f(t.basket.removeFrom, { name: lineName(line, t.locale) })}
+                              className="flex h-8 w-8 items-center justify-center rounded-lg text-[var(--ink-muted)] transition-colors hover:bg-red-50 hover:text-red-600"
+                            >
+                              <Trash2 className="h-4 w-4" aria-hidden="true" />
+                            </button>
+                          </div>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                </li>
+              ))}
 
               <li className="flex flex-wrap items-center justify-between gap-3">
                 <Button variant="outline" size="sm" asChild>
@@ -270,12 +353,22 @@ export default function SebetPage() {
               </li>
             </ul>
 
-            <aside className="h-fit rounded-xl border border-[var(--line)] bg-[var(--paper-raised)] p-5">
+            {/*
+              Three separate decisions — where, how to pay, what it comes to —
+              that used to run together as one column of controls with no
+              boundaries. Each is now its own titled block, so the eye can find
+              the one it is looking for instead of reading the whole panel.
+            */}
+            <aside className="h-fit divide-y divide-[var(--line)] rounded-xl border border-[var(--line)] bg-[var(--paper-raised)]">
+              <section className="p-5">
+                <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--ink-muted)]">
+                  {t.ui.basketBranchSection}
+                </h2>
               <label
                 htmlFor="basket-branch"
                 className="block text-sm font-medium text-[var(--ink)]"
               >
-                Filial
+                {t.doctors.branch}
               </label>
               <select
                 id="basket-branch"
@@ -315,8 +408,14 @@ export default function SebetPage() {
                 </span>
               </label>
 
-              <fieldset className="mt-5">
-                <legend className="text-sm font-medium text-[var(--ink)]">
+              </section>
+
+              <section className="p-5">
+                <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--ink-muted)]">
+                  {t.ui.basketPaymentSection}
+                </h2>
+              <fieldset>
+                <legend className="sr-only">
                   {t.basket.paymentMethod}
                 </legend>
                 <div className="mt-2 grid grid-cols-2 gap-2">
@@ -351,9 +450,46 @@ export default function SebetPage() {
 {t.basket.paymentAtBranch}
                 </p>
               </fieldset>
+              </section>
 
-              <dl className="mt-5 space-y-2 border-t border-[var(--line)] pt-4 text-sm">
-                <div className="flex justify-between">
+              <section className="p-5">
+                <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--ink-muted)]">
+                  {t.ui.basketSummarySection}
+                </h2>
+              <dl className="space-y-2 text-sm">
+                {/*
+                  Where the split by person actually earns its place: this is
+                  the number someone checks before paying for two people, and
+                  it is the one thing a chip on a line cannot tell them.
+                */}
+                {showPatients &&
+                  patientGroups.map((group) => (
+                    <div
+                      key={group.patientId || "unassigned"}
+                      className="flex justify-between gap-3"
+                    >
+                      <dt className="flex min-w-0 items-center gap-2 text-[var(--ink-muted)]">
+                        <span
+                          className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--secondary)] text-[0.625rem] font-semibold text-[var(--ink)]"
+                          aria-hidden="true"
+                        >
+                          {initialsOf(patientNameOf(group))}
+                        </span>
+                        <span className="truncate">{patientNameOf(group)}</span>
+                      </dt>
+                      <dd className="shrink-0 text-[var(--ink)]">
+                        {formatAzn(basketSubtotal(group.lines))}
+                      </dd>
+                    </div>
+                  ))}
+
+                <div
+                  className={
+                    showPatients
+                      ? "flex justify-between border-t border-[var(--line)] pt-2"
+                      : "flex justify-between"
+                  }
+                >
                   <dt className="text-[var(--ink-muted)]">{t.basket.services}</dt>
                   <dd className="text-[var(--ink)]">{formatAzn(subtotal)}</dd>
                 </div>
@@ -402,7 +538,7 @@ export default function SebetPage() {
                     disabled={submitting}
                     onClick={placeOrder}
                   >
-                    {submitting ? "{t.basket.submitting}" : "{t.basket.submitOrder}"}
+                    {submitting ? t.basket.submitting : t.basket.submitOrder}
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </Button>
                 </>
@@ -444,6 +580,7 @@ export default function SebetPage() {
                 />
 {t.basket.noOnlinePayment}
               </p>
+              </section>
             </aside>
           </div>
         )}

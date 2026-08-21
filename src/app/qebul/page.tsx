@@ -1,6 +1,6 @@
 "use client"
 
-import { Suspense, useMemo, useState } from "react"
+import { Suspense, useCallback, useEffect, useMemo, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { useForm, useWatch, type Control } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -23,6 +23,7 @@ import {
   Stethoscope,
   AlertCircle,
   Loader2,
+  Users,
 } from "lucide-react"
 import {
   branches,
@@ -36,6 +37,10 @@ import { createValidators } from "@/lib/validation"
 import { missingProfileFields } from "@/lib/profile-complete"
 import ProfileCompletionCard from "@/components/profile-completion-card"
 import { useAuthStore } from "@/lib/auth-store"
+import { useCurrentUser } from "@/lib/use-current-user"
+import { findPatient, usePatients } from "@/lib/patients"
+import PatientSelect from "@/components/patient-select"
+import SignInRequired from "@/components/sign-in-required"
 import Link from "next/link"
 import { useT } from "@/i18n/client"
 import {
@@ -50,6 +55,10 @@ import {
 const buildSchema = (t: ReturnType<typeof useT>) => {
   const v = createValidators(t.validation)
   return z.object({
+    /* Who the appointment is for — the account holder or one of their
+       relatives. Validated like any other field so an appointment cannot be
+       submitted against nobody. */
+    patientId: z.string().min(1, t.family.patientRequired),
     fullName: v.fullName,
     phone: v.phoneNumber,
     // Optional fields must accept "" — see lib/validation.ts.
@@ -72,7 +81,7 @@ type FormData = z.output<Schema>
 
 /** Fields that must be valid before the given step can be left. */
 const stepFields: Record<number, (keyof FormInput)[]> = {
-  1: ["fullName", "phone", "email", "finCode"],
+  1: ["patientId", "fullName", "phone", "email", "finCode"],
   2: ["department", "branch", "date", "time"],
   3: ["consent"],
 }
@@ -123,15 +132,40 @@ function QebulContent() {
     ? doctors.find((d) => d.id === doctorParam && d.available)
     : undefined
 
-  const [step, setStep] = useState(preselected ? 2 : 1)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [submitError, setSubmitError] = useState("")
   const [reference, setReference] = useState("")
 
-  const user = useAuthStore((s) => s.user)
+  /*
+   * The signed-in account comes from the session, not from the auth store.
+   *
+   * The store's `user` has been null since identity moved into the signed
+   * session cookie, so everything hanging off it here — the prefilled name and
+   * phone, the incomplete-profile guard — was quietly dead: the guard could
+   * never fire and the form was never prefilled for anyone.
+   */
+  const { user, isLoading: userLoading } = useCurrentUser()
+  const { patients, isSingle, isLoading: patientsLoading } = usePatients()
   const addAppointment = useAuthStore((s) => s.addAppointment)
   const isSlotTaken = useAuthStore((s) => s.isSlotTaken)
   const missing = user ? missingProfileFields(user) : []
+
+  /*
+   * Someone with no relatives has nothing to choose between, so step 1 would
+   * be a screen with one answer — it is skipped and the appointment is filed
+   * against the account holder. The moment a second person exists the choice is
+   * real, and it is made explicitly: see the note in usePatients on why nothing
+   * is preselected.
+   */
+  const skipPatientStep = !patientsLoading && isSingle
+  /*
+   * Derived rather than corrected in an effect: the skip depends on data that
+   * arrives after the first render, and writing it back as state renders step 1
+   * once before replacing it — a visible flash of a screen the visitor was
+   * never meant to see.
+   */
+  const [requestedStep, setStep] = useState(preselected ? 2 : 1)
+  const step = skipPatientStep && requestedStep === 1 ? 2 : requestedStep
 
   const {
     register,
@@ -139,17 +173,19 @@ function QebulContent() {
     control,
     trigger,
     reset,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<FormInput, unknown, FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
+      patientId: "",
       branch: preselected?.branchId ?? "nrimanov",
       department: preselected?.department ?? "",
       doctor: preselected?.id ?? "",
-      fullName: user?.fullName ?? "",
-      phone: user?.phone ?? "",
-      email: user?.email ?? "",
-      finCode: user?.finCode ?? "",
+      fullName: "",
+      phone: "",
+      email: "",
+      finCode: "",
       date: "",
       time: "",
       complaint: "",
@@ -159,6 +195,44 @@ function QebulContent() {
   // `useWatch` rather than `watch()`: the latter is not memoisable, which makes
   // React Compiler skip optimising this entire (large) component.
   const values = useWatch({ control: control as Control<FormInput> })
+  const patientId = values.patientId ?? ""
+  const patient = findPatient(patients, patientId)
+
+  /**
+   * Copies the chosen patient's details into the fields the appointment is
+   * filed with.
+   *
+   * They stay real form fields rather than being read off `patient` at submit
+   * time, so the existing validation still applies: a relative saved before a
+   * field became mandatory, or an account holder with a blank phone, is caught
+   * here rather than reaching reception as an appointment nobody can ring.
+   */
+  const choosePatient = useCallback(
+    (id: string) => {
+      const next = findPatient(patients, id)
+      if (!next) return
+      setValue("patientId", id, { shouldValidate: true })
+      setValue("fullName", next.fullName, { shouldValidate: false })
+      setValue("phone", next.phone, { shouldValidate: false })
+      setValue("email", next.email, { shouldValidate: false })
+      setValue("finCode", next.finCode, { shouldValidate: false })
+    },
+    [patients, setValue]
+  )
+
+  /*
+   * The single-patient shortcut, and the only place a patient is chosen without
+   * the visitor saying so. Runs once the session and the family list have both
+   * loaded — acting earlier would read "no relatives yet" as "no family" and
+   * file a relative's appointment under the account holder.
+   */
+  useEffect(() => {
+    if (patientsLoading || !skipPatientStep || patientId) return
+    const self = patients[0]
+    if (!self) return
+    choosePatient(self.id)
+  }, [patientsLoading, skipPatientStep, patientId, patients, choosePatient])
+
   const selectedDepartment = values.department ?? ""
   const selectedBranch = values.branch ?? ""
   const selectedDoctor = values.doctor ?? ""
@@ -208,7 +282,11 @@ function QebulContent() {
   const onSubmit = (data: FormData) => {
     setSubmitError("")
     const result = addAppointment({
+      // The account that owns the booking, which is not necessarily the person
+      // it is for — a parent books, the child attends.
       userId: user?.id ?? "guest",
+      patientId: data.patientId,
+      patientName: data.fullName,
       fullName: data.fullName,
       phone: data.phone,
       email: data.email,
@@ -237,13 +315,46 @@ function QebulContent() {
     if (valid) setStep((prev) => Math.min(prev + 1, 3))
   }
 
-  const prevStep = () => setStep((prev) => Math.max(prev - 1, 1))
+  /* Floor at 2 when step 1 was skipped: Back must not drop someone onto a
+     choice that has only one answer and was never shown to them. */
+  const prevStep = () =>
+    setStep((prev) => Math.max(prev - 1, skipPatientStep ? 2 : 1))
 
   const startOver = () => {
     reset()
-    setStep(1)
+    setStep(skipPatientStep ? 2 : 1)
     setIsSubmitted(false)
     setSubmitError("")
+  }
+
+  /*
+   * Signed out: no form at all.
+   *
+   * An appointment is now filed against a patient — the account holder or one
+   * of their relatives — and a guest has neither, so there is nothing the form
+   * could collect that would make the booking filable. The screen explains that
+   * and offers the way in, rather than redirecting and losing the reason.
+   */
+  if (userLoading) {
+    return (
+      <div
+        className="flex min-h-[60vh] items-center justify-center"
+        role="status"
+      >
+        <Loader2 className="h-8 w-8 animate-spin text-primary" aria-hidden="true" />
+        <span className="sr-only">{t.common.loading}</span>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return (
+      <SignInRequired
+        title={t.ui.loginToBook}
+        body={t.ui.loginToBookBody}
+        next="/qebul"
+      />
+    )
   }
 
   if (isSubmitted) {
@@ -311,8 +422,8 @@ function QebulContent() {
         <div className="max-w-3xl mx-auto mb-10">
           <ol className="flex items-center justify-between" aria-label={t.booking.bookSteps}>
             {[
-              { num: 1, label: "{t.booking.stepPersonal}" },
-              { num: 2, label: "{t.booking.stepDoctor}" },
+              { num: 1, label: t.family.forWhom },
+              { num: 2, label: t.booking.stepDoctor },
               { num: 3, label: t.booking.stepConfirm },
             ].map((s, i) => (
               <li
@@ -358,81 +469,85 @@ function QebulContent() {
 
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="max-w-3xl mx-auto">
-            {/* Step 1 — personal details */}
+            {/* Step 1 — who the appointment is for */}
             {step === 1 && (
               <Card className="border-0 shadow-lg">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <User className="w-5 h-5 text-primary" aria-hidden="true" />
-                    {t.booking.stepPersonal}
+                    <Users className="w-5 h-5 text-primary" aria-hidden="true" />
+                    {t.family.forWhom}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Field label={t.common.fullName} required error={errors.fullName?.message}>
-                      {(field) => (
-                        <Input
-                          {...field}
-                          autoComplete="name"
-                          placeholder={t.booking.fullName}
-                          {...register("fullName")}
-                          className={errors.fullName ? "border-red-500" : ""}
-                        />
-                      )}
-                    </Field>
+                  <p
+                    id="patient-hint"
+                    className="text-sm text-[var(--ink-muted)]"
+                  >
+                    {t.family.choosePatientHint}
+                  </p>
 
-                    <Field
-                      label="{t.booking.phoneNumber}"
-                      required
-                      error={errors.phone?.message}
-                    >
-                      {(field) => (
-                        <Input
-                          {...field}
-                          type="tel"
-                          autoComplete="tel"
-                          placeholder="+994 XX XXX XX XX"
-                          {...register("phone")}
-                          className={errors.phone ? "border-red-500" : ""}
-                        />
-                      )}
-                    </Field>
+                  <PatientSelect
+                    patients={patients}
+                    value={patientId}
+                    onChange={choosePatient}
+                    describedBy="patient-hint"
+                    invalid={!!errors.patientId}
+                  />
 
-                    {/* Previously had no error slot at all: an invalid value here
-                        blocked submission with no visible explanation. */}
-                    <Field
-                      label="Email"
-                      hint="{t.booking.optional}"
-                      error={errors.email?.message}
+                  {errors.patientId?.message && (
+                    <p
+                      className="flex items-center gap-2 text-sm text-red-600"
+                      role="alert"
                     >
-                      {(field) => (
-                        <Input
-                          {...field}
-                          type="email"
-                          autoComplete="email"
-                          placeholder="email@example.com"
-                          {...register("email")}
-                          className={errors.email ? "border-red-500" : ""}
-                        />
-                      )}
-                    </Field>
+                      <AlertCircle className="w-4 h-4 shrink-0" aria-hidden="true" />
+                      {errors.patientId.message}
+                    </p>
+                  )}
 
-                    <Field
-                      label={t.profile.finCode}
-                      hint="{t.booking.optionalFin}"
-                      error={errors.finCode?.message}
+                  {/*
+                    The chosen patient's details, filled from the profile or the
+                    family record and shown rather than retyped. They are still
+                    form fields — see choosePatient — so an incomplete record is
+                    caught here instead of at reception.
+                  */}
+                  {patient && (
+                    <dl className="grid grid-cols-1 gap-x-6 gap-y-3 rounded-xl border border-[var(--line)] p-4 sm:grid-cols-2">
+                      <SummaryRow
+                        icon={User}
+                        label={t.common.fullName}
+                        value={patient.fullName}
+                      />
+                      <SummaryRow
+                        icon={Phone}
+                        label={t.common.phone}
+                        value={patient.phone}
+                      />
+                      <SummaryRow
+                        icon={FileText}
+                        label={t.profile.finCode}
+                        value={patient.finCode}
+                      />
+                      <SummaryRow
+                        icon={Calendar}
+                        label={t.profile.birthDate}
+                        value={patient.birthDate}
+                      />
+                    </dl>
+                  )}
+
+                  {/* The details come from the record, so a blank one is fixed
+                      where it lives rather than papered over here. */}
+                  {(errors.fullName || errors.phone || errors.finCode) && (
+                    <p
+                      className="flex items-start gap-2 rounded-lg bg-amber-50 p-3 text-sm text-amber-800"
+                      role="alert"
                     >
-                      {(field) => (
-                        <Input
-                          {...field}
-                          placeholder={t.profile.finCodeHint}
-                          maxLength={7}
-                          {...register("finCode")}
-                          className={errors.finCode ? "border-red-500" : ""}
-                        />
-                      )}
-                    </Field>
-                  </div>
+                      <AlertCircle className="mt-0.5 w-4 h-4 shrink-0" aria-hidden="true" />
+                      {errors.fullName?.message ??
+                        errors.phone?.message ??
+                        errors.finCode?.message}
+                    </p>
+                  )}
                 </CardContent>
               </Card>
             )}
@@ -468,7 +583,7 @@ function QebulContent() {
                       )}
                     </Field>
 
-                    <Field label="Filial" required error={errors.branch?.message}>
+                    <Field label={t.doctors.branch} required error={errors.branch?.message}>
                       {(field) => (
                         <select
                           {...field}
@@ -547,12 +662,12 @@ function QebulContent() {
                     </Field>
 
                     <Field
-                      label="Vaxt"
+                      label={t.booking.time}
                       required
                       hint={
                         selectedDate
-                          ? "{t.booking.slotsUnavailable}"
-                          : "{t.booking.pickDateFirst}"
+                          ? t.booking.slotsUnavailable
+                          : t.booking.pickDateFirst
                       }
                       error={errors.time?.message}
                     >
@@ -579,8 +694,8 @@ function QebulContent() {
                   </div>
 
                   <Field
-                    label="{t.booking.complaint}"
-                    hint="{t.booking.complaintHint}"
+                    label={t.booking.complaint}
+                    hint={t.booking.complaintHint}
                     error={errors.complaint?.message}
                   >
                     {(field) => (
@@ -624,7 +739,7 @@ function QebulContent() {
                       label={t.common.fullName}
                       value={values.fullName}
                     />
-                    <SummaryRow icon={Phone} label="Telefon" value={values.phone} />
+                    <SummaryRow icon={Phone} label={t.common.phone} value={values.phone} />
                     {values.email && (
                       <SummaryRow icon={Mail} label="Email" value={values.email} />
                     )}
@@ -645,23 +760,23 @@ function QebulContent() {
                           ? (t.data.doctorNames?.[
                               getDoctorName(selectedDoctor)
                             ] ?? getDoctorName(selectedDoctor))
-                          : "{t.booking.assignedByReception}"
+                          : t.booking.assignedByReception
                       }
                     />
                     <SummaryRow
                       icon={MapPin}
-                      label="Filial"
+                      label={t.doctors.branch}
                       value={
                         t.data.branches?.[selectedBranch]?.name ??
                         getBranchName(selectedBranch)
                       }
                     />
-                    <SummaryRow icon={Calendar} label="Tarix" value={values.date} />
-                    <SummaryRow icon={Clock} label="Vaxt" value={values.time} />
+                    <SummaryRow icon={Calendar} label={t.booking.date} value={values.date} />
+                    <SummaryRow icon={Clock} label={t.booking.time} value={values.time} />
                     {values.complaint && (
                       <SummaryRow
                         icon={FileText}
-                        label="{t.booking.complaint}"
+                        label={t.booking.complaint}
                         value={values.complaint}
                       />
                     )}
@@ -731,7 +846,7 @@ function QebulContent() {
                   <ProfileCompletionCard compact
                     missing={missing}
                     next="/qebul"
-                    reason="{t.booking.profileNeededForBooking}"
+                    reason={t.booking.profileNeededForBooking}
                   />
                 ) : (
                   <Button
@@ -745,7 +860,7 @@ function QebulContent() {
                     ) : (
                       <CheckCircle className="w-5 h-5" aria-hidden="true" />
                     )}
-                    {isSubmitting ? "{t.booking.sending}" : "{t.booking.confirmButton}"}
+                    {isSubmitting ? t.booking.sending : t.booking.confirmButton}
                   </Button>
                 )}
               </div>

@@ -106,9 +106,10 @@ describe("dictionaries", () => {
   /*
    * Strings that are legitimately the same in every language: a printed field
    * format is not prose, and "translating" it would make the hint disagree with
-   * what the form actually accepts.
+   * what the form actually accepts. `tour.step` is the same kind of thing — two
+   * numerals and a slash, which read identically in all four languages.
    */
-  const IDENTICAL_BY_DESIGN = new Set(["booking.cardNoFormat"])
+  const IDENTICAL_BY_DESIGN = new Set(["booking.cardNoFormat", "tour.step"])
 
   it.each(["ru", "en"])("%s is actually translated, not copied", (locale) => {
     const translated = flatten(dictionaries[locale])

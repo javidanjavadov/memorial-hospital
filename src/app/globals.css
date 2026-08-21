@@ -849,3 +849,122 @@ html[data-scroll-behavior="smooth"] {
     filter: none !important;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Patient dialog.
+
+   Every @keyframes here is declared at the top level, and the media queries
+   only swap which one is used. Keyframes nested inside a media query are not
+   registered, so the animation ran with a name that resolved to nothing — the
+   card was correctly told to animate and simply sat there. Names are distinct
+   for the same reason: redefining `dialogCardIn` inside a media query does not
+   scope it to that query, it replaces the original everywhere.
+
+   The backdrop and the card are animated separately. The dimming leads, so the
+   page behind reads as inert straight away; the card follows a beat later on a
+   long expo-out curve, which is what makes it feel like it settles into place
+   rather than snapping there.
+--------------------------------------------------------------------------- */
+@keyframes dialogOverlayIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes dialogOverlayOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+@keyframes dialogCardIn {
+  from   { opacity: 0; transform: translateY(28px) scale(0.94); }
+  60%    { opacity: 1; }
+  to     { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes dialogCardOut {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to   { opacity: 0; transform: translateY(16px) scale(0.97); }
+}
+
+/* Narrow screens: the card is a sheet on the bottom edge, so it rises. */
+@keyframes dialogSheetIn {
+  from { opacity: 0; transform: translateY(100%); }
+  40%  { opacity: 1; }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes dialogSheetOut {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(100%); }
+}
+
+/* Reduced motion: no travel, but the same unhurried timing. A gentle settle in
+   scale carries the same "arriving" feeling without anything sliding across
+   the screen, which is the part that causes trouble. */
+@keyframes dialogFadeIn {
+  from { opacity: 0; transform: scale(0.985); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes dialogFadeOut {
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0; transform: scale(0.99); }
+}
+
+.dialog-overlay {
+  animation: dialogOverlayIn 320ms ease-out both;
+}
+
+.dialog-overlay[data-state="closing"] {
+  animation: dialogOverlayOut 260ms ease-in both;
+}
+
+.dialog-card {
+  /* Expo-out: most of the distance is covered early, then it eases in slowly
+     over the tail. The 60ms delay lets the backdrop establish itself first. */
+  animation: dialogCardIn 560ms cubic-bezier(0.16, 1, 0.3, 1) 60ms both;
+}
+
+.dialog-card[data-state="closing"] {
+  /* No delay on the way out: a dialog that hesitates after a click feels
+     unresponsive, however pretty the curve. */
+  animation: dialogCardOut 300ms cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+@media (max-width: 639px) {
+  .dialog-card {
+    animation-name: dialogSheetIn;
+  }
+
+  .dialog-card[data-state="closing"] {
+    animation-name: dialogSheetOut;
+  }
+}
+
+/*
+ * The blanket rule further up collapses every animation on the page to
+ * 0.001ms, which is right for decorative movement and wrong here: a dialog
+ * that appears and vanishes between two frames reads as a glitch and gives no
+ * sense of where it came from. "Reduce" means less motion, not none — so the
+ * travel goes and the timing stays.
+ *
+ * `!important` only to outrank that rule. REDUCED_EXIT_MS in
+ * patient-prompt.tsx matches the exit below.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .dialog-overlay {
+    animation: dialogFadeIn 320ms ease-out both !important;
+  }
+
+  .dialog-overlay[data-state="closing"] {
+    animation: dialogFadeOut 260ms ease-in both !important;
+  }
+
+  .dialog-card {
+    animation: dialogFadeIn 460ms ease-out 60ms both !important;
+  }
+
+  .dialog-card[data-state="closing"] {
+    animation: dialogFadeOut 280ms ease-in both !important;
+  }
+}

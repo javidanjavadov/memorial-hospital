@@ -105,7 +105,7 @@ export default function FindDoctorSection() {
 
             <div>
               <label htmlFor={branchId} className="sr-only">
-                Filial
+                {t.doctors.branch}
               </label>
               <select
                 id={branchId}

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { Check, Plus } from "lucide-react"
 import { useBasketStore, type BasketLine,
   lineName,
+  linePatientId,
 } from "@/lib/basket-store"
 import { cn } from "@/lib/utils"
 import { useT } from "@/i18n/client"
@@ -30,8 +31,22 @@ export default function AddToBasketButton({
   const hasHydrated = useBasketStore((s) => s.hasHydrated)
   const add = useBasketStore((s) => s.add)
   const remove = useBasketStore((s) => s.remove)
+  const activePatientId = useBasketStore((s) => s.activePatientId)
 
-  const added = hasHydrated && lines.some((l) => l.slug === line.slug)
+  /*
+   * Added FOR THE CURRENT PATIENT, not added at all.
+   *
+   * The same test can be in the basket twice — once for a mother, once for her
+   * son — so a button that lit up whenever the slug appeared anywhere would
+   * read "already added" while the person actually selected had nothing, and
+   * clicking it would remove someone else's test.
+   */
+  const patientId = line.patientId ?? activePatientId
+  const added =
+    hasHydrated &&
+    lines.some(
+      (l) => l.slug === line.slug && linePatientId(l) === patientId
+    )
 
   /*
    * Adding is the one action here with no page change behind it. Without a
@@ -56,9 +71,9 @@ export default function AddToBasketButton({
       type="button"
       onClick={() => {
         if (added) {
-          remove(line.slug)
+          remove(line.slug, patientId)
         } else {
-          add(line)
+          add({ ...line, patientId })
           pop()
         }
       }}

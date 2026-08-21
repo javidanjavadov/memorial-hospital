@@ -248,7 +248,7 @@ export default function NeticelerPage() {
                   ) : (
                     <FileText className="h-5 w-5" aria-hidden="true" />
                   )}
-                  {isSubmitting ? "{t.booking.checking}" : "{t.booking.showResult}"}
+                  {isSubmitting ? t.booking.checking : t.booking.showResult}
                 </Button>
 
                 <p className="flex items-start gap-2 text-xs text-[var(--ink-muted)]">

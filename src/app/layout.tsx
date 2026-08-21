@@ -12,6 +12,7 @@ import PageTransition from "@/components/page-transition";
 import RouteLoader from "@/components/route-loader";
 import StoreHydration from "@/components/store-hydration";
 import BasketHydration from "@/components/basket-hydration";
+import FamilyHydration from "@/components/family-hydration";
 import AuthSessionProvider from "@/components/session-provider";
 import StructuredData from "@/components/structured-data";
 import { siteName, siteUrl } from "@/lib/site";
@@ -140,6 +141,7 @@ export default async function RootLayout({
           </a>
           <StoreHydration />
           <BasketHydration />
+          <FamilyHydration />
           <RouteLoader />
           <Navbar />
           <main id="main-content" className="flex-1" tabIndex={-1}>

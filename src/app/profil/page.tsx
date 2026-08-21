@@ -25,6 +25,7 @@ import {
   Save,
   XCircle,
   Stethoscope,
+  Users,
   AlertCircle,
   CheckCircle,
   Loader2,
@@ -32,6 +33,8 @@ import {
 import { missingProfileFields } from "@/lib/profile-complete"
 import ResultsPanel from "@/components/results-panel"
 import ProfileCompletionCard from "@/components/profile-completion-card"
+import FamilySection from "@/components/family-section"
+import { membersFor, useFamilyStore } from "@/lib/family-store"
 import { useAuthStore } from "@/lib/auth-store"
 import { ordersFor, useBasketStore,
   lineName,
@@ -112,15 +115,27 @@ function ProfilPageInner() {
   const cancelAppointment = useAuthStore((s) => s.cancelAppointment)
   const allOrders = useBasketStore((s) => s.orders)
   const reorder = useBasketStore((s) => s.reorder)
+  const allFamily = useFamilyStore((s) => s.members)
+  const familyHydrated = useFamilyStore((s) => s.hasHydrated)
+  // Zero until the store has read localStorage, so the count on the tab matches
+  // the list behind it rather than flashing a number that is briefly wrong.
+  const familyCount = familyHydrated
+    ? membersFor(allFamily, user?.id).length
+    : 0
 
   const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState<
-    "profile" | "appointments" | "orders" | "results"
+    "profile" | "family" | "appointments" | "orders" | "results"
   >(() => {
     // Deep link, so "{t.profile.myResults}ə bax" in the header can open this section
     // directly instead of dropping the visitor on the profile form.
     const tab = searchParams.get("tab")
-    return tab === "results" || tab === "orders" || tab === "appointments"
+    return tab === "results" ||
+      tab === "orders" ||
+      tab === "appointments" ||
+      // ?tab=family is how the booking form and the service picker send
+      // someone here to add a relative and come back.
+      tab === "family"
       ? tab
       : "profile"
   })
@@ -279,6 +294,17 @@ function ProfilPageInner() {
           >
             <User className="w-4 h-4" aria-hidden="true" />
             {t.profile.title}
+          </Button>
+          <Button
+            role="tab"
+            id="tab-family"
+            aria-selected={activeTab === "family"}
+            aria-controls="panel-family"
+            variant={activeTab === "family" ? "cta" : "outline"}
+            onClick={() => setActiveTab("family")}
+          >
+            <Users className="w-4 h-4" aria-hidden="true" />
+            {t.family.tab} ({familyCount})
           </Button>
           <Button
             role="tab"
@@ -521,6 +547,12 @@ function ProfilPageInner() {
                 </form>
               </CardContent>
             </Card>
+          </div>
+        )}
+
+        {activeTab === "family" && (
+          <div role="tabpanel" id="panel-family" aria-labelledby="tab-family">
+            <FamilySection />
           </div>
         )}
 

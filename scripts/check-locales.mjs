@@ -29,14 +29,8 @@ const BASE = process.argv[2] ?? "http://localhost:3000"
  * quietly become a translation failure.
  */
 const roster = await readFile(new URL("../src/data/index.ts", import.meta.url), "utf8")
-/*
- * Doctors only. Matching `id` followed by `name` also caught departments,
- * whose ids are not routes — the scan then reported 404s as translation
- * failures, which is a different problem wearing the same badge.
- */
-const DOCTOR_PAGES = [
-  ...roster.matchAll(/id: "([a-z0-9-]+)",\s+name: "[^"]+",\s+specialty:/g),
-].map((m) => `/hekimler/${m[1]}`)
+/* Doctors no longer have a page of their own — the roster is read here only
+   for the names, which are data rather than translations. */
 const NAMES = [...roster.matchAll(/name: "([^"]+)"/g)].map((m) => m[1])
 const NAME_WORDS = new Set(NAMES.flatMap((name) => name.split(/[\s,.-]+/)).filter(Boolean))
 
@@ -115,7 +109,6 @@ const PAGES = [
   "/qeydiyyat",
   "/sebet",
   ...CATEGORY_PAGES,
-  ...DOCTOR_PAGES,
 ]
 
 const LOCALES = ["az", "ru", "en", "tr"]

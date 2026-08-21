@@ -91,8 +91,19 @@ const offendersIn = (source: string) => {
        * Route slugs are Azerbaijani too — "/qebul", "xidmetler", "#hekimler" —
        * and they are addresses, not text anyone reads. A single token with no
        * space in it is one of those, unless it carries a letter only prose has.
+       *
+       * A slug is written in lower case. Exempting every single token instead
+       * — as this did — also exempted the one-word labels, and `label="Filial"`,
+       * `label="Tarix"` and `label="Vaxt"` stood in Azerbaijani on all four
+       * languages of the booking form while this test ran green. A capitalised
+       * token is prose: a slug never is.
        */
-      if (!/\s/.test(text) && !AZERBAIJANI.test(text)) continue
+      if (
+        !/\s/.test(text) &&
+        !AZERBAIJANI.test(text) &&
+        !/^[A-ZƏİÖÜÇŞĞ]/u.test(text)
+      )
+        continue
       if (ALLOWED.some((allowed) => allowed.test(text))) continue
       found.push(text.slice(0, 70))
     }

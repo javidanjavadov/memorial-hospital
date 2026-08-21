@@ -96,7 +96,7 @@ export default async function Home() {
                         {branches.length}
                       </span>
                     </div>
-                    <span className="text-sm font-medium text-slate-700">Filial</span>
+                    <span className="text-sm font-medium text-slate-700">{t.doctors.branch}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">

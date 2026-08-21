@@ -75,7 +75,8 @@
     "orderStoredOnly": "Siparişiniz profilinizdeki “Siparişlerim” bölümünde saklandı. Onay için kliniği aramanızı rica ederiz — sipariş otomatik olarak iletilmez.",
     "noPaymentTaken": "Online ödeme alınmadı",
     "paymentAtClinic": "ödeme şubede yapılır",
-    "backToServices": "Hizmetlere dön"
+    "backToServices": "Hizmetlere dön",
+    "forPatient": "Kimin için"
   },
   "catalog": {
     "title": "Hizmetler ve fiyatlar",
@@ -356,6 +357,7 @@
     "messageOpenedInMail": "Mesajınız e-posta uygulamanızda açıldı — gönderimi orada tamamlayın.",
     "noHealthDataNote": "Lütfen bu forma kişisel sağlık bilgilerinizi yazmayın.",
     "messagePlaceholder": "Mesajınızı yazın...",
+    "messageLabel": "Mesaj",
     "send": "Gönder",
     "contactDetails": "İletişim Bilgileri",
     "address": "Adres",
@@ -371,7 +373,8 @@
     "contactSubject": "Web sitesi başvurusu — {name}",
     "noteLabel": "Not:",
     "manualConfirm": "Bu talep otomatik olarak onaylanmaz. Kayıt görevlisi verdiğiniz numarayı arayarak randevuyu onaylayacak.",
-    "date": "Tarih"
+    "date": "Tarih",
+    "time": "Saat"
   },
   "data": {
     "departments": {
@@ -816,7 +819,17 @@
     "orCall": "veya arayın",
     "emergencyCall": "Acil durumlarda bizi arayın:",
     "errorCode": "Hata kodu",
-    "newCaptcha": "Yeni kod oluştur"
+    "newCaptcha": "Yeni kod oluştur",
+    "familyLimitReached": "Daha fazla aile üyesi eklenemez.",
+    "familyDuplicateFin": "Bu FIN ile bir aile üyesi zaten mevcut.",
+    "familyMemberNotFound": "Aile üyesi bulunamadı.",
+    "familySaveFailed": "Aile üyesi kaydedilemedi.",
+    "loginToBook": "Randevu almak için giriş yapın",
+    "loginToBookBody": "Kendi adınıza veya bir aile üyesi adına randevu almak için hesabınıza giriş yapmalısınız.",
+    "loginToOrder": "Hizmet sipariş etmek için giriş yapın",
+    "basketBranchSection": "Şube ve numune alma",
+    "basketPaymentSection": "Ödeme",
+    "basketSummarySection": "Toplam"
   },
   "meta": {
     "contact": {
@@ -851,5 +864,52 @@
       "title": "Sepetim",
       "description": "Seçtiğiniz laboratuvar testleri ve siparişiniz."
     }
+  },
+  "family": {
+    "title": "Ailem",
+    "subtitle": "Randevu alabileceğiniz ve hizmet sipariş edebileceğiniz yakınlarınız",
+    "tab": "Ailem",
+    "addMember": "Aile üyesi ekle",
+    "editMember": "Bilgileri düzenle",
+    "removeMember": "Aileden çıkar",
+    "removeConfirm": "{name} aile listenizden çıkarılsın mı?",
+    "empty": "Henüz aile üyesi eklemediniz.",
+    "emptyHint": "Bir yakınınızı eklerseniz onun adına randevu alabilir ve hizmet sipariş edebilirsiniz.",
+    "relation": "Yakınlık derecesi",
+    "selectRelation": "Yakınlık derecesini seçin",
+    "relationSpouse": "Eş",
+    "relationChild": "Çocuk",
+    "relationParent": "Ebeveyn",
+    "relationSibling": "Kardeş",
+    "relationOther": "Diğer",
+    "self": "Kendim",
+    "memberCount": "Aile üyesi: {count}",
+    "phoneOptional": "İsteğe bağlı — boş bırakırsanız sizin numaranız kullanılır.",
+    "detailsNote": "Laboratuvar hastayı FIN ile tanır ve sonucu yaşa ve cinsiyete göre değerlendirir; bu alanlar sizinki kadar zorunludur.",
+    "saved": "Aile üyesi kaydedildi",
+    "removed": "Aile üyesi çıkarıldı",
+    "forWhom": "Kimin için?",
+    "selectPatient": "Hastayı seçin",
+    "patientRequired": "Lütfen hastayı seçin",
+    "choosePatientHint": "Ailenizde birden fazla kişi var — randevunun kimin adına olduğunu seçin.",
+    "orderingFor": "Sipariş: {name}",
+    "bookingFor": "Randevu: {name}",
+    "changePatient": "Değiştir",
+    "addFromPicker": "Yeni üye ekle",
+    "promptHint": "Seçtiğiniz hizmetler bu kişinin adına eklenecek. Daha sonra yukarıdaki «Kimin için?» alanından değiştirebilirsiniz."
+  },
+  "tour": {
+    "skip": "Atla",
+    "next": "İleri",
+    "done": "Bitir",
+    "step": "{current}/{total}",
+    "patientTitle": "Kimin için?",
+    "patientBody": "Seçtiğiniz hizmetler bu kişinin adına ekleniyor. Değiştirmek için karta tıklayın.",
+    "groupTitle": "Hizmet grubu",
+    "groupBody": "Laboratuvar, poliklinik veya doktor randevusu — hangi alanda aradığınızı seçin.",
+    "categoryTitle": "Kategori",
+    "categoryBody": "Grup içinden bir kategori seçin. Hizmetler hemen aşağıda görünecek.",
+    "basketTitle": "Sepet",
+    "basketBody": "Eklediğiniz hizmetler burada toplanır. Sonra sepete geçip siparişi tamamlayın."
   }
 }

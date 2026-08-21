@@ -33,7 +33,19 @@ export const buildFullName = (
 
 export interface Appointment {
   id: string
+  /** The account that booked it. */
   userId: string
+  /**
+   * Who it is for: the account id for the holder, a family member id otherwise.
+   *
+   * Separate from `userId` because a parent books and the child attends. The
+   * two were the same value until the account could act for relatives, and
+   * collapsing them again would file every appointment under whoever happened
+   * to be signed in.
+   */
+  patientId?: string
+  /** The patient's name as it stood when the appointment was made. */
+  patientName?: string
   fullName: string
   phone: string
   email?: string

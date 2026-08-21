@@ -159,7 +159,7 @@ export default function ElaqePage() {
                     )}
                   </Field>
 
-                  <Field label="Telefon" required error={errors.phone?.message}>
+                  <Field label={t.common.phone} required error={errors.phone?.message}>
                     {(field) => (
                       <Input
                         {...field}
@@ -173,9 +173,9 @@ export default function ElaqePage() {
                   </Field>
 
                   <Field
-                    label="Mesaj"
+                    label={t.booking.messageLabel}
                     required
-                    hint="{t.booking.noHealthDataNote}"
+                    hint={t.booking.noHealthDataNote}
                     error={errors.message?.message}
                   >
                     {(field) => (

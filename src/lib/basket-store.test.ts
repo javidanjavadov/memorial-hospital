@@ -6,6 +6,8 @@ import {
   useBasketStore,
   type BasketLine,
   lineName,
+  linePatientId,
+  groupLinesByPatient,
 } from "@/lib/basket-store"
 
 const line = (slug: string, price: number, promoted?: number): BasketLine => ({
@@ -24,6 +26,8 @@ beforeEach(() => {
     homeCollection: false,
     paymentMethod: "CASH",
     hasHydrated: true,
+    activePatientId: "",
+    activePatientName: "",
   })
 })
 
@@ -125,5 +129,92 @@ describe("lineName", () => {
 
   it("falls back for a line saved before names were stored", () => {
     expect(lineName({ slug: "b", name: "Qlükoza", price: 3 }, "ru")).toBe("Qlükoza")
+  })
+})
+
+/*
+ * The same test can legitimately be in the basket twice — a mother and her son
+ * both needing a blood count is two samples and two results. The identity of a
+ * line is therefore the test AND the person, which is what these pin down.
+ */
+describe("per-patient lines", () => {
+  const forPatient = (
+    slug: string,
+    patientId: string,
+    patientName: string
+  ): BasketLine => ({ ...line(slug, 10), patientId, patientName })
+
+  it("keeps the same test for two different patients", () => {
+    const { add } = useBasketStore.getState()
+    add(forPatient("cbc", "mum", "Cavadova Aysel"))
+    add(forPatient("cbc", "son", "Cavadov Kanan"))
+
+    expect(useBasketStore.getState().lines).toHaveLength(2)
+  })
+
+  it("still refuses the same test twice for one patient", () => {
+    const { add } = useBasketStore.getState()
+    add(forPatient("cbc", "mum", "Cavadova Aysel"))
+    add(forPatient("cbc", "mum", "Cavadova Aysel"))
+
+    expect(useBasketStore.getState().lines).toHaveLength(1)
+  })
+
+  it("tags a line with the active patient when it carries none", () => {
+    useBasketStore.getState().setActivePatient("mum", "Cavadova Aysel")
+    useBasketStore.getState().add(line("cbc", 10))
+
+    const [entry] = useBasketStore.getState().lines
+    expect(entry.patientId).toBe("mum")
+    expect(entry.patientName).toBe("Cavadova Aysel")
+  })
+
+  /* Removing one person's test must not take the other person's with it. */
+  it("removes only the named patient's copy", () => {
+    const { add } = useBasketStore.getState()
+    add(forPatient("cbc", "mum", "Cavadova Aysel"))
+    add(forPatient("cbc", "son", "Cavadov Kanan"))
+
+    useBasketStore.getState().remove("cbc", "mum")
+
+    const { lines } = useBasketStore.getState()
+    expect(lines).toHaveLength(1)
+    expect(lines[0].patientId).toBe("son")
+  })
+
+  it("reports `has` per patient", () => {
+    useBasketStore.getState().add(forPatient("cbc", "mum", "Cavadova Aysel"))
+
+    expect(useBasketStore.getState().has("cbc", "mum")).toBe(true)
+    expect(useBasketStore.getState().has("cbc", "son")).toBe(false)
+  })
+})
+
+describe("linePatientId", () => {
+  /* A basket saved before the family feature existed has no patient on its
+     lines; those belong to the account holder, not to nobody. */
+  it("reads a line with no patient as the unassigned bucket", () => {
+    expect(linePatientId(line("cbc", 10))).toBe("")
+  })
+})
+
+describe("groupLinesByPatient", () => {
+  it("groups in the order each patient first appears", () => {
+    const groups = groupLinesByPatient([
+      { ...line("cbc", 10), patientId: "mum", patientName: "Cavadova Aysel" },
+      { ...line("vitd", 35), patientId: "son", patientName: "Cavadov Kanan" },
+      { ...line("tsh", 12), patientId: "mum", patientName: "Cavadova Aysel" },
+    ])
+
+    expect(groups.map((g) => g.patientId)).toEqual(["mum", "son"])
+    expect(groups[0].lines).toHaveLength(2)
+    expect(groups[1].lines).toHaveLength(1)
+  })
+
+  it("carries the patient name onto the group", () => {
+    const groups = groupLinesByPatient([
+      { ...line("cbc", 10), patientId: "mum", patientName: "Cavadova Aysel" },
+    ])
+    expect(groups[0].patientName).toBe("Cavadova Aysel")
   })
 })

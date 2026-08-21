@@ -7,6 +7,7 @@ import { ArrowRight, ListPlus, ShoppingCart, Trash2, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { basketSubtotal, useBasketStore,
   lineName,
+  linePatientId,
 } from "@/lib/basket-store"
 import { shortServiceName } from "@/lib/service-name"
 import { cn } from "@/lib/utils"
@@ -168,7 +169,7 @@ export default function FloatingBasket() {
                 </span>
                 <button
                   type="button"
-                  onClick={() => remove(line.slug)}
+                  onClick={() => remove(line.slug, linePatientId(line))}
                   aria-label={t.f(t.basket.removeFrom, { name: lineName(line, t.locale) })}
                   className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-[var(--ink-muted)] transition-colors hover:bg-red-50 hover:text-red-600"
                 >

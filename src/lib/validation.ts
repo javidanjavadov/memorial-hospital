@@ -56,6 +56,20 @@ export function createValidators(m: ValidationMessages) {
     optionalText: (max: number, message?: string) =>
       optional(z.string().max(max, message ?? fill(m.textMax, { max }))),
 
+    /**
+     * A phone number that may be left blank, checked the same way when it is not.
+     *
+     * For a family member: a child has no number of their own, and reception
+     * rings the account holder about them. Blank is a real answer here, but a
+     * half-typed one is still a mistake worth catching.
+     */
+    optionalPhoneNumber: optional(
+      z.string().refine((value) => {
+        const digits = value.replace(/\D/g, "")
+        return digits.length >= 9 && digits.length <= 15
+      }, m.phoneDigits)
+    ),
+
     requiredEmail: z.string().min(1, m.emailRequired).email(m.emailInvalid),
 
     /** Accepts what people actually type: +994 55 710 10 50, 0557101050, (055) 710-10-50. */

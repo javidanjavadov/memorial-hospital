@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import {
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
   FlaskConical,
@@ -19,6 +20,10 @@ import { Button } from "@/components/ui/button"
 import ServiceInfoButton from "@/components/service-info-button"
 import BasketPanel from "@/components/basket-panel"
 import PatientHeader from "@/components/patient-header"
+import { relationLabel } from "@/components/patient-select"
+import PatientPrompt from "@/components/patient-prompt"
+import PickerTour from "@/components/picker-tour"
+import { findPatient, shouldAskForPatient, usePatients } from "@/lib/patients"
 import AddToBasketButton from "@/components/add-to-basket-button"
 import { branches } from "@/data"
 import { ordersFor, useBasketStore, type BasketLine,
@@ -30,6 +35,9 @@ import { useT } from "@/i18n/client"
 import { cn } from "@/lib/utils"
 
 const DEFAULT_BRANCH = "nrimanov"
+
+/** Set once the tour has been finished or skipped. */
+const TOUR_SEEN_KEY = "memorial-picker-tour"
 
 export interface PickerCategory {
   slug: string
@@ -97,6 +105,12 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
   const [categorySlug, setCategorySlug] = useState(
     groups[0]?.categories[0]?.slug ?? ""
   )
+  const { patients, isSingle, isLoading: patientsLoading } = usePatients()
+  const activePatientId = useBasketStore((s) => s.activePatientId)
+  const setActivePatient = useBasketStore((s) => s.setActivePatient)
+  const { user } = useCurrentUser()
+  const activePatient = findPatient(patients, activePatientId)
+
   const [items, setItems] = useState<PickerItem[]>([])
   /* Which category the rendered list belongs to. The list is keyed on this, not
      on the selected category, so the outgoing cards stay put and fade while the
@@ -185,6 +199,106 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
     [groups]
   )
 
+  /*
+   * Settles step 1 once the session and the family list have both loaded.
+   *
+   * A signed-out visitor gets no patient at all — their lines carry none, which
+   * is what `linePatientId` reads as "the account holder" if they sign in
+   * later. A lone account holder is selected for them. Anyone with relatives is
+   * left on step 1 to choose.
+   */
+  useEffect(() => {
+    if (patientsLoading) return
+
+    if (!user) {
+      if (activePatientId) setActivePatient("", "")
+      return
+    }
+
+    if (isSingle) {
+      const self = patients[0]
+      if (self && activePatientId !== self.id) {
+        setActivePatient(self.id, self.fullName)
+      }
+      return
+    }
+
+    /* Has relatives: a patient chosen on a previous visit still counts, but one
+       who has since been removed from the family must not. */
+    if (activePatientId && !patients.some((p) => p.id === activePatientId)) {
+      setActivePatient("", "")
+    }
+  }, [
+    patientsLoading,
+    user,
+    isSingle,
+    patients,
+    activePatientId,
+    setActivePatient,
+  ])
+
+  /*
+   * Answered on THIS visit — chosen or dismissed. Deliberately component state
+   * and never persisted: the question is asked afresh every time the catalogue
+   * is opened, and this only stops it reappearing while the visitor is still on
+   * the page.
+   */
+  const [answered, setAnswered] = useState(false)
+  const promptOpen = shouldAskForPatient({
+    isLoading: patientsLoading,
+    isSignedIn: !!user,
+    patientCount: patients.length,
+    answered,
+  })
+
+  /*
+   * The guided tour, shown once per browser.
+   *
+   * Starts when the patient dialog closes rather than on arrival: two things
+   * competing for attention teaches neither, and the dialog is the one with a
+   * question in it. `tourDone` is persisted because this is genuinely
+   * one-time — unlike the patient question, which is asked every visit.
+   */
+  const [tourOpen, setTourOpen] = useState(false)
+
+  const startTour = () => {
+    if (typeof window === "undefined") return
+    try {
+      if (window.localStorage.getItem(TOUR_SEEN_KEY)) return
+    } catch {
+      // Private mode: no memory of the tour, so it is simply not shown.
+      return
+    }
+    setTourOpen(true)
+  }
+
+  const finishTour = useCallback(() => {
+    setTourOpen(false)
+    try {
+      window.localStorage.setItem(TOUR_SEEN_KEY, "1")
+    } catch {
+      /* Nothing to do — it will be offered again next time. */
+    }
+  }, [])
+
+  const choosePatient = useCallback(
+    (id: string) => {
+      const next = findPatient(patients, id)
+      if (!next) return
+      setActivePatient(next.id, next.fullName)
+    },
+    [patients, setActivePatient]
+  )
+
+  /* Plain function, not useCallback: the React Compiler memoises this component
+     for us, and a hand-written dependency list it cannot verify makes it skip
+     optimising the whole file. */
+  const chooseFromPrompt = (id: string) => {
+    choosePatient(id)
+    setAnswered(true)
+    startTour()
+  }
+
   const needle = query.trim().toLowerCase()
   const visible = needle
     ? items.filter(
@@ -231,8 +345,90 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
 
         {tab === "services" ? (
           <div key="services" className="panel-in">
+            {/*
+              One screen, not a wizard.
+
+              Choosing a category is not a commitment — people cross between
+              them constantly while building a request — so putting a Continue
+              button between the categories and the services made the ordinary
+              case worse to serve a step nobody asked for. The category strip
+              sits directly above the list it filters, which is what the
+              hospital's own panel does.
+
+              The patient is a selector rather than a step for the same reason:
+              it is a setting on the order, not a stage of it.
+            */}
+            {/*
+              Who the order is for.
+
+              Shaped like a select — avatar, name, relation, chevron — but built
+              rather than native. A real <select> could not show an avatar or put
+              the relation on its own line, and its dropdown is drawn by the OS,
+              so the list of relatives lost the dates of birth and FIN codes that
+              tell two people with one surname apart. This opens the same dialog
+              used on arrival instead, so there is one way to pick a patient.
+
+              The callout underneath is the part that teaches. When the dialog
+              closes, the choice the visitor just made moves from the middle of
+              the screen to a control at the top they were never looking at —
+              so a pointer follows it there and says what it is. It shows only
+              in that moment; a permanent caption on a control this plain would
+              be clutter.
+            */}
+            {user && activePatient && patients.length > 1 && (
+              <div className="relative mb-8">
+                <p
+                  id="picker-patient-label"
+                  className="mb-2 text-sm font-medium text-[var(--ink)]"
+                >
+                  {t.family.forWhom}
+                </p>
+
+                <button
+                  id="tour-patient"
+                  type="button"
+                  onClick={() => setAnswered(false)}
+                  aria-haspopup="dialog"
+                  aria-labelledby="picker-patient-label picker-patient-name"
+                  className="flex w-full max-w-md items-center gap-4 rounded-xl border-2 border-[var(--line)] bg-[var(--paper-raised)] p-4 text-left transition-colors duration-300 hover:border-primary"
+                >
+                  <span
+                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-white"
+                    aria-hidden="true"
+                  >
+                    {activePatient.fullName
+                      .split(" ")
+                      .filter(Boolean)
+                      .map((part) => part[0])
+                      .slice(0, 2)
+                      .join("")}
+                  </span>
+
+                  <span className="min-w-0 flex-1">
+                    <span
+                      id="picker-patient-name"
+                      className="block truncate font-display text-step-0 text-[var(--ink)]"
+                    >
+                      {activePatient.fullName}
+                    </span>
+                    <span className="block text-sm text-[var(--ink-muted)]">
+                      {relationLabel(activePatient, t)}
+                    </span>
+                  </span>
+
+                  <span
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--secondary)] text-[var(--ink-muted)]"
+                    aria-hidden="true"
+                  >
+                    <ChevronDown className="h-5 w-5" />
+                  </span>
+                </button>
+
+              </div>
+            )}
+
             {/* Groups */}
-            <div className="grid gap-3 sm:grid-cols-3">
+            <div id="tour-groups" className="grid gap-3 sm:grid-cols-3">
               {groups.map((raw) => {
                 const entry = raw
                 const Icon = GROUP_ICONS[entry.slug] ?? FlaskConical
@@ -281,6 +477,7 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
             </div>
 
             <CategoryStrip
+              id="tour-categories"
               ref={chipsRef}
               groupSlug={group?.slug ?? ""}
               categories={group?.categories ?? []}
@@ -387,8 +584,60 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
         it now follows the catalogue down and stops at the end of the list.
       */}
       <aside className="hidden xl:block">
-        <BasketPanel />
+        {/*
+          The tour anchor is on the panel, not on this column. The column is
+          deliberately left to stretch so the sticky panel has room to travel,
+          so it is as tall as the whole catalogue — and a highlight ring drawn
+          around it enclosed most of the page rather than the basket.
+        */}
+        <BasketPanel id="tour-basket" />
       </aside>
+
+      {tourOpen && (
+        <PickerTour
+          steps={[
+            {
+              target: "tour-patient",
+              title: t.tour.patientTitle,
+              body: t.tour.patientBody,
+            },
+            {
+              target: "tour-groups",
+              title: t.tour.groupTitle,
+              body: t.tour.groupBody,
+            },
+            {
+              target: "tour-categories",
+              title: t.tour.categoryTitle,
+              body: t.tour.categoryBody,
+            },
+            {
+              target: "tour-basket",
+              title: t.tour.basketTitle,
+              body: t.tour.basketBody,
+            },
+          ]}
+          onFinish={finishTour}
+        />
+      )}
+
+      {/* Mounted only while open, so every appearance replays the entry
+          animation. The dialog delays these callbacks until its exit animation
+          has finished — see patient-prompt.tsx. */}
+      {promptOpen && (
+        <PatientPrompt
+          patients={patients}
+          selected={activePatientId}
+          onChoose={chooseFromPrompt}
+          /* Closed without choosing: point at the control anyway. Someone who
+             dismissed the dialog is precisely the person who does not yet know
+             where the choice went. */
+          onDismiss={() => {
+            setAnswered(true)
+            startTour()
+          }}
+        />
+      )}
     </div>
   )
 }
@@ -401,12 +650,15 @@ export default function ServicePicker({ groups }: { groups: PickerGroup[] }) {
  * arrows appear only where there is no touch scrolling to reach for.
  */
 function CategoryStrip({
+  id,
   ref,
   groupSlug,
   categories,
   selected,
   onSelect,
 }: {
+  /** Anchor for the guided tour. */
+  id?: string
   ref: React.RefObject<HTMLDivElement | null>
   groupSlug: string
   categories: PickerCategory[]
@@ -422,7 +674,7 @@ function CategoryStrip({
   }
 
   return (
-    <div className="relative mt-4">
+    <div id={id} className="relative mt-4">
       <button
         type="button"
         onClick={() => scrollBy(-1)}

@@ -84,7 +84,8 @@
     "orderStoredOnly": "Your order has been saved in the “My orders” section of your profile. Please call the clinic to confirm it — orders are not sent automatically.",
     "noPaymentTaken": "No online payment was taken",
     "paymentAtClinic": "payment is made at the branch",
-    "backToServices": "Back to services"
+    "backToServices": "Back to services",
+    "forPatient": "Who for"
   },
   "catalog": {
     "title": "Services and prices",
@@ -368,6 +369,7 @@
     "messageOpenedInMail": "Your message has opened in your email app — finish sending it there.",
     "noHealthDataNote": "Please do not include personal health information in this form.",
     "messagePlaceholder": "Write your message...",
+    "messageLabel": "Message",
     "send": "Send",
     "contactDetails": "Contact Details",
     "address": "Address",
@@ -383,7 +385,8 @@
     "contactSubject": "Website enquiry — {name}",
     "noteLabel": "Note:",
     "manualConfirm": "This request is not confirmed automatically. A registry operator will call the number you gave and confirm the appointment.",
-    "date": "Date"
+    "date": "Date",
+    "time": "Time"
   },
   "data": {
     "departments": {
@@ -828,7 +831,17 @@
     "orCall": "or call",
     "emergencyCall": "In an emergency, call us:",
     "errorCode": "Error code",
-    "newCaptcha": "Generate a new code"
+    "newCaptcha": "Generate a new code",
+    "familyLimitReached": "No more family members can be added.",
+    "familyDuplicateFin": "A family member with this FIN already exists.",
+    "familyMemberNotFound": "Family member not found.",
+    "familySaveFailed": "The family member could not be saved.",
+    "loginToBook": "Sign in to book an appointment",
+    "loginToBookBody": "To book in your own name or a family member's, you need to sign in to your account.",
+    "loginToOrder": "Sign in to order a service",
+    "basketBranchSection": "Branch and collection",
+    "basketPaymentSection": "Payment",
+    "basketSummarySection": "Summary"
   },
   "meta": {
     "contact": {
@@ -863,5 +876,52 @@
       "title": "My Basket",
       "description": "Your selected lab tests and order."
     }
+  },
+  "family": {
+    "title": "My family",
+    "subtitle": "Relatives you can book appointments and order services for",
+    "tab": "My family",
+    "addMember": "Add family member",
+    "editMember": "Edit details",
+    "removeMember": "Remove from family",
+    "removeConfirm": "Remove {name} from your family list?",
+    "empty": "You have not added any family members yet.",
+    "emptyHint": "Add a relative and you will be able to book appointments and order services in their name.",
+    "relation": "Relationship",
+    "selectRelation": "Select the relationship",
+    "relationSpouse": "Spouse",
+    "relationChild": "Child",
+    "relationParent": "Parent",
+    "relationSibling": "Sibling",
+    "relationOther": "Other",
+    "self": "Myself",
+    "memberCount": "Family members: {count}",
+    "phoneOptional": "Optional — your own number is used if you leave this blank.",
+    "detailsNote": "The laboratory identifies a patient by FIN and reads results against age- and sex-dependent ranges, so these fields are as mandatory as they are for you.",
+    "saved": "Family member saved",
+    "removed": "Family member removed",
+    "forWhom": "Who is this for?",
+    "selectPatient": "Select the patient",
+    "patientRequired": "Please select the patient",
+    "choosePatientHint": "There is more than one person in your family — choose whose name the appointment is in.",
+    "orderingFor": "Ordering for: {name}",
+    "bookingFor": "Appointment for: {name}",
+    "changePatient": "Change",
+    "addFromPicker": "Add a new member",
+    "promptHint": "The services you choose will be ordered in this person's name. You can change it later from the “Who is this for?” field above."
+  },
+  "tour": {
+    "skip": "Skip",
+    "next": "Next",
+    "done": "Done",
+    "step": "{current}/{total}",
+    "patientTitle": "Who is this for?",
+    "patientBody": "The services you choose are added in this person's name. Click the card to change it.",
+    "groupTitle": "Service group",
+    "groupBody": "Laboratory, polyclinic or a doctor's appointment — pick the area you are looking in.",
+    "categoryTitle": "Category",
+    "categoryBody": "Choose a category within the group. The services appear below straight away.",
+    "basketTitle": "Basket",
+    "basketBody": "Everything you add collects here. Then open the basket and place the order."
   }
 }

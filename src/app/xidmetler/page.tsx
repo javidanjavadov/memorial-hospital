@@ -26,21 +26,21 @@ export default async function XidmetlerPage() {
 
   return (
     <div className="min-h-screen bg-[var(--paper)]">
-      <div className="border-b border-[var(--line)] bg-[var(--paper-raised)]">
-        <div className="container mx-auto px-4 py-14 md:py-20">
-          <p className="mb-3 text-sm uppercase tracking-[0.14em] text-[var(--ink-muted)]">
-            {t.nav.services}
-          </p>
-          <h1 className="font-display text-step-4 max-w-3xl text-[var(--ink)]">
-            {t.catalog.title}
-          </h1>
-          <p className="mt-4 max-w-2xl text-step-0 text-[var(--ink-muted)]">
-{fill(t.catalog.pageIntro, { count: catalogTotals.items })}
-          </p>
-        </div>
-      </div>
+      {/*
+        The hero is gone: this page is an order-entry panel, and a full screen
+        of title before it pushed the thing people came for below the fold.
 
-      <div className="container mx-auto space-y-10 px-4 py-10 md:py-14">
+        The heading itself stays, read out rather than drawn. A page with no
+        h1 has no name in a screen reader's landmark list and none in a search
+        result, and the intro line is what the catalogue's snippet is built
+        from — deleting the markup would have cost both to hide a banner.
+      */}
+      <h1 className="sr-only">{t.catalog.title}</h1>
+      <p className="sr-only">
+        {fill(t.catalog.pageIntro, { count: catalogTotals.items })}
+      </p>
+
+      <div className="container mx-auto space-y-10 px-4 py-6 md:py-8">
         {/*
           The catalogue as an order-entry panel — group, category strip, then the
           services with the basket beside them. Browsing a list of category names

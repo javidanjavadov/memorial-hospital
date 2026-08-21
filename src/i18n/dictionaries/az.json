@@ -75,7 +75,8 @@
     "orderStoredOnly": "Sifarişiniz profilinizin “Sifarişlərim” bölməsində saxlanıldı. Təsdiq üçün klinikaya zəng etməyiniz xahiş olunur — sifariş avtomatik olaraq göndərilmir.",
     "noPaymentTaken": "Onlayn ödəniş alınmadı",
     "paymentAtClinic": "ödəniş filialda həyata keçirilir",
-    "backToServices": "Xidmətlərə qayıt"
+    "backToServices": "Xidmətlərə qayıt",
+    "forPatient": "Kimin üçün"
   },
   "catalog": {
     "title": "Xidmətlər və qiymətlər",
@@ -356,6 +357,7 @@
     "messageOpenedInMail": "E-poçt proqramınızda mesaj açıldı — göndərməni orada tamamlayın.",
     "noHealthDataNote": "Zəhmət olmasa şəxsi sağlamlıq məlumatlarınızı bu formda yazmayın.",
     "messagePlaceholder": "Mesajınızı yazın...",
+    "messageLabel": "Mesaj",
     "send": "Göndər",
     "contactDetails": "Əlaqə Məlumatları",
     "address": "Ünvan",
@@ -371,7 +373,8 @@
     "contactSubject": "Sayt müraciəti — {name}",
     "noteLabel": "Qeyd:",
     "manualConfirm": "Bu sorğu avtomatik təsdiqlənmir. Reqistratura operatoru göstərdiyiniz nömrəyə zəng edərək qəbulu təsdiqləyəcək.",
-    "date": "Tarix"
+    "date": "Tarix",
+    "time": "Vaxt"
   },
   "data": {
     "departments": {},
@@ -681,7 +684,17 @@
     "orCall": "və ya zəng edin",
     "emergencyCall": "Təcili hallarda bizə zəng edin:",
     "errorCode": "Xəta kodu",
-    "newCaptcha": "Yeni kod yarat"
+    "newCaptcha": "Yeni kod yarat",
+    "familyLimitReached": "Ailə siyahısına daha çox üzv əlavə etmək mümkün deyil.",
+    "familyDuplicateFin": "Bu FIN kod ilə ailə üzvü artıq mövcuddur.",
+    "familyMemberNotFound": "Ailə üzvü tapılmadı.",
+    "familySaveFailed": "Ailə üzvü yadda saxlanılmadı.",
+    "loginToBook": "Qəbula yazılmaq üçün daxil olun",
+    "loginToBookBody": "Qəbulu sizin və ailənizin adına qeyd etmək üçün hesabınıza daxil olmalısınız.",
+    "loginToOrder": "Xidmət sifariş etmək üçün daxil olun",
+    "basketBranchSection": "Filial və çatdırılma",
+    "basketPaymentSection": "Ödəniş",
+    "basketSummarySection": "Yekun"
   },
   "meta": {
     "contact": {
@@ -716,5 +729,52 @@
       "title": "Səbətim",
       "description": "Seçdiyiniz laborator analizlər və sifariş."
     }
+  },
+  "family": {
+    "title": "Ailəm",
+    "subtitle": "Qəbul və sifariş edə biləcəyiniz yaxınlarınız",
+    "tab": "Ailəm",
+    "addMember": "Ailə üzvü əlavə et",
+    "editMember": "Məlumatları redaktə et",
+    "removeMember": "Ailədən çıxar",
+    "removeConfirm": "{name} ailə siyahınızdan çıxarılsın?",
+    "empty": "Hələ ailə üzvü əlavə etməmisiniz.",
+    "emptyHint": "Yaxınınızı əlavə etsəniz, onun adına qəbula yazıla və xidmət sifariş edə bilərsiniz.",
+    "relation": "Yaxınlıq dərəcəsi",
+    "selectRelation": "Yaxınlıq dərəcəsini seçin",
+    "relationSpouse": "Həyat yoldaşı",
+    "relationChild": "Övladı",
+    "relationParent": "Valideyni",
+    "relationSibling": "Bacı/qardaş",
+    "relationOther": "Digər",
+    "self": "Özüm",
+    "memberCount": "Ailə üzvü: {count}",
+    "phoneOptional": "İxtiyari — boş buraxsanız sizin nömrəniz istifadə olunacaq.",
+    "detailsNote": "Laboratoriya pasiyenti FIN üzrə tanıyır, nəticəni isə yaşa və cinsə görə qiymətləndirir — bu sahələr özünüzdə olduğu kimi mütləqdir.",
+    "saved": "Ailə üzvü yadda saxlanıldı",
+    "removed": "Ailə üzvü çıxarıldı",
+    "forWhom": "Kimin üçün?",
+    "selectPatient": "Pasiyenti seçin",
+    "patientRequired": "Zəhmət olmasa pasiyenti seçin",
+    "choosePatientHint": "Ailənizdə birdən çox şəxs var — qəbulun kimin adına olduğunu seçin.",
+    "orderingFor": "Sifariş: {name}",
+    "bookingFor": "Qəbul: {name}",
+    "changePatient": "Dəyiş",
+    "addFromPicker": "Yeni üzv əlavə et",
+    "promptHint": "Seçdiyiniz xidmətlər bu şəxsin adına əlavə olunacaq. Sonradan yuxarıdakı «Kimin üçün?» sahəsindən dəyişə bilərsiniz."
+  },
+  "tour": {
+    "skip": "Keç",
+    "next": "Növbəti",
+    "done": "Bitir",
+    "step": "{current}/{total}",
+    "patientTitle": "Kimin üçün?",
+    "patientBody": "Seçdiyiniz xidmətlər bu şəxsin adına əlavə olunur. Dəyişmək üçün bu karta klikləyin.",
+    "groupTitle": "Xidmət qrupu",
+    "groupBody": "Laboratoriya, poliklinika və ya həkim qəbulu — hansı sahədə axtardığınızı seçin.",
+    "categoryTitle": "Kateqoriya",
+    "categoryBody": "Qrupun içindən kateqoriya seçin. Xidmətlər dərhal aşağıda görünəcək.",
+    "basketTitle": "Səbət",
+    "basketBody": "Əlavə etdiyiniz xidmətlər burada toplanır. Sonra səbətə keçib sifarişi tamamlayın."
   }
 }

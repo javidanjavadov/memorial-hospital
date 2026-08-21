@@ -1,15 +1,19 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowRight, ShoppingCart, Trash2 } from "lucide-react"
+import { ArrowRight, ShoppingCart, Trash2, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   basketSubtotal,
   HOME_COLLECTION_FEE,
   useBasketStore,
   lineName,
+  linePatientId,
+  groupLinesByPatient,
 } from "@/lib/basket-store"
 import { shortServiceName } from "@/lib/service-name"
+import { usePatients } from "@/lib/patients"
+import { useCurrentUser } from "@/lib/use-current-user"
 import { useT } from "@/i18n/client"
 
 const formatAzn = (value: number) =>
@@ -23,7 +27,7 @@ const formatAzn = (value: number) =>
  * Sticky rather than fixed: it scrolls with the page until it reaches the top,
  * then holds, which keeps it clear of the header and lets the footer past.
  */
-export default function BasketPanel() {
+export default function BasketPanel({ id }: { id?: string } = {}) {
   const t = useT()
   const lines = useBasketStore((s) => s.lines)
   const homeCollection = useBasketStore((s) => s.homeCollection)
@@ -31,8 +35,24 @@ export default function BasketPanel() {
   const remove = useBasketStore((s) => s.remove)
   const clear = useBasketStore((s) => s.clear)
 
+  const { patients } = usePatients()
+  const { user } = useCurrentUser()
+
   const subtotal = basketSubtotal(lines)
   const total = subtotal + (homeCollection ? HOME_COLLECTION_FEE : 0)
+
+  const groups = groupLinesByPatient(lines)
+  /* Headed by name only when there is more than one person in the basket —
+     for one patient every heading would say the same thing. */
+  const showPatients = groups.length > 1
+
+  /** Prefers the family list, so a relative renamed on the profile reads
+   *  correctly here, and falls back to the name stored on the line. */
+  const nameOf = (group: { patientId: string; patientName: string }) =>
+    patients.find((p) => p.id === group.patientId)?.fullName ||
+    group.patientName ||
+    user?.fullName ||
+    t.family.self
 
   return (
     /*
@@ -41,7 +61,10 @@ export default function BasketPanel() {
      * catalogue, and bounded by its column, so it stops rather than trailing
      * past the end of the list.
      */
-    <div className="sticky top-24 flex max-h-[calc(100dvh-8rem)] flex-col overflow-hidden rounded-xl border border-[var(--line)] bg-[var(--paper-raised)]">
+    <div
+      id={id}
+      className="sticky top-24 flex max-h-[calc(100dvh-8rem)] flex-col overflow-hidden rounded-xl border border-[var(--line)] bg-[var(--paper-raised)]"
+    >
       <div className="flex shrink-0 items-center justify-between border-b border-[var(--line)] px-4 py-3">
         <h2 className="font-display text-[var(--ink)]">{t.basket.title}</h2>
         {hasHydrated && lines.length > 0 && (
@@ -76,15 +99,30 @@ export default function BasketPanel() {
             Capped and scrollable: a basket of thirty tests would otherwise run
             past the viewport and push the total out of reach.
           */}
-          <ul className="max-h-[22rem] divide-y divide-[var(--line)] overflow-y-auto">
-            {lines.map((line) => {
+          <ul className="max-h-[22rem] overflow-y-auto">
+            {groups.map((group) => (
+              <li key={group.patientId || "unassigned"}>
+                {/*
+                  The person's name, not a number: this panel is read while
+                  adding tests for a family, and "1" over a block of results
+                  tells nobody whose sample it is.
+                */}
+                {showPatients && (
+                  <p className="sticky top-0 z-10 flex items-center gap-1.5 border-b border-[var(--line)] bg-[var(--secondary)] px-4 py-1.5 text-[0.6875rem] font-semibold uppercase tracking-wide text-[var(--ink-muted)]">
+                    <Users className="h-3 w-3" aria-hidden="true" />
+                    {nameOf(group)}
+                  </p>
+                )}
+
+                <ul className="divide-y divide-[var(--line)]">
+            {group.lines.map((line) => {
               const effective =
                 line.promoted != null && line.promoted < line.price
                   ? line.promoted
                   : line.price
               return (
                 <li
-                  key={line.slug}
+                  key={`${linePatientId(line)}:${line.slug}`}
                   className="line-in flex items-start gap-2 px-4 py-3"
                 >
                   <span className="min-w-0 flex-1">
@@ -100,7 +138,7 @@ export default function BasketPanel() {
                   </span>
                   <button
                     type="button"
-                    onClick={() => remove(line.slug)}
+                    onClick={() => remove(line.slug, linePatientId(line))}
                     aria-label={t.f(t.basket.removeFrom, { name: lineName(line, t.locale) })}
                     className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-[var(--ink-muted)] transition-colors hover:bg-red-50 hover:text-red-600"
                   >
@@ -109,6 +147,9 @@ export default function BasketPanel() {
                 </li>
               )
             })}
+                </ul>
+              </li>
+            ))}
           </ul>
 
           <div className="shrink-0 border-t border-[var(--line)] px-4 py-4">

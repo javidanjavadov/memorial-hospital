@@ -43,7 +43,7 @@ export default function ProfileCompletionCard({
 
   return (
     <section
-      aria-label="{t.ui.profileCompletionEyebrow}"
+      aria-label={t.ui.profileCompletionEyebrow}
       className={cn(
         "overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--paper-raised)]",
         className
@@ -83,7 +83,7 @@ export default function ProfileCompletionCard({
 
             <p className="mt-1.5 text-sm leading-relaxed text-[var(--ink-muted)]">
               {reason ??
-                "{t.ui.profileCompletionBody}"}
+                t.ui.profileCompletionBody}
             </p>
 
             {/*
